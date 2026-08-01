@@ -1,0 +1,81 @@
+# OpsFlow
+
+## Project Overview
+
+OpsFlow is a modern project and operations management platform for teams and businesses. It enables organizations to manage projects, assign tasks, monitor progress, and improve operational efficiency through a centralized dashboard.
+
+The system provides a centralized platform where administrators, managers, and employees can organize work, monitor progress, assign responsibilities, and improve operational visibility through dashboards and reports.
+
+OpsFlow aims to demonstrate production-ready software engineering practices by following clean architecture, RESTful API design, scalable database modeling, and modern frontend development.
+
+---
+
+## Objectives
+
+- Improve project visibility
+- Organize tasks efficiently
+- Monitor project progress
+- Simplify task assignments
+- Track employee productivity
+- Demonstrate enterprise-grade application architecture
+
+---
+
+## Target Users
+
+- Administrators
+- Project Managers
+- Employees
+
+---
+
+## Tech Stack
+
+### Backend
+
+- Laravel 12
+- PHP 8.4+
+- PostgreSQL
+- Laravel Sanctum
+- REST API
+
+### Frontend
+
+- Vue 3
+- TypeScript
+- Pinia
+- Vue Router
+- Tailwind CSS
+- Axios
+
+### Development Tools
+
+- Cursor
+- VS Code
+- Git
+- GitHub
+- Postman
+- pgAdmin
+- Vercel
+
+---
+
+## Version
+
+Current Version
+
+v1.0.0 (Development)
+
+---
+
+## Goals
+
+This project serves as a production-quality portfolio application demonstrating full-stack software engineering skills including:
+
+- Backend API Development
+- Authentication
+- Database Design
+- Frontend Development
+- REST API Integration
+- Software Architecture
+- Deployment
