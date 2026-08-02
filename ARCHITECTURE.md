@@ -77,9 +77,9 @@ Lookups example (Phase 3.4):
 
 `LookupController` → `LookupService` → `Role` / `Department` / `JobTitle` → `RoleResource` / `DepartmentResource` / `JobTitleResource`
 
-Project Management example (Milestone 4 — designed):
+Project Management example (Phases 4.2–4.3 — implemented):
 
-`ProjectController` → Form Requests → `ProjectService` / `ProjectQuery` → `Project` + members → `ProjectResource`; authorize via `ProjectPolicy`
+`ProjectController` → Form Requests → `ProjectService` → `Project` / members → `ProjectResource` / `ProjectMemberResource`
 
 ---
 
@@ -174,11 +174,11 @@ API routes (`api/*`) render through `App\Exceptions\ApiExceptionRenderer` using 
 | Coarse authorization (3.6) | ✅ Implemented |
 | **Milestone 3** | ✅ **Complete** |
 | Phase 4.1 — Project Domain Foundation | ✅ Implemented |
-| Phase 4.2 — Project CRUD | Designed / Pending |
-| Phase 4.3 — Project Members | Designed / Pending |
-| Phase 4.4 — Project Queries | Designed / Pending |
-| Phase 4.5 — Project Authorization | Designed / Pending |
-| **Milestone 4** | In progress (4.1 done) |
+| Phase 4.2 — Project CRUD | ✅ Implemented |
+| Phase 4.3 — Project Members | ✅ Implemented |
+| Phase 4.4 — Project Queries | ⏳ Pending |
+| Phase 4.5 — Project Authorization | ⏳ Pending |
+| **Milestone 4** | In progress (4.1–4.3 done) |
 | Tasks / Remarks / Activity Logs | Planned |
 | Vue Pinia auth | Planned |
 | Deployment | Planned |

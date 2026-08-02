@@ -3,7 +3,7 @@
 Physical schema companion to [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md).
 
 **Milestone 3 status:** Phases 3.1–3.6 implemented (Milestone 3 complete).  
-**Milestone 4 status:** Phase 4.1 implemented · Phases 4.2–4.5 pending — see [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md).
+**Milestone 4 status:** Phases 4.1–4.3 implemented · Phases 4.4–4.5 pending — see [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md).
 
 ---
 
@@ -149,7 +149,7 @@ Represented in code with `App\Enums\RoleName`.
 
 ### Projects
 
-> Milestone 4 — Phase 4.1 implemented (Phases 4.2–4.5 pending)  
+> Milestone 4 — Phases 4.1–4.3 implemented (4.4–4.5 pending)  
 > ADR: [decisions/Project-Management.md](decisions/Project-Management.md)
 
 | Column | Notes |
@@ -186,7 +186,7 @@ Represented in code with `App\Enums\RoleName`.
 
 ### Project Members
 
-> Milestone 4 — Phase 4.1 implemented (member APIs in 4.3)
+> Milestone 4 — Phase 4.1 schema · Phase 4.3 member APIs implemented
 
 Table: `project_members`
 
@@ -195,16 +195,17 @@ Table: `project_members`
 | id | PK |
 | project_id | FK → `projects.id` (**RESTRICT** on hard delete) |
 | user_id | FK → `users.id` (**RESTRICT** on hard delete) |
-| joined_at | timestamp — set when the member is added |
+| joined_at | timestamp — **server-set** when the member is added (client value ignored) |
 | created_at | timestamp |
 | updated_at | timestamp |
 
 **Rules:**
 
-- Unique (`project_id`, `user_id`)
+- Unique (`project_id`, `user_id`) — duplicate membership via API → HTTP `409`
 - No soft deletes on the pivot (remove = delete pivot row)
 - No member role / permission / invitation columns
 - Owner (`projects.created_by`) is **not** auto-inserted into this table
+- Only active, non-soft-deleted users may be added via API (`422` otherwise)
 
 ---
 
@@ -275,7 +276,7 @@ Eloquent expectations (Milestone 3):
 | `Role` | `hasMany(User::class)` |
 | `User` | `belongsTo(Role)`, `belongsTo(Department)`, `belongsTo(JobTitle)` |
 
-Eloquent expectations (Milestone 4 — Phase 4.1 implemented):
+Eloquent expectations (Milestone 4 — Phases 4.1–4.3):
 
 | Model | Relations |
 |-------|-----------|

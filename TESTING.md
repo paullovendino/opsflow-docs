@@ -40,8 +40,8 @@ From `opsflow-api`:
 # All tests
 php artisan test
 
-# Milestone suites (Phases 2–4.1)
-php artisan test --filter="AuthenticationTest|OrganizationFoundationTest|UserDomainFoundationTest|UserManagementApiTest|UserListQueryTest|LookupApiTest|UserAuthorizationTest|ProjectDomainFoundationTest"
+# Milestone suites (Phases 2–4.3)
+php artisan test --filter="AuthenticationTest|OrganizationFoundationTest|UserDomainFoundationTest|UserManagementApiTest|UserListQueryTest|LookupApiTest|UserAuthorizationTest|ProjectDomainFoundationTest|ProjectManagementApiTest|ProjectMembersApiTest"
 ```
 
 ---
@@ -158,6 +158,36 @@ Path: `tests/Feature/Project/ProjectDomainFoundationTest.php`
 | Factory | Generates owner + default Planning status |
 | Morph map | `project` alias registered |
 
+## Project Management APIs (Phase 4.2)
+
+Path: `tests/Feature/Project/ProjectManagementApiTest.php`
+
+| Area | Expectations |
+|------|----------------|
+| Create | `201`, owner = auth user, status `planning`, envelope + owner nested |
+| Owner assignment | Client `created_by` ignored |
+| Validation | Missing `name` → `422` |
+| List / show | `200`, owner nested, no members |
+| Update | Mutable fields only; status/owner unchanged |
+| Soft delete | `200`, `assertSoftDeleted` |
+| Status patch | Only `status` changes; invalid enum → `422` |
+| Guest | All project endpoints `401` |
+| Resource shape | id/name/description/status/dates/owner/timestamps |
+
+## Project Members APIs (Phase 4.3)
+
+Path: `tests/Feature/Project/ProjectMembersApiTest.php`
+
+| Area | Expectations |
+|------|----------------|
+| List | `200`, user summary + `joined_at`; owner not auto-listed |
+| Add | `201`, server `joined_at`; client `joined_at` ignored |
+| Duplicate | HTTP `409` envelope |
+| Inactive / soft-deleted user | `422` on `user_id` |
+| Remove | `200`, pivot gone; owner unchanged |
+| Unknown member | `404` |
+| Guest | Member endpoints `401` |
+
 ## Project Management (Milestone 4 — remaining)
 
 Spec: [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md)
@@ -166,8 +196,6 @@ Planned Feature suites (create during later phases):
 
 | Phase | Suggested path | Coverage |
 |-------|----------------|----------|
-| 4.2 | `tests/Feature/Project/ProjectManagementApiTest.php` | CRUD, status patch, validation, resource shape, guest `401` |
-| 4.3 | `tests/Feature/Project/ProjectMembersApiTest.php` | list/add/remove members, duplicate rejection, `joined_at` |
 | 4.4 | `tests/Feature/Project/ProjectListQueryTest.php` | search, filters, sort, pagination, clamp, validation |
 | 4.5 | `tests/Feature/Project/ProjectAuthorizationTest.php` | Admin / PM / Employee matrix (owned-or-member for Employee) |
 
@@ -178,4 +206,4 @@ Planned Feature suites (create during later phases):
 - Explicit `429` rate-limit assertion
 - CSRF rejection cases
 - Frontend Pinia auth tests
-- Phase 4.2–4.5 Project Management API / policy tests
+- Phase 4.4–4.5 Project Management query / policy tests

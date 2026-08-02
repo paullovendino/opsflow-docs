@@ -8,6 +8,34 @@ Format follows a lightweight Keep a Changelog style.
 
 ## [Unreleased] — v1.0.0 (Development)
 
+### Documentation sync — Phase 4.3 complete / handoff for Phase 4.4
+
+- HANDOFF updated as next-session starting context (Phases 4.1–4.3 complete; next is Phase 4.4)
+- Documented Project Member APIs + business rules (owner ≠ member, server `joined_at`, duplicate `409`, active-only)
+- Synchronized ROADMAP, DEVELOPMENT_ROADMAP, README, API_SPEC, DATABASE_DESIGN, ARCHITECTURE, TESTING, REQUIREMENTS, DOMAIN_MODEL, ADRs, and related docs
+- Technical debt noted: project list not paginated yet; project routes not policy-gated until 4.5
+
+### Project Members APIs (Phase 4.3) — ✅ Implemented
+
+- Member routes on `ProjectController`: list / add / remove
+- `StoreProjectMemberRequest` — active, non-soft-deleted `user_id` only
+- `ProjectMemberResource` — user summary + server `joined_at`
+- Duplicate membership → HTTP `409` (`DuplicateProjectMemberException`)
+- Owner remains independent of membership; client `joined_at` ignored
+- PHPUnit Feature suite: `tests/Feature/Project/ProjectMembersApiTest.php`
+- Docs synchronized; next is Phase 4.4 — Project Queries (pending approval)
+
+### Project CRUD APIs (Phase 4.2) — ✅ Implemented
+
+- `ProjectController` / `ProjectService` / Form Requests / `ProjectResource`
+- Routes: CRUD + `PATCH /api/v1/projects/{project}/status` under `auth:sanctum`
+- Create: `created_by` = auth user; status always `planning`; client `created_by`/`status` ignored
+- Update: name/description/dates only (not status or owner)
+- Soft delete; status-only patch via `UpdateProjectStatusRequest`
+- List returns simple collection (pagination/filters deferred to 4.4); no policies yet (4.5)
+- PHPUnit Feature suite: `tests/Feature/Project/ProjectManagementApiTest.php`
+- Docs synchronized; next is Phase 4.3 — Project Members (pending approval)
+
 ### Project Domain Foundation (Phase 4.1) — ✅ Implemented
 
 - `projects` table with soft deletes, `ProjectStatus`, `created_by` RESTRICT

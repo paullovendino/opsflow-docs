@@ -22,7 +22,7 @@
 - Prefer `opsflow-docs/docs/DOMAIN_MODEL.md` for business concepts.
 - Prefer milestone specs under `opsflow-docs/docs/` before implementing a phase.
 - Do not implement future modules early (Projects/Tasks/Remarks/advanced RBAC) unless the milestone says so.
-- Current Milestone 3 backend is **complete**. Phase **4.1** is complete — do **not** start Phase 4.2 without explicit implementation approval.
+- Current Milestone 3 backend is **complete**. Phases **4.1–4.3** are complete — do **not** start Phase 4.4 without explicit implementation approval.
 - Match existing patterns: `UserController` → Form Request → `UserService` / `UserQuery` → Resources; authorize via `UserPolicy`; lookups use `LookupController` → `LookupService` → Resources (no Form Requests for collection GETs). For Projects, mirror with `ProjectController` / `ProjectService` / `ProjectQuery` / `ProjectPolicy` per `docs/MILESTONE_4_PROJECT_MANAGEMENT.md`.
 
 ## API

@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted — Milestone 3 complete (Phases 3.1–3.6); Milestone 4 Phase 4.1 Project ERD migrated
+Accepted — Milestone 3 complete (Phases 3.1–3.6); Milestone 4 Phases 4.1–4.3 (`projects` / `project_members` + member APIs)
 
 ## Context
 
@@ -70,14 +70,14 @@ Legacy single `name` column is replaced during ERD alignment. Keep `email_verifi
 | Phase 1 | `roles` (+ Sanctum tokens); default Laravel `users` |
 | Phase 2 | Auth only — no ERD expansion |
 | Phase 3 | Users ERD + `departments` + `job_titles` (**complete**) |
-| Phase 4 | `projects` + `project_members` (**Phase 4.1 complete**) |
+| Phase 4 | `projects` + `project_members` (**Phase 4.1 complete**; member APIs **Phase 4.3 complete**) |
 | Phase 5+ | Tasks, Remarks, Activity Logs |
 
-### Projects ERD (Milestone 4 — Phase 4.1 migrated)
+### Projects ERD (Milestone 4 — Phase 4.1 migrated; member APIs Phase 4.3)
 
 `projects`: `name`, `description` (nullable), `status` (`ProjectStatus`), `start_date` / `due_date` (nullable), `created_by` → `users.id` (**RESTRICT**), timestamps, soft deletes.
 
-`project_members`: `project_id`, `user_id`, `joined_at`, timestamps; unique (`project_id`, `user_id`); no member roles / invitations / pivot permissions; FKs **RESTRICT**.
+`project_members`: `project_id`, `user_id`, `joined_at` (server-set), timestamps; unique (`project_id`, `user_id`); no member roles / invitations / pivot permissions; FKs **RESTRICT**. Duplicate membership via API → HTTP `409`. Only active, non-soft-deleted users may be added.
 
 Status values: `planning`, `active`, `on_hold`, `completed`, `archived`.
 

@@ -14,19 +14,19 @@ The canonical roadmap lives in [ROADMAP.md](ROADMAP.md).
   - ✅ Phase 3.5 — Search, Filtering & Pagination (includes Sorting)
   - ✅ Phase 3.6 — Authorization (RBAC)
 - ✅ Phase 4.1 — Project Domain Foundation
+- ✅ Phase 4.2 — Project CRUD
+- ✅ Phase 4.3 — Project Members
 
 ## Next
 
-**Phase 4.2 — Project CRUD** (pending approval)
+**Phase 4.4 — Project Queries** (pending approval)
 
 Specification: [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md) · ADR: [decisions/Project-Management.md](decisions/Project-Management.md)
 
 Remaining Milestone 4:
 
-- Phase 4.2 — Project CRUD
-- Phase 4.3 — Project Members
-- Phase 4.4 — Project Queries
-- Phase 4.5 — Project Authorization
+- ⏳ Phase 4.4 — Project Queries
+- ⏳ Phase 4.5 — Project Authorization
 
 Also pending from earlier phases: Vue 3 / Pinia authentication (`opsflow-web`).
 

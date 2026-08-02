@@ -469,7 +469,7 @@ List job titles (non-soft-deleted).
 
 ## Projects
 
-> **Milestone 4 — Designed / Pending implementation** (Phases 4.1–4.5)  
+> **Milestone 4 — Phases 4.1–4.3 implemented** (4.4–4.5 pending)  
 > Spec: [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md)  
 > ADR: [decisions/Project-Management.md](decisions/Project-Management.md)
 
@@ -481,7 +481,7 @@ List job titles (non-soft-deleted).
 | Project Manager | Full Project Management (all projects) |
 | Employee | List/view projects they own or are members of |
 
-Project routes require `auth:sanctum` and `ProjectPolicy` checks. Unauthorized → HTTP `403` with the standard API envelope.
+Project routes currently require `auth:sanctum`. `ProjectPolicy` checks arrive in Phase 4.5.
 
 ### Project resource shape
 
@@ -493,7 +493,6 @@ Project routes require `auth:sanctum` and `ProjectPolicy` checks. Unauthorized �
   "status": "planning",
   "start_date": "2026-08-01",
   "due_date": "2026-12-31",
-  "created_by": 1,
   "owner": {
     "id": 1,
     "first_name": "Jane",
@@ -508,56 +507,41 @@ Project routes require `auth:sanctum` and `ProjectPolicy` checks. Unauthorized �
 ```
 
 `status` values (`ProjectStatus`): `planning`, `active`, `on_hold`, `completed`, `archived`.  
-`owner` is nested when the relation is loaded (`whenLoaded()`). Members are exposed via dedicated member endpoints (not always embedded on the project resource).
+`owner` is nested when the relation is loaded (`whenLoaded()`). Members are exposed via dedicated member endpoints (Phase 4.3).
 
 ---
 
 ### GET /api/v1/projects
 
-**Status:** Designed (Phases 4.2 + 4.4 + 4.5)
+**Status:** Implemented (Phase 4.2; query polish in 4.4; authz in 4.5)
 
-List projects with search, filtering, sorting, and pagination.
+List projects (simple collection ordered by `created_at` desc; pagination/filters/sorting arrive in Phase 4.4).
 
-**Authentication:** `auth:sanctum`  
-**Authorization:** Administrator / Project Manager — all projects; Employee — owned or member projects only
+**Authentication:** `auth:sanctum`
 
-**Query parameters:**
-
-| Param | Rules / notes |
-|-------|----------------|
-| `search` | Optional string; matches `name`, `description` (case-insensitive) |
-| `status` | Optional; `planning` \| `active` \| `on_hold` \| `completed` \| `archived` |
-| `created_by` | Optional integer; must exist in `users` |
-| `sort` | Optional; one of `name`, `status`, `start_date`, `due_date`, `created_at` (default `created_at`) |
-| `direction` | Optional; `asc` \| `desc` (default `desc`) |
-| `page` | Optional integer ≥ 1 (default `1`) |
-| `per_page` | Optional integer 1–100 (default `15`); values above 100 are clamped to 100 |
-
-**Success:** `200` with project collection in `data` and pagination in `meta`. Invalid query params → `422`. Unauthorized → `403`.
+**Success:** `200` with project collection in `data` (`meta` null until 4.4).
 
 ---
 
 ### GET /api/v1/projects/{id}
 
-**Status:** Designed (Phase 4.2 + 4.5)
+**Status:** Implemented (Phase 4.2; authz in 4.5)
 
 Show a single project.
 
-**Authentication:** `auth:sanctum`  
-**Authorization:** Administrator / Project Manager — any; Employee — owned or member only
+**Authentication:** `auth:sanctum`
 
-**Success:** `200` with project object in `data`. Unauthorized → `403`.
+**Success:** `200` with project object in `data`.
 
 ---
 
 ### POST /api/v1/projects
 
-**Status:** Designed (Phase 4.2 + 4.5)
+**Status:** Implemented (Phase 4.2; authz in 4.5)
 
 Create a project.
 
-**Authentication:** `auth:sanctum`  
-**Authorization:** Administrator, Project Manager
+**Authentication:** `auth:sanctum`
 
 **Request body:**
 
@@ -565,7 +549,6 @@ Create a project.
 {
   "name": "OpsFlow Launch",
   "description": "Initial product launch workstream",
-  "status": "planning",
   "start_date": "2026-08-01",
   "due_date": "2026-12-31"
 }
@@ -575,8 +558,8 @@ Create a project.
 
 - `name` required
 - `description`, `start_date`, `due_date` optional
-- `status` optional; default `planning`
-- `created_by` set server-side from the authenticated user (not accepted in the body)
+- `status` is **not** accepted on create — always `planning`
+- `created_by` set server-side from the authenticated user (client-supplied values ignored)
 
 **Success:** `201` with created project in `data`.
 
@@ -584,40 +567,37 @@ Create a project.
 
 ### PUT /api/v1/projects/{id}
 
-**Status:** Designed (Phase 4.2 + 4.5)
+**Status:** Implemented (Phase 4.2; authz in 4.5)
 
 Update a project.
 
-**Authentication:** `auth:sanctum`  
-**Authorization:** Administrator, Project Manager
+**Authentication:** `auth:sanctum`
 
-**Request body:** same mutable fields as create (`name`, `description`, `status`, `start_date`, `due_date`). Ownership (`created_by`) is not updatable in Phase 4.
+**Request body:** `name`, `description`, `start_date`, `due_date` only. Ownership (`created_by`) and `status` are not updatable here.
 
-**Success:** `200` with updated project in `data`. Unauthorized → `403`.
+**Success:** `200` with updated project in `data`.
 
 ---
 
 ### DELETE /api/v1/projects/{id}
 
-**Status:** Designed (Phase 4.2 + 4.5)
+**Status:** Implemented (Phase 4.2; authz in 4.5)
 
 Soft-delete a project.
 
-**Authentication:** `auth:sanctum`  
-**Authorization:** Administrator, Project Manager
+**Authentication:** `auth:sanctum`
 
-**Success:** `200` with standard envelope. Unauthorized → `403`.
+**Success:** `200` with standard envelope.
 
 ---
 
 ### PATCH /api/v1/projects/{id}/status
 
-**Status:** Designed (Phase 4.2 + 4.5)
+**Status:** Implemented (Phase 4.2; authz in 4.5)
 
 Update project status only.
 
-**Authentication:** `auth:sanctum`  
-**Authorization:** Administrator, Project Manager
+**Authentication:** `auth:sanctum`
 
 **Request body:**
 
@@ -635,25 +615,23 @@ Accepted `status` values (`ProjectStatus`): `planning`, `active`, `on_hold`, `co
 
 ### GET /api/v1/projects/{id}/members
 
-**Status:** Designed (Phase 4.3 + 4.5)
+**Status:** Implemented (Phase 4.3; authz in 4.5)
 
 List members of a project.
 
-**Authentication:** `auth:sanctum`  
-**Authorization:** Same visibility as viewing the project
+**Authentication:** `auth:sanctum`
 
-**Success:** `200` with member collection in `data` (user summary + `joined_at`).
+**Success:** `200` with member collection in `data` (`ProjectMemberResource`: user summary + `joined_at`).
 
 ---
 
 ### POST /api/v1/projects/{id}/members
 
-**Status:** Designed (Phase 4.3 + 4.5)
+**Status:** Implemented (Phase 4.3; authz in 4.5)
 
 Add a member to a project.
 
-**Authentication:** `auth:sanctum`  
-**Authorization:** Administrator, Project Manager
+**Authentication:** `auth:sanctum`
 
 **Request body:**
 
@@ -665,9 +643,9 @@ Add a member to a project.
 
 **Notes:**
 
-- `user_id` required; must exist (non-soft-deleted user)
-- Unique (`project_id`, `user_id`) — duplicate → `422`
-- Sets `joined_at` to now
+- `user_id` required; must exist, be `active`, and not soft-deleted (`422` otherwise)
+- Unique (`project_id`, `user_id`) — duplicate → HTTP `409`
+- `joined_at` set server-side to now (client value ignored)
 - No invitation workflow
 
 **Success:** `201` with member payload in `data`.
@@ -676,14 +654,13 @@ Add a member to a project.
 
 ### DELETE /api/v1/projects/{id}/members/{user}
 
-**Status:** Designed (Phase 4.3 + 4.5)
+**Status:** Implemented (Phase 4.3; authz in 4.5)
 
 Remove a member from a project (hard-delete pivot row).
 
-**Authentication:** `auth:sanctum`  
-**Authorization:** Administrator, Project Manager
+**Authentication:** `auth:sanctum`
 
-**Success:** `200` with standard envelope. Does not change `created_by`.
+**Success:** `200` with standard envelope. Does not change `created_by`. Unknown membership → `404`.
 
 ---
 

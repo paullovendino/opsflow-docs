@@ -2,9 +2,7 @@
 
 ## Status
 
-## Status
-
-Accepted — Phase 4.1 implemented; Phases 4.2–4.5 pending
+Accepted — Phases 4.1–4.3 implemented; Phases 4.4–4.5 pending
 
 ## Context
 
@@ -33,28 +31,31 @@ Represented by `App\Enums\ProjectStatus` (snake_case stored values):
 | `completed` | Completed |
 | `archived` | Archived |
 
-Default on create when omitted: `planning`. Status-only updates use `PATCH /api/v1/projects/{project}/status`.
+Default on create: `planning` (status is **not** accepted on create/update bodies). Status-only updates use `PATCH /api/v1/projects/{project}/status`.
 
-### Project members
+### Project members (Phase 4.3 — implemented)
 
 - Many-to-many via pivot table **`project_members`**
 - Columns: `id`, `project_id`, `user_id`, `joined_at`, `created_at`, `updated_at`
 - Unique (`project_id`, `user_id`)
 - **No** member roles, invitation workflow, or permissions on the pivot
-- Owner is **not** auto-added to `project_members`; membership is explicit
-- Employee access = projects where the user is **owner OR member**
+- Owner is **not** auto-added to `project_members`; membership is explicit and independent of `created_by`
+- `joined_at` is **server-generated only**; client-supplied `joined_at` is ignored
+- Duplicate membership → HTTP **`409 Conflict`**
+- Only **active**, non-soft-deleted users may be added (`422` otherwise)
+- Employee access (Phase 4.5) = projects where the user is **owner OR member**
 
 ### Implementation phasing
 
 | Phase | Scope | Status |
 |-------|--------|--------|
 | 4.1 | Domain foundation (schema, models, enum, morph alias, relations, factory, tests) | ✅ Implemented |
-| 4.2 | Project CRUD + status patch | Pending |
-| 4.3 | Project Members APIs | Pending |
-| 4.4 | Search / filter / sort / pagination | Pending |
-| 4.5 | Coarse `ProjectPolicy` authorization | Pending |
+| 4.2 | Project CRUD + status patch | ✅ Implemented |
+| 4.3 | Project Members APIs | ✅ Implemented |
+| 4.4 | Search / filter / sort / pagination | ⏳ Pending |
+| 4.5 | Coarse `ProjectPolicy` authorization | ⏳ Pending |
 
-### API paths (planned)
+### API paths (implemented through 4.3)
 
 - Projects: `GET/POST /api/v1/projects`, `GET/PUT/DELETE /api/v1/projects/{project}`, `PATCH /api/v1/projects/{project}/status`
 - Members: `GET/POST /api/v1/projects/{project}/members`, `DELETE /api/v1/projects/{project}/members/{user}`
@@ -69,16 +70,18 @@ Default on create when omitted: `planning`. Status-only updates use `PATCH /api/
 
 Enforced via `ProjectPolicy` + controller `$this->authorize()`. Unauthorized → `403` API envelope.
 
+Until Phase 4.5, project routes require `auth:sanctum` only.
+
 ### Explicitly out of scope for Phase 4
 
 Tasks, Remarks, Activity Logs, Dashboard, Reports, Vue UI, ownership transfer, member roles/invitations, advanced RBAC.
 
 ## Consequences
 
-- Morph map gains `project` when the model exists (Phase 4.1)
+- Morph map includes `project` (Phase 4.1)
 - Hard-deleting a referenced User is blocked while they own projects or appear in `project_members` (RESTRICT)
 - Soft-deleted projects remain excluded from default listings
-- Layering mirrors User Management: thin controller, Form Requests, Service, Query object, Policy, API Resources
+- Layering mirrors User Management: thin controller, Form Requests, Service, Query object (4.4), Policy (4.5), API Resources
 - Database ADR / `DATABASE_DESIGN.md` must stay aligned with this decision
 
 ## References

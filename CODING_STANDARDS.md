@@ -139,19 +139,18 @@ Details: [AUTHENTICATION.md](AUTHENTICATION.md)
 
 ---
 
-## Project Management (Milestone 4 — designed)
+## Project Management (Milestone 4 — Phases 4.1–4.3 implemented)
 
-> Phase 4.1 domain foundation is implemented. HTTP / Service / Policy layers remain Phase 4.2+.
+> Phase 4.3 member APIs are implemented. Query / Policy layers remain Phase 4.4+.
 
-- Thin `ProjectController`; business logic in `App\Services\Projects\ProjectService` (4.2+)
-- List query concerns in `App\Queries\Projects\ProjectQuery`; validate index params with `IndexProjectsRequest` (4.4)
+- Thin `ProjectController`; business logic in `App\Services\Projects\ProjectService`
+- List is a simple collection until `ProjectQuery` / `IndexProjectsRequest` in Phase 4.4
 - Validate mutations with `StoreProjectRequest` / `UpdateProjectRequest` / `UpdateProjectStatusRequest` / `StoreProjectMemberRequest`
-- Authorize with `App\Policies\ProjectPolicy` via `$this->authorize()` (4.5)
-- Respond with `ProjectResource` (nested owner via `whenLoaded()`); members via dedicated endpoints
+- Authorize with `App\Policies\ProjectPolicy` via `$this->authorize()` (Phase 4.5)
+- Respond with `ProjectResource` / `ProjectMemberResource`
 - Soft-delete projects only; status patch updates `status` only (`ProjectStatus`)
-- `created_by` set server-side on create; not transferable in Phase 4
-- Members via `project_members` — no pivot roles/invitations; owner not auto-added as member
-- Domain model `App\Models\Project` + `ProjectStatus` + factory exist (Phase 4.1)
+- Create always sets status `planning`; `created_by` set server-side; not transferable
+- Members via `project_members` — no pivot roles/invitations; owner not auto-added; duplicate → `409`
 - Follow [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md) and [decisions/Project-Management.md](decisions/Project-Management.md)
 
 ---

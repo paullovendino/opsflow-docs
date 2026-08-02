@@ -19,12 +19,12 @@ OpsFlow development roadmap by phase.
 | Phase 3.4 | Lookup APIs | ✅ Implemented |
 | Phase 3.5 | Search, Filtering & Pagination | ✅ Implemented |
 | Phase 3.6 | Authorization (RBAC) | ✅ Implemented |
-| **Milestone 4** | **Project Management** | In progress (4.1 done) |
+| **Milestone 4** | **Project Management** | In progress (4.1–4.3 done) |
 | Phase 4.1 | Project Domain Foundation | ✅ Implemented |
-| Phase 4.2 | Project CRUD | Pending |
-| Phase 4.3 | Project Members | Pending |
-| Phase 4.4 | Project Queries | Pending |
-| Phase 4.5 | Project Authorization | Pending |
+| Phase 4.2 | Project CRUD | ✅ Implemented |
+| Phase 4.3 | Project Members | ✅ Implemented |
+| Phase 4.4 | Project Queries | ⏳ Pending |
+| Phase 4.5 | Project Authorization | ⏳ Pending |
 
 ---
 
@@ -156,7 +156,7 @@ Department/Job Title CRUD, multi-role / multi-department users, teams, branches,
 
 ## Phase 4 — Project Management
 
-**Status: Phase 4.1 implemented** · Phases 4.2–4.5 pending (wait for explicit approval per phase)
+**Status: Phases 4.1–4.3 implemented** · Phases 4.4–4.5 pending (wait for explicit approval per phase)
 
 Specification:
 
@@ -176,21 +176,21 @@ Specification:
 
 ### Phase 4.2 — Project CRUD
 
-**Status: Pending**
+**Status: ✅ Implemented**
 
-- [ ] Project CRUD + `PATCH /projects/{id}/status` (`ProjectController` / `ProjectService`)
-- [ ] Form Requests + `ProjectResource`
-- [ ] Soft delete; status-only patch; `created_by` set server-side
-- [ ] PHPUnit Feature tests for CRUD
+- [x] Project CRUD + `PATCH /projects/{id}/status` (`ProjectController` / `ProjectService`)
+- [x] Form Requests + `ProjectResource`
+- [x] Soft delete; status-only patch; `created_by` set server-side; create status always `planning`
+- [x] PHPUnit Feature tests (`ProjectManagementApiTest`)
 
 ### Phase 4.3 — Project Members
 
-**Status: Pending**
+**Status: ✅ Implemented**
 
-- [ ] `GET/POST /api/v1/projects/{project}/members`
-- [ ] `DELETE /api/v1/projects/{project}/members/{user}`
-- [ ] No member roles / invitations / pivot permissions
-- [ ] PHPUnit Feature tests for members
+- [x] `GET/POST /api/v1/projects/{project}/members`
+- [x] `DELETE /api/v1/projects/{project}/members/{user}`
+- [x] No member roles / invitations / pivot permissions; duplicate → `409`; active users only
+- [x] PHPUnit Feature tests (`ProjectMembersApiTest`)
 
 ### Phase 4.4 — Project Queries
 

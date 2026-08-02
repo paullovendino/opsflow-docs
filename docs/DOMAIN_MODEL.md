@@ -316,10 +316,23 @@ A body of work with a defined scope, timeline, and ownership used to organize ta
 - Status is one of: `planning`, `active`, `on_hold`, `completed`, `archived` (`ProjectStatus`)
 - Default status on create: `planning`
 - Owner (`created_by`) is required; FK **RESTRICT**; set from the authenticated user on create; no ownership transfer in Phase 4
-- Membership is explicit via `project_members` — owner is **not** auto-added as a member
+- Membership is explicit via `project_members` — owner is **not** auto-added as a member (owner ≠ membership)
+- `joined_at` is server-generated; client-supplied values are ignored
+- Duplicate membership is rejected (HTTP `409`)
+- Only active, non-soft-deleted users may be added as members
 - No member roles, invitation workflow, or permissions on the membership pivot
-- Employee project visibility: projects they **own** or are a **member** of
+- Employee project visibility (Phase 4.5): projects they **own** or are a **member** of
 - Schema / API defined in [MILESTONE_4_PROJECT_MANAGEMENT.md](MILESTONE_4_PROJECT_MANAGEMENT.md) and [decisions/Project-Management.md](../decisions/Project-Management.md)
+
+### Implementation status (Milestone 4)
+
+| Phase | Status |
+|-------|--------|
+| 4.1 Domain Foundation | ✅ Implemented |
+| 4.2 Project CRUD | ✅ Implemented |
+| 4.3 Project Members | ✅ Implemented |
+| 4.4 Project Queries | Pending |
+| 4.5 Project Authorization | Pending |
 
 ### Future Expansion
 

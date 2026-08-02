@@ -1,6 +1,6 @@
 # Milestone 4 — Project Management
 
-**Status:** Phase 4.1 implemented · Phases 4.2–4.5 pending  
+**Status:** Phases 4.1–4.3 implemented · Phases 4.4–4.5 pending  
 **Product version:** v1.0.0 (Development)  
 **Last updated:** 2026-08-02
 
@@ -44,10 +44,10 @@ User (owner via created_by)
 | Phase | Scope | Status |
 |-------|--------|--------|
 | **4.1 Project Domain Foundation** | `projects` / `project_members` tables; models; relations; `ProjectStatus` enum; morph alias `project` | ✅ Implemented |
-| **4.2 Project CRUD** | `ProjectController` / `ProjectService` / Form Requests / Resources / CRUD + status patch | Pending |
-| **4.3 Project Members** | Member list / add / remove endpoints + service methods | Pending |
-| **4.4 Project Queries** | Project list search, filters, sorting, pagination `meta` | Pending |
-| **4.5 Project Authorization** | Coarse role matrix via `ProjectPolicy` | Pending |
+| **4.2 Project CRUD** | `ProjectController` / `ProjectService` / Form Requests / Resources / CRUD + status patch | ✅ Implemented |
+| **4.3 Project Members** | Member list / add / remove endpoints + service methods | ✅ Implemented |
+| **4.4 Project Queries** | Project list search, filters, sorting, pagination `meta` | ⏳ Pending |
+| **4.5 Project Authorization** | Coarse role matrix via `ProjectPolicy` | ⏳ Pending |
 
 ---
 
@@ -130,11 +130,13 @@ Deliverables:
 
 ## 6. Phase 4.2 — Project CRUD
 
+**Status:** ✅ Implemented
+
 ### Routes (`auth:sanctum`)
 
 | Method | Path | Behavior |
 |--------|------|----------|
-| GET | `/api/v1/projects` | List projects (query behavior finalized in 4.4; authz in 4.5) |
+| GET | `/api/v1/projects` | List projects (simple collection; query polish in 4.4) |
 | GET | `/api/v1/projects/{project}` | Show project |
 | POST | `/api/v1/projects` | Create project |
 | PUT | `/api/v1/projects/{project}` | Update project |
@@ -153,7 +155,7 @@ Deliverables:
 | Update validation | `UpdateProjectRequest` |
 | Status validation | `UpdateProjectStatusRequest` |
 | Index validation | `IndexProjectsRequest` (wired in 4.4) |
-| Resources | `ProjectResource` (+ nested owner `UserResource` summary when loaded) |
+| Resources | `ProjectResource` (+ nested owner `UserResource` when loaded) |
 | Status enum | `App\Enums\ProjectStatus` |
 
 ### Create / update fields
@@ -162,7 +164,7 @@ Deliverables:
 |-------|--------|--------|
 | `name` | required | required |
 | `description` | optional | optional |
-| `status` | optional (default `planning`) | optional (or use status patch) |
+| `status` | **not accepted** — always `planning` | **not accepted** — use status patch |
 | `start_date` | optional date | optional date |
 | `due_date` | optional date | optional date |
 | `created_by` | set server-side from auth user | **not accepted** |
@@ -171,13 +173,17 @@ Deliverables:
 
 - Soft delete only
 - Status endpoint accepts `ProjectStatus` values only; does not modify other fields
-- Eager-load owner (and members when useful) for responses; nest via API Resources + `whenLoaded()`
+- Eager-load owner for responses; nest via `ProjectResource` + `whenLoaded()`
 - Standard response envelope; never return raw models
+- List returns a collection without pagination (Phase 4.4)
 - Match User Management patterns (`UserController` / `UserService` / status patch)
+- Feature tests: `tests/Feature/Project/ProjectManagementApiTest.php`
 
 ---
 
 ## 7. Phase 4.3 — Project Members
+
+**Status:** ✅ Implemented
 
 ### Routes (`auth:sanctum`)
 
@@ -189,19 +195,22 @@ Deliverables:
 
 ### Behaviors
 
-- Add: body `{ "user_id": <id> }`; set `joined_at` to now; reject duplicates (`422` or conflict message via validation)
-- `user_id` must exist and refer to a non-soft-deleted user
-- Remove: delete pivot row; idempotent-or-404 per Laravel route-model conventions (document chosen behavior in tests)
-- Member list returns nested user summary resources (not full password-bearing payloads)
-- Owner (`created_by`) is **not** required to be in `project_members`
+- Add: body `{ "user_id": <id> }`; `joined_at` set server-side to now (client value ignored)
+- `user_id` must exist, be active, and not soft-deleted (`422` otherwise)
+- Duplicate membership → HTTP `409` (`DuplicateProjectMemberException`)
+- Remove: hard-delete pivot row; unknown membership → `404`
+- Member list returns `ProjectMemberResource` (user summary + `joined_at`)
+- Owner (`created_by`) is **not** auto-added as a member
 - Removing membership does **not** change `created_by`
 - No invitation emails; no accept/decline flow
 
 ### Classes
 
-- Prefer methods on `ProjectService` (or a focused collaborator if needed) called from `ProjectController` / dedicated thin actions — keep controllers thin
-- Form Requests: `StoreProjectMemberRequest` (and index validation only if query params are added later)
-- Response: member collection shaped for API consistency (user fields + `joined_at`)
+- `ProjectController::members` / `storeMember` / `destroyMember`
+- `ProjectService::listMembers` / `addMember` / `removeMember`
+- `StoreProjectMemberRequest`
+- `ProjectMemberResource`
+- Feature tests: `tests/Feature/Project/ProjectMembersApiTest.php`
 
 ---
 
@@ -263,13 +272,13 @@ Unauthorized → HTTP `403` with standard API envelope.
 - [x] `project_members` pivot with unique (`project_id`, `user_id`), `joined_at`, timestamps
 - [x] Morph map includes `project`
 - [x] `ProjectStatus` enum values match approved list
-- [ ] Project CRUD + status endpoints with standard envelope
-- [ ] Member list / add / remove endpoints
+- [x] Project CRUD + status endpoints with standard envelope
+- [x] Member list / add / remove endpoints
 - [ ] Project list search + filters + sorting + pagination (4.4)
 - [ ] Coarse authorization enforced (4.5)
-- [x] Feature tests green for 4.1
-- [ ] Feature tests green for 4.2–4.5
-- [x] Docs synchronized for 4.1 implemented behavior
+- [x] Feature tests green for 4.1–4.3
+- [ ] Feature tests green for 4.4–4.5
+- [x] Docs synchronized for 4.1–4.3 implemented behavior
 
 ---
 
