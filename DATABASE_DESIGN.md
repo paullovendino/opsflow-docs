@@ -5,10 +5,18 @@
 ### Roles
 
 - id
-- name
+- name (unique, lowercase snake_case)
 - description
 - created_at
 - updated_at
+
+Seeded roles:
+
+| name | description |
+|------|-------------|
+| `administrator` | Full system access |
+| `project_manager` | Manage projects and tasks |
+| `employee` | Assigned work and updates |
 
 ---
 
@@ -90,3 +98,20 @@ User
 User
 
 1 → Many Activity Logs
+
+---
+
+## Morph Map
+
+Use Laravel `Relation::enforceMorphMap`.
+
+Registered aliases (existing models only):
+
+- `user` → `App\Models\User`
+- `role` → `App\Models\Role`
+
+Add future aliases incrementally when models are introduced:
+
+- `project` → `App\Models\Project`
+- `task` → `App\Models\Task`
+- `activity_log` → `App\Models\ActivityLog`

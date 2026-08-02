@@ -33,11 +33,11 @@ OpsFlow aims to demonstrate production-ready software engineering practices by f
 
 ### Backend
 
-- Laravel 12
-- PHP 8.4+
+- Laravel 13
+- PHP 8.3+
 - PostgreSQL
-- Laravel Sanctum
-- REST API
+- Laravel Sanctum (SPA cookie authentication)
+- REST API (`/api/v1`)
 
 ### Frontend
 
@@ -57,6 +57,14 @@ OpsFlow aims to demonstrate production-ready software engineering practices by f
 - Postman
 - pgAdmin
 - Vercel
+
+---
+
+## Repositories
+
+- `opsflow-api` — Laravel REST API
+- `opsflow-web` — Vue 3 frontend (separate repository)
+- `opsflow-docs` — Project documentation and decisions
 
 ---
 

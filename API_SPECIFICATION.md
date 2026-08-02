@@ -1,63 +1,91 @@
 # API Specification
 
+All endpoints are versioned under `/api/v1`.
+
+## Response Envelope
+
+Every endpoint returns:
+
+```json
+{
+  "success": true,
+  "message": "Request completed successfully.",
+  "data": {},
+  "errors": null,
+  "meta": null
+}
+```
+
+---
+
+## System
+
+GET /api/v1/health
+
+---
+
 ## Authentication
 
-POST /api/login
+Sanctum SPA cookie authentication.
 
-POST /api/logout
+GET /sanctum/csrf-cookie
 
-GET /api/user
+POST /api/v1/login
+
+POST /api/v1/logout
+
+GET /api/v1/user
 
 ---
 
 ## Users
 
-GET /api/users
+GET /api/v1/users
 
-GET /api/users/{id}
+GET /api/v1/users/{id}
 
-POST /api/users
+POST /api/v1/users
 
-PUT /api/users/{id}
+PUT /api/v1/users/{id}
 
-DELETE /api/users/{id}
+DELETE /api/v1/users/{id}
 
 ---
 
 ## Projects
 
-GET /api/projects
+GET /api/v1/projects
 
-GET /api/projects/{id}
+GET /api/v1/projects/{id}
 
-POST /api/projects
+POST /api/v1/projects
 
-PUT /api/projects/{id}
+PUT /api/v1/projects/{id}
 
-DELETE /api/projects/{id}
+DELETE /api/v1/projects/{id}
 
 ---
 
 ## Tasks
 
-GET /api/tasks
+GET /api/v1/tasks
 
-GET /api/tasks/{id}
+GET /api/v1/tasks/{id}
 
-POST /api/tasks
+POST /api/v1/tasks
 
-PUT /api/tasks/{id}
+PUT /api/v1/tasks/{id}
 
-DELETE /api/tasks/{id}
+DELETE /api/v1/tasks/{id}
 
 ---
 
 ## Dashboard
 
-GET /api/dashboard
+GET /api/v1/dashboard
 
 ---
 
 ## Activity Logs
 
-GET /api/activity-logs
+GET /api/v1/activity-logs

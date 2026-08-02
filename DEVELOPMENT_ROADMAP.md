@@ -4,11 +4,20 @@
 
 Project Setup
 
-- Laravel
-- Vue
-- PostgreSQL
-- GitHub
-- Documentation
+- [x] Laravel 13 API (`opsflow-api`)
+- [ ] Vue 3 frontend repository
+- [x] PostgreSQL configuration
+- [x] Laravel Sanctum installed (SPA cookie mode)
+- [x] API versioning (`/api/v1`)
+- [x] CORS configuration
+- [x] Base API controller and response envelope
+- [x] Global API exception handling
+- [x] Morph map foundation
+- [x] Roles table, model, and seeder
+- [x] Health check endpoint
+- [x] Agreed folder structure
+- [x] Documentation
+- [ ] GitHub repositories finalized
 
 ---
 
@@ -16,10 +25,11 @@ Project Setup
 
 Authentication
 
-- Laravel Sanctum
-- Login API
-- Protected Routes
-- Pinia Authentication
+- Sanctum SPA cookie login/logout
+- CSRF cookie flow
+- Protected API routes
+- Current authenticated user endpoint
+- Pinia authentication on Vue
 
 ---
 
@@ -27,9 +37,10 @@ Authentication
 
 User Management
 
+- Align users schema with ERD
 - CRUD Users
-- Roles
-- Permissions
+- Role assignment
+- Activate/Deactivate users
 
 ---
 
