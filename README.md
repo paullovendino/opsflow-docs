@@ -17,14 +17,16 @@ Central documentation for the OpsFlow SaaS platform.
 | Phase 1 — Project Setup (API foundation) | Completed (backend) |
 | Phase 2 — Authentication (API) | Completed |
 | Phase 2 — Pinia auth (Vue) | Pending |
-| Phase 3 — User Management | Not started |
+| Phase 3 — Organization & User Management | Design approved — awaiting implementation approval |
 
 ## Documentation Index
 
 | Document | Description |
 |----------|-------------|
 | [README.md](README.md) | Docs index + status |
-| [docs/HANDOFF.md](docs/HANDOFF.md) | **Project handoff for new AI/dev sessions** |
+| [HANDOFF.md](HANDOFF.md) | **Project handoff for new AI/dev sessions** |
+| [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md) | **Business domain model (primary)** |
+| [docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md](docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md) | Milestone 3 implementation specification |
 | [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md) | Product overview and tech stack |
 | [REQUIREMENTS.md](REQUIREMENTS.md) | Functional and non-functional requirements |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | System and backend architecture |
@@ -43,6 +45,8 @@ Central documentation for the OpsFlow SaaS platform.
 
 ## Quick Links
 
+- Domain model: [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md)
 - Auth endpoints: `/api/v1/auth/login`, `/api/v1/auth/logout`, `/api/v1/auth/me`
 - Health: `GET /api/v1/health`
 - CSRF cookie: `GET /sanctum/csrf-cookie`
+- Milestone 3 (Planned): `/api/v1/users`, `/api/v1/roles`, `/api/v1/departments`, `/api/v1/job-titles`

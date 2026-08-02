@@ -10,6 +10,8 @@ OpsFlow uses a separated frontend/backend architecture:
 
 The API is the system of record. The SPA consumes `/api/v1` with Sanctum SPA cookie authentication.
 
+Domain reference: [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md)
+
 ---
 
 ## High-Level Components
@@ -25,6 +27,24 @@ The API is the system of record. The SPA consumes `/api/v1` with Sanctum SPA coo
 
 ---
 
+## Organizational Domain Architecture
+
+OpsFlow models a single logical organization:
+
+```text
+Organization (logical, single-tenant v1.0)
+    ├── Departments     → grouping
+    ├── Job Titles      → positions
+    ├── Roles           → permissions
+    └── Users           → people
+```
+
+These concepts are **independent**. A user has one Role (required) and optional Department and Job Title.
+
+See [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md) and [decisions/Organization-User-Management.md](decisions/Organization-User-Management.md).
+
+---
+
 ## Backend Layering
 
 Follows `CODING_STANDARDS.md`:
@@ -37,11 +57,16 @@ Follows `CODING_STANDARDS.md`:
 | Services | Business logic |
 | Models | Persistence / relationships |
 | Enums | Domain constants |
+| Policies | Coarse authorization (Milestone 3+) |
 | Exceptions + `ApiExceptionRenderer` | Consistent API errors |
 
 Authentication example:
 
 `AuthController` → `LoginRequest` → `AuthenticationService` → `User` / session → `UserResource`
+
+User Management example (Planned — Milestone 3):
+
+`UserController` → Form Request → User service → `User` + relations → `UserResource`
 
 ---
 
@@ -66,6 +91,24 @@ Details: [AUTHENTICATION.md](AUTHENTICATION.md)
 
 ---
 
+## Authorization Architecture (Milestone 3 — Planned)
+
+Coarse role checks only — not advanced RBAC:
+
+| Role | User Management |
+|------|-----------------|
+| Administrator | Full user management |
+| Project Manager | Read-only user directory |
+| Employee | View own profile |
+
+Lookup endpoints (roles / departments / job titles): **all authenticated users**.
+
+Inactive accounts cannot log in (`403` dedicated message).
+
+Permission management UIs, ability matrices, and multi-role users are deferred.
+
+---
+
 ## Cross-Cutting Concerns
 
 ### CORS
@@ -80,11 +123,19 @@ API routes (`api/*`) render through `App\Exceptions\ApiExceptionRenderer` using 
 
 ### Morph Map
 
-`Relation::enforceMorphMap` registers aliases only for existing models (`user`, `role`).
+`Relation::enforceMorphMap` registers aliases only for existing models.
 
-### Roles Foundation
+| Status | Aliases |
+|--------|---------|
+| Registered today | `user`, `role` |
+| Milestone 3 (when models exist) | `department`, `job_title` |
+| Later | `project`, `task`, `remark`, `activity_log` |
 
-Roles are seeded for future RBAC. Authorization is not enforced yet.
+### Reference Data
+
+- Roles: seeded; read-only in Milestone 3
+- Departments: seeded; read-only in Milestone 3
+- Job Titles: seeded; read-only in Milestone 3
 
 ---
 
@@ -94,7 +145,7 @@ Roles are seeded for future RBAC. Authorization is not enforced yet.
 |------|--------|
 | API foundation | Implemented |
 | Authentication (API) | Implemented |
-| User / Role management | Planned (Phase 3) |
-| Projects / Tasks | Planned |
+| Organization & User Management (API) | Planned (Milestone 3 — design approved) |
+| Projects / Tasks / Remarks / Activity Logs | Planned |
 | Vue Pinia auth | Planned |
 | Deployment | Planned |

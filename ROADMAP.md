@@ -2,7 +2,7 @@
 
 OpsFlow development roadmap by phase.
 
-**Status legend:** Completed · In progress · Pending
+**Status legend:** Completed · In progress · Pending · Designed (docs only)
 
 ---
 
@@ -53,14 +53,44 @@ OpsFlow development roadmap by phase.
 
 ---
 
-## Phase 3 — User Management
+## Phase 3 — Organization & User Management
 
-**Status: Pending**
+**Status: Design approved — awaiting implementation approval**
 
-- Align users schema with ERD
-- CRUD Users
-- Role assignment
-- Activate/Deactivate users
+Specification:
+
+- [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md)
+- [docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md](docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md)
+- [decisions/Organization-User-Management.md](decisions/Organization-User-Management.md)
+
+### Organizational model
+
+```text
+Organization
+    ├── Departments
+    ├── Job Titles
+    ├── Roles (Permissions)
+    └── Users
+```
+
+### Planned work
+
+- [ ] Align `users` schema with ERD (`role_id`, names, `department_id`, `job_title_id`, `status`, soft deletes, keep `email_verified_at`, …)
+- [ ] `departments` table + approved seeder (read-only API; soft deletes)
+- [ ] `job_titles` table + approved seeder (read-only API; soft deletes)
+- [ ] Roles remain seeded and read-only (`GET /roles`, `GET /roles/{id}`) — all authenticated users
+- [ ] Department / Job Title lookups — all authenticated users
+- [ ] User CRUD + `PATCH /users/{id}/status`
+- [ ] User list filters: `search`, `role_id`, `department_id`, `job_title_id`, `status` + pagination
+- [ ] FK RESTRICT for role / department / job title references
+- [ ] Inactive login → dedicated `403`
+- [ ] Coarse authorization (Administrator / Project Manager / Employee)
+- [ ] Update auth `UserResource` for expanded profile
+- [ ] Feature tests + documentation status flip Planned → Implemented
+
+### Explicitly out of scope
+
+Department/Job Title CRUD, multi-role / multi-department users, teams, branches, organization settings, invitation emails, force password change, permission management, advanced RBAC.
 
 ---
 
@@ -130,6 +160,7 @@ OpsFlow development roadmap by phase.
 - Notifications
 - Email Alerts
 - File Attachments
+- Remarks (domain entity)
 
 ### v1.2
 
@@ -143,3 +174,4 @@ OpsFlow development roadmap by phase.
 - Gantt Chart
 - Mobile Application
 - Analytics
+- Multi-organization / organization settings

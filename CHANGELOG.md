@@ -8,6 +8,23 @@ Format follows a lightweight Keep a Changelog style.
 
 ## [Unreleased] — v1.0.0 (Development)
 
+### Documentation — Milestone 3 Organization & User Management (Design approved)
+
+- Adopted organizational domain model: Organization → Departments, Job Titles, Roles, Users
+- Added [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md) as the primary business-domain reference
+- Added [docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md](docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md) implementation specification
+- Added ADR [decisions/Organization-User-Management.md](decisions/Organization-User-Management.md)
+- Expanded ERD for Users (`role_id`, `department_id`, `job_title_id`, structured names, `status`, `last_login_at`, soft deletes; keep `email_verified_at`)
+- Approved Department and Job Title seed lists
+- Designed `departments` and `job_titles` (seeded, soft deletes, read-only in Milestone 3)
+- Standardized user list filters on IDs: `search`, `role_id`, `department_id`, `job_title_id`, plus `status` + pagination
+- Approved FK **RESTRICT** for role / department / job title references (no `SET NULL`)
+- Approved inactive-account login rejection: HTTP `403` (`Account is inactive.`)
+- Approved lookup access for all authenticated users (roles, departments, job titles)
+- Documented Planned APIs for users, roles, departments, job titles (including filters and coarse authorization)
+- Renamed Phase 3 on the roadmap to **Organization & User Management**
+- Updated architecture, requirements, database ADR, handoff, and related docs
+
 ### Backend Foundation (Phase 1) — Completed
 
 - Laravel 13 API application (`opsflow-api`)
@@ -43,10 +60,16 @@ Format follows a lightweight Keep a Changelog style.
 - Auth routes standardized under `/api/v1/auth/*`
 - Documentation aligned to Laravel 13 / PHP 8.3+
 - Tech Stack ADR completed (`decisions/Tech-Stack.md`)
+- Phase 3 scope expanded from “User Management” to **Organization & User Management**
 
 ### Deferred
 
+- Milestone 3 API implementation (migrations, models, controllers, services)
 - Vue Pinia authentication (`opsflow-web`)
-- User Management / RBAC enforcement
+- Department / Job Title CRUD
+- Advanced RBAC / permission management
+- Multi-role and multi-department users
+- Teams, branches, organization settings
+- Invitation emails, force password change
 - Registration, password reset, email verification, social login
 - Draw.io diagrams, API collections, environment-config hardening

@@ -87,7 +87,15 @@ Rules:
 - Morph relationships where applicable
 - Register morph aliases only for existing models via `Relation::enforceMorphMap`
 - Add morph aliases incrementally as models are introduced
+- Follow `DATABASE_DESIGN.md` and `docs/DOMAIN_MODEL.md` for schema/domain alignment
+- Do not invent tables/columns beyond the approved ERD without an ADR update
 
+### Organizational independence
+
+- Roles = permissions
+- Departments = grouping
+- Job Titles = positions
+- Do not conflate these concepts in models, APIs, or seeders
 ---
 
 ## Authentication

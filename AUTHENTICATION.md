@@ -147,6 +147,7 @@ Auth-specific conventions:
 | Invalid credentials | 401 | `Invalid credentials.` |
 | Unauthenticated | 401 | `Unauthenticated.` |
 | Already authenticated (login) | 403 | `Already authenticated.` |
+| Inactive account (login) | 403 | `Account is inactive.` (Milestone 3 — Planned) |
 | Rate limited | 429 | Too many attempts |
 
 ---
@@ -182,12 +183,24 @@ See also: [decisions/Authentication.md](decisions/Authentication.md)
 
 ## Future Authentication Improvements
 
-Deferred to later milestones:
+### Milestone 3 touchpoints (Planned)
+
+When Organization & User Management is implemented:
+
+- Users ERD alignment (`role_id`, structured names, `department_id`, `job_title_id`, `status`, soft deletes, keep `email_verified_at`, …)
+- Expand `UserResource` used by login and `/me`
+- Set `last_login_at` on successful login
+- Reject inactive users at login with dedicated HTTP `403` (`Account is inactive.`)
+- Coarse authorization for User Management endpoints (not advanced RBAC)
+
+Domain: [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md)  
+ADR: [decisions/Organization-User-Management.md](decisions/Organization-User-Management.md)
+
+### Deferred further
 
 - Pinia auth store and Vue route guards
-- Users ERD alignment (`role_id`, profile fields, status)
-- RBAC policies / gates using seeded roles
+- Advanced RBAC / permission management
 - Failed-login activity logging
 - Optional remember-me
 - Token auth for mobile clients
-- Password reset and email verification (if product requires them)
+- Password reset, email verification, invitation emails, force password change

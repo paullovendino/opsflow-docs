@@ -16,6 +16,8 @@ Every endpoint returns:
 }
 ```
 
+Pagination (when applicable): records in `data`, page info in `meta` (`current_page`, `last_page`, `per_page`, `total`, `from`, `to`).
+
 ---
 
 ## System
@@ -88,6 +90,8 @@ Authenticate a user and start a session.
 }
 ```
 
+> **Milestone 3 note (Planned):** After users ERD alignment, `UserResource` will expose structured profile fields (`first_name`, `last_name`, `role`, `department`, `job_title`, `status`, etc.) instead of the legacy `name` shape. Auth responses must follow the updated resource.
+
 **Error responses:**
 
 | HTTP | Condition | Example message |
@@ -95,7 +99,10 @@ Authenticate a user and start a session.
 | `422` | Validation failure | `The given data was invalid.` |
 | `401` | Invalid credentials | `Invalid credentials.` |
 | `403` | Already authenticated | `Already authenticated.` |
+| `403` | Account inactive (`status = inactive`) | `Account is inactive.` |
 | `429` | Rate limit exceeded | `Too Many Attempts.` |
+
+> **Milestone 3 (approved):** Inactive users must not be able to log in. After credentials would otherwise succeed, reject with HTTP `403` and a dedicated inactive-account message (not `401`).
 
 **Example request (HTTP):**
 
@@ -185,6 +192,8 @@ Return the currently authenticated user.
 }
 ```
 
+> **Milestone 3 note (Planned):** Same `UserResource` expansion as login (`data` holds the user object directly).
+
 **Error responses:**
 
 | HTTP | Condition | Example message |
@@ -203,19 +212,272 @@ Cookie: <session-cookie>
 
 ---
 
+## Organization & User Management
+
+> **Planned — Milestone 3 (Organization & User Management)**  
+> Implementation has not started. All endpoints in this section are **Planned**.
+
+Domain reference: [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md)  
+Milestone spec: [docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md](docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md)
+
+### Authorization (coarse — Planned)
+
+| Role | Capability |
+|------|------------|
+| Administrator | Full User Management |
+| Project Manager | Read-only user directory |
+| Employee | View own profile |
+
+Lookup reads (roles / departments / job titles): **all authenticated users** (`auth:sanctum`).
+
+Advanced RBAC is out of scope for this milestone.
+
+### Planned User resource shape
+
+```json
+{
+  "id": 1,
+  "first_name": "Jane",
+  "middle_name": null,
+  "last_name": "Doe",
+  "email": "jane@example.com",
+  "email_verified_at": null,
+  "avatar": null,
+  "status": "active",
+  "last_login_at": null,
+  "role": {
+    "id": 1,
+    "name": "administrator",
+    "description": "Full system access"
+  },
+  "department": {
+    "id": 1,
+    "name": "engineering",
+    "description": "Product and engineering"
+  },
+  "job_title": {
+    "id": 2,
+    "name": "project_manager",
+    "description": "Delivers projects and coordinates teams"
+  },
+  "created_at": "2026-08-02T00:00:00.000000Z",
+  "updated_at": "2026-08-02T00:00:00.000000Z"
+}
+```
+
+Password is never returned. `department` / `job_title` may be `null`.
+
+---
+
 ## Users
 
-> Planned — Phase 3
+> Planned — Milestone 3
 
-GET /api/v1/users
+### GET /api/v1/users
 
-GET /api/v1/users/{id}
+**Status:** Planned
 
-POST /api/v1/users
+List users (directory).
 
-PUT /api/v1/users/{id}
+**Authentication:** `auth:sanctum`  
+**Authorization (Planned):** Administrator, Project Manager (read-only)
 
-DELETE /api/v1/users/{id}
+**Query parameters (approved filters):**
+
+| Parameter | Description |
+|-----------|-------------|
+| `search` | Match against name fields and/or email |
+| `role_id` | Filter by role ID |
+| `department_id` | Filter by department ID |
+| `job_title_id` | Filter by job title ID |
+| `status` | Filter by user status (`active`, `inactive`) |
+| `page` / `per_page` | Pagination |
+
+Do not use name-based FK filters (`role`, `department`, `job_title`). Standardize on IDs.
+
+**Success:** `200` with user collection in `data` and pagination in `meta`.
+
+---
+
+### GET /api/v1/users/{id}
+
+**Status:** Planned
+
+Show a single user.
+
+**Authentication:** `auth:sanctum`  
+**Authorization (Planned):** Administrator; Project Manager (read); Employee only when `{id}` is self
+
+**Success:** `200` with user object in `data`.
+
+---
+
+### POST /api/v1/users
+
+**Status:** Planned
+
+Create a user.
+
+**Authentication:** `auth:sanctum`  
+**Authorization (Planned):** Administrator only
+
+**Request body (Planned):**
+
+```json
+{
+  "first_name": "Jane",
+  "middle_name": null,
+  "last_name": "Doe",
+  "email": "jane@example.com",
+  "password": "secret-password",
+  "role_id": 3,
+  "department_id": 1,
+  "job_title_id": 2,
+  "avatar": null,
+  "status": "active"
+}
+```
+
+**Notes:**
+
+- `role_id` required
+- `department_id` / `job_title_id` nullable
+- Password hashed server-side
+
+**Success:** `201` with created user in `data`.
+
+---
+
+### PUT /api/v1/users/{id}
+
+**Status:** Planned
+
+Update a user.
+
+**Authentication:** `auth:sanctum`  
+**Authorization (Planned):** Administrator only
+
+**Request body (Planned):** same fields as create; password optional on update.
+
+**Success:** `200` with updated user in `data`.
+
+---
+
+### DELETE /api/v1/users/{id}
+
+**Status:** Planned
+
+Soft-delete a user.
+
+**Authentication:** `auth:sanctum`  
+**Authorization (Planned):** Administrator only
+
+**Success:** `200` (or `204` if team standardizes on no body — prefer envelope `200` for consistency).
+
+---
+
+### PATCH /api/v1/users/{id}/status
+
+**Status:** Planned
+
+Activate or deactivate a user.
+
+**Authentication:** `auth:sanctum`  
+**Authorization (Planned):** Administrator only
+
+**Request body (Planned):**
+
+```json
+{
+  "status": "inactive"
+}
+```
+
+**Success:** `200` with updated user in `data`.
+
+---
+
+## Roles
+
+> Planned — Milestone 3 (read-only)
+
+### GET /api/v1/roles
+
+**Status:** Planned
+
+List seeded roles.
+
+**Authentication:** `auth:sanctum` (all authenticated users)
+
+**Success:** `200` with roles collection in `data`.
+
+---
+
+### GET /api/v1/roles/{id}
+
+**Status:** Planned
+
+Show a role.
+
+**Authentication:** `auth:sanctum` (all authenticated users)
+
+**Success:** `200` with role object in `data`.
+
+---
+
+## Departments
+
+> Planned — Milestone 3 (read-only; seeded)
+
+### GET /api/v1/departments
+
+**Status:** Planned
+
+List departments.
+
+**Authentication:** `auth:sanctum` (all authenticated users)
+
+**Success:** `200` with departments collection in `data`.
+
+---
+
+### GET /api/v1/departments/{id}
+
+**Status:** Planned
+
+Show a department.
+
+**Authentication:** `auth:sanctum` (all authenticated users)
+
+**Success:** `200` with department object in `data`.
+
+---
+
+## Job Titles
+
+> Planned — Milestone 3 (read-only; seeded)
+
+### GET /api/v1/job-titles
+
+**Status:** Planned
+
+List job titles.
+
+**Authentication:** `auth:sanctum` (all authenticated users)
+
+**Success:** `200` with job titles collection in `data`.
+
+---
+
+### GET /api/v1/job-titles/{id}
+
+**Status:** Planned
+
+Show a job title.
+
+**Authentication:** `auth:sanctum` (all authenticated users)
+
+**Success:** `200` with job title object in `data`.
 
 ---
 
@@ -248,6 +510,14 @@ POST /api/v1/tasks
 PUT /api/v1/tasks/{id}
 
 DELETE /api/v1/tasks/{id}
+
+---
+
+## Remarks
+
+> Planned — future
+
+Remark endpoints will be defined when the Remarks milestone begins.
 
 ---
 

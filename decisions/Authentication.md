@@ -44,7 +44,15 @@ Use **Laravel Sanctum SPA cookie authentication**.
 
 - Roles table + `RoleName` enum + seeder already exist
 - `User::role()` relationship is defined for later use
-- Do not enforce authorization until User Management aligns the users schema (`role_id`, status, etc.)
+- Do not enforce authorization until Milestone 3 aligns the users schema (`role_id`, status, department, job title, etc.)
+- Milestone 3 uses **coarse** role checks only (Administrator / Project Manager / Employee) — not advanced RBAC
+- See [decisions/Organization-User-Management.md](Organization-User-Management.md)
+
+### Inactive accounts (Milestone 3 — approved)
+
+- Users with `status = inactive` must not be able to log in
+- Login rejection uses HTTP `403` with a dedicated message (e.g. `Account is inactive.`)
+- Do not collapse inactive accounts into invalid-credentials `401`
 
 ## Local CORS / Stateful Defaults
 

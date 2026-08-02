@@ -6,6 +6,16 @@ OpsFlow is a modern project and operations management platform for teams and bus
 
 The system provides a centralized platform where administrators, managers, and employees can organize work, monitor progress, assign responsibilities, and improve operational visibility through dashboards and reports.
 
+Organizational people model (see [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md)):
+
+```text
+Organization
+    ├── Departments
+    ├── Job Titles
+    ├── Roles (Permissions)
+    └── Users
+```
+
 OpsFlow aims to demonstrate production-ready software engineering practices by following clean architecture, RESTful API design, scalable database modeling, and modern frontend development.
 
 ---
@@ -79,7 +89,7 @@ v1.0.0 (Development)
 - Phase 1 API foundation: completed
 - Phase 2 Authentication (API): completed
 - Phase 2 Authentication (Vue/Pinia): pending
-- Phase 3 User Management: next
+- Phase 3 Organization & User Management: design approved — awaiting implementation approval
 
 ---
 

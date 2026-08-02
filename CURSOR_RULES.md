@@ -19,6 +19,9 @@
 - Do not introduce packages unless requested.
 - If a requirement is unclear, ask instead of assuming.
 - Follow approved decisions in `opsflow-docs/decisions/`.
+- Prefer `opsflow-docs/docs/DOMAIN_MODEL.md` for business concepts.
+- Prefer milestone specs under `opsflow-docs/docs/` before implementing a phase.
+- Do not implement future modules early (Projects/Tasks/Remarks/advanced RBAC) unless the milestone says so.
 
 ## API
 

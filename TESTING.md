@@ -85,3 +85,24 @@ Recommended later (not required to close this milestone):
 - Explicit `429` rate-limit assertion
 - CSRF rejection cases
 - Frontend Pinia auth tests
+
+---
+
+## Organization & User Management (Milestone 3 — Planned)
+
+When implementation begins, add feature coverage for:
+
+| Area | Expectations |
+|------|----------------|
+| Users CRUD | Create/update/show/list/soft-delete with envelope |
+| Status patch | Activate / deactivate |
+| Filters | `search`, `role_id`, `department_id`, `job_title_id`, `status` + pagination `meta` |
+| Lookups | Roles / Departments / Job Titles list + show for any authenticated user |
+| Authorization | Administrator write; Project Manager read directory; Employee own profile |
+| Inactive login | Credentials valid but `status = inactive` → HTTP `403` (`Account is inactive.`) |
+| Auth regression | Login/`/me` still green after `UserResource` expansion |
+| `last_login_at` | Updated on successful login |
+
+Seeders for roles, departments, and job titles must be available in the test database (`RefreshDatabase` + seed as needed).
+
+Spec: [docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md](docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md)

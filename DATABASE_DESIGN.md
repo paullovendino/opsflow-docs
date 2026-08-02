@@ -1,14 +1,89 @@
 # Database Design
 
+Physical schema companion to [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md).
+
+**Milestone 3 status:** Designed — not yet migrated/implemented.
+
+---
+
+## Organizational Model (persistence)
+
+Logical organization (single-tenant v1.0) persists as:
+
+| Table | Milestone 3 |
+|-------|-------------|
+| `departments` | New — seeded, soft deletes |
+| `job_titles` | New — seeded, soft deletes |
+| `roles` | Existing — seeded, read-only usage |
+| `users` | Align to ERD — soft deletes |
+
+No `organizations` table in Milestone 3.
+
+---
+
 ## Tables
+
+### Departments
+
+| Column | Notes |
+|--------|-------|
+| id | PK |
+| name | unique, lowercase snake_case |
+| description | nullable text |
+| created_at | timestamp |
+| updated_at | timestamp |
+| deleted_at | soft deletes |
+
+**Milestone 3:** seeded by default; read-only via API; CRUD postponed.
+
+**Approved seed list:**
+
+| name | description |
+|------|-------------|
+| `administration` | Company administration and leadership |
+| `operations` | Day-to-day operations |
+| `engineering` | Product and engineering |
+| `human_resources` | People and talent |
+| `finance` | Finance and accounting |
+
+---
+
+### Job Titles
+
+| Column | Notes |
+|--------|-------|
+| id | PK |
+| name | unique, lowercase snake_case |
+| description | nullable text |
+| created_at | timestamp |
+| updated_at | timestamp |
+| deleted_at | soft deletes |
+
+**Milestone 3:** seeded by default; read-only via API; CRUD postponed.
+
+**Approved seed list:**
+
+| name | description |
+|------|-------------|
+| `administrator` | Company / system administrator position |
+| `project_manager` | Delivers projects and coordinates teams |
+| `software_engineer` | Builds and maintains software |
+| `operations_specialist` | Supports operational processes |
+| `human_resources_specialist` | Supports HR processes |
+
+> Job title names may coincide with role names linguistically; they are **not** the same records or permissions.
+
+---
 
 ### Roles
 
-- id
-- name (unique, lowercase snake_case)
-- description
-- created_at
-- updated_at
+| Column | Notes |
+|--------|-------|
+| id | PK |
+| name | unique, lowercase snake_case |
+| description | text |
+| created_at | timestamp |
+| updated_at | timestamp |
 
 Seeded roles:
 
@@ -18,24 +93,54 @@ Seeded roles:
 | `project_manager` | Manage projects and tasks |
 | `employee` | Assigned work and updates |
 
+**Milestone 3:** remain read-only. Soft deletes are not required for roles in this milestone.
+
+Represented in code with `App\Enums\RoleName`.
+
 ---
 
 ### Users
 
-- id
-- role_id
-- first_name
-- last_name
-- email
-- password
-- avatar
-- status
-- created_at
-- updated_at
+| Column | Notes |
+|--------|-------|
+| id | PK |
+| role_id | required FK → `roles.id` |
+| department_id | nullable FK → `departments.id` |
+| job_title_id | nullable FK → `job_titles.id` |
+| first_name | string |
+| middle_name | nullable string |
+| last_name | string |
+| email | unique string (login identifier) |
+| email_verified_at | nullable timestamp — **kept** for future compatibility (not enforced in Milestone 3) |
+| password | hashed string |
+| avatar | nullable string (path/URL) |
+| status | enum-backed string (see below) |
+| last_login_at | nullable timestamp |
+| created_at | timestamp |
+| updated_at | timestamp |
+| deleted_at | soft deletes |
+
+**Status values** (`UserStatus` enum — planned):
+
+| value | Meaning |
+|-------|---------|
+| `active` | Account may authenticate and use the system |
+| `inactive` | Account deactivated; login blocked with HTTP `403` |
+
+**ERD alignment notes:**
+
+- Replaces legacy Laravel `name` with structured name fields
+- **Keep** Laravel `email_verified_at` for future compatibility (verification not required in Milestone 3)
+- `role_id` required; `department_id` / `job_title_id` nullable for onboarding flexibility
+- Indexes recommended: `role_id`, `department_id`, `job_title_id`, `status`, unique `email`
+
+**Implemented today (pre–Milestone 3):** default Laravel `users` (`name`, `email`, `password`, …) — **not** full ERD yet.
 
 ---
 
 ### Projects
+
+> Planned — later phase
 
 - id
 - name
@@ -51,6 +156,8 @@ Seeded roles:
 
 ### Tasks
 
+> Planned — later phase
+
 - id
 - project_id
 - assigned_to
@@ -65,7 +172,17 @@ Seeded roles:
 
 ---
 
+### Remarks
+
+> Planned — later phase (schema TBD)
+
+Conceptual only in [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md). Physical columns decided when the Remarks milestone begins.
+
+---
+
 ### Activity Logs
+
+> Planned — later phase
 
 - id
 - user_id
@@ -79,25 +196,29 @@ Seeded roles:
 
 ## Relationships
 
-Role
+```text
+Department 1 ──► * Users
+JobTitle   1 ──► * Users
+Role       1 ──► * Users
 
-1 → Many Users
+User * ──► 1 Role          (required)
+User * ──► 0..1 Department (nullable)
+User * ──► 0..1 JobTitle   (nullable)
 
-Users
+User 1 ──► * Projects      (planned)
+Project 1 ──► * Tasks      (planned)
+User 1 ──► * Tasks         (planned; assignment)
+User 1 ──► * Activity Logs (planned)
+```
 
-1 → Many Projects
+Eloquent expectations (Milestone 3):
 
-Project
-
-1 → Many Tasks
-
-User
-
-1 → Many Tasks
-
-User
-
-1 → Many Activity Logs
+| Model | Relations |
+|-------|-----------|
+| `Department` | `hasMany(User::class)` |
+| `JobTitle` | `hasMany(User::class)` |
+| `Role` | `hasMany(User::class)` |
+| `User` | `belongsTo(Role)`, `belongsTo(Department)`, `belongsTo(JobTitle)` |
 
 ---
 
@@ -105,13 +226,46 @@ User
 
 Use Laravel `Relation::enforceMorphMap`.
 
-Registered aliases (existing models only):
+### Registered today (existing models only)
 
 - `user` → `App\Models\User`
 - `role` → `App\Models\Role`
 
-Add future aliases incrementally when models are introduced:
+### Add when Milestone 3 models are introduced
+
+- `department` → `App\Models\Department`
+- `job_title` → `App\Models\JobTitle`
+
+### Future aliases (later phases)
 
 - `project` → `App\Models\Project`
 - `task` → `App\Models\Task`
+- `remark` → `App\Models\Remark`
 - `activity_log` → `App\Models\ActivityLog`
+
+---
+
+## Foreign Key / Delete Behavior (approved)
+
+| FK | On delete |
+|----|-----------|
+| `users.role_id` → `roles.id` | **RESTRICT** while users reference the role |
+| `users.department_id` → `departments.id` | **RESTRICT** while users reference the department |
+| `users.job_title_id` → `job_titles.id` | **RESTRICT** while users reference the job title |
+
+Do **not** use `SET NULL` on these foreign keys.
+
+Notes:
+
+- Nullable `department_id` / `job_title_id` still allows users without a department or job title
+- Hard-deleting a referenced Department, Job Title, or Role must fail while users exist
+- Soft deletes on Departments / Job Titles do not remove the row; RESTRICT applies to hard deletes
+- List endpoints typically exclude soft-deleted reference rows unless explicitly requested later
+
+---
+
+## Related Decisions
+
+- [decisions/Database.md](decisions/Database.md)
+- [decisions/Organization-User-Management.md](decisions/Organization-User-Management.md)
+- [docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md](docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md)
