@@ -74,6 +74,13 @@ Current Version
 
 v1.0.0 (Development)
 
+### Milestone progress
+
+- Phase 1 API foundation: completed
+- Phase 2 Authentication (API): completed
+- Phase 2 Authentication (Vue/Pinia): pending
+- Phase 3 User Management: next
+
 ---
 
 ## Goals

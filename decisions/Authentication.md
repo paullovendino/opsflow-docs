@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted
+Accepted (Implemented — Phase 2 API)
 
 ## Context
 
@@ -12,14 +12,39 @@ OpsFlow has a separate Vue 3 SPA (`opsflow-web`) and a Laravel API (`opsflow-api
 
 Use **Laravel Sanctum SPA cookie authentication**.
 
-Details:
+### Core choices
 
 - Session-based auth via the `web` guard
 - Stateful domains configured through `SANCTUM_STATEFUL_DOMAINS`
 - CSRF cookie endpoint: `GET /sanctum/csrf-cookie`
 - CORS allows credentialed requests from the Vue app
-- Auth API endpoints will live under `/api/v1` (login, logout, user)
-- Authentication endpoints are implemented in Phase 2
+- Service-layer auth logic in `App\Services\Auth\AuthenticationService`
+- Form Request validation via `LoginRequest`
+- API Resources via `UserResource`
+- Standard API response envelope (`success`, `message`, `data`, `errors`, `meta`)
+
+### Endpoints
+
+- `POST /api/v1/auth/login`
+- `POST /api/v1/auth/logout`
+- `GET /api/v1/auth/me`
+
+### Security controls
+
+- Logout and me are protected with `auth:sanctum`
+- Successful login returns the authenticated user under `data.user`
+- Invalid credentials return HTTP `401`
+- Validation failures return HTTP `422`
+- Login is rate limited via the named `login` RateLimiter (`throttle:login`, 5 attempts/minute per email + IP)
+- Authenticated users cannot access login (`guest` middleware → HTTP `403` for API/JSON)
+- `Auth::attempt()` receives only `email` and `password` (credential allowlist)
+- Session regenerated after login; invalidated on logout
+
+### Future RBAC preparation
+
+- Roles table + `RoleName` enum + seeder already exist
+- `User::role()` relationship is defined for later use
+- Do not enforce authorization until User Management aligns the users schema (`role_id`, status, etc.)
 
 ## Local CORS / Stateful Defaults
 
@@ -33,3 +58,10 @@ Details:
 - Axios must use `withCredentials: true`
 - Production requires matching SPA/API top-level domain (or subdomain) strategy
 - Token auth for mobile can be added later without replacing SPA cookie auth
+- Pinia auth store remains a frontend Phase 2 follow-up
+
+## References
+
+- [AUTHENTICATION.md](../AUTHENTICATION.md)
+- [API_SPECIFICATION.md](../API_SPECIFICATION.md)
+- [ARCHITECTURE.md](../ARCHITECTURE.md)

@@ -2,10 +2,12 @@
 
 ## Authentication
 
-- User login
-- User logout
-- Protected routes
-- Role-based access
+- [x] User login (`POST /api/v1/auth/login`)
+- [x] User logout (`POST /api/v1/auth/logout`)
+- [x] Protected routes (`auth:sanctum`)
+- [x] Current authenticated user (`GET /api/v1/auth/me`)
+- [ ] Role-based access (prepared; enforcement in User Management)
+- [ ] Frontend Pinia authentication
 
 ---
 

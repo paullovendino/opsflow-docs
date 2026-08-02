@@ -95,6 +95,13 @@ Rules:
 - Laravel Sanctum SPA cookie authentication
 - Stateful domains and CORS must remain environment-driven
 - Do not invent auth flows that conflict with `decisions/Authentication.md`
+- Keep auth business logic in `App\Services\Auth\AuthenticationService`
+- Validate login with Form Requests; respond with API Resources
+- Protect authenticated routes with `auth:sanctum`
+- Keep login guest-only and rate-limited (`guest`, `throttle:login`)
+- Pass only `email` and `password` into `Auth::attempt()`
+
+Details: [AUTHENTICATION.md](AUTHENTICATION.md)
 
 ---
 

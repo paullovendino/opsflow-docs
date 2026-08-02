@@ -26,6 +26,7 @@
 - Return the approved JSON response envelope from `CODING_STANDARDS.md`.
 - Use proper HTTP status codes.
 - Never return raw Eloquent models.
+- Follow `AUTHENTICATION.md` and `decisions/Authentication.md` for auth endpoints.
 
 ## Database
 
