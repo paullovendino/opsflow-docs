@@ -34,13 +34,13 @@ Use **PostgreSQL** as the only application database.
 ### Departments & Job Titles (Milestone 3)
 
 - Dedicated `departments` and `job_titles` tables
-- Unique lowercase snake_case `name`
+- Columns: `name` (unique, human-readable), `code` (unique, stable identifier), `description` (nullable), timestamps, soft deletes
 - Soft deletes supported
 - Seeded with the **approved** lists in `DATABASE_DESIGN.md`; API is read-only (CRUD postponed)
 
-Approved department seeds: `administration`, `operations`, `engineering`, `human_resources`, `finance`
+Approved department seeds (`name` / `code`): Administration/`ADMIN`, Operations/`OPS`, Engineering/`ENG`, Human Resources/`HR`, Finance/`FIN`
 
-Approved job title seeds: `administrator`, `project_manager`, `software_engineer`, `operations_specialist`, `human_resources_specialist`
+Approved job title seeds (`name` / `code`): Administrator/`ADMIN`, Project Manager/`PM`, Software Engineer/`SE`, Operations Specialist/`OPS_SPEC`, Human Resources Specialist/`HR_SPEC`
 
 ### Users ERD (Milestone 3)
 
@@ -78,8 +78,7 @@ Do not invent schema beyond the approved ERD without updating this decision and 
 
 - Use `Relation::enforceMorphMap`
 - Register aliases only for existing models
-- Current aliases: `user`, `role`
-- Milestone 3 aliases when models exist: `department`, `job_title`
+- Current aliases: `user`, `role`, `department`, `job_title`
 - Future: `project`, `task`, `remark`, `activity_log`
 
 ## Consequences

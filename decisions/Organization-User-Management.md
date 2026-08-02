@@ -28,11 +28,13 @@ Organization
 
 ### Approved seed lists
 
-**Departments:** `administration`, `operations`, `engineering`, `human_resources`, `finance`
+**Departments** (`name` / `code`): Administration/`ADMIN`, Operations/`OPS`, Engineering/`ENG`, Human Resources/`HR`, Finance/`FIN`
 
-**Job Titles:** `administrator`, `project_manager`, `software_engineer`, `operations_specialist`, `human_resources_specialist`
+**Job Titles** (`name` / `code`): Administrator/`ADMIN`, Project Manager/`PM`, Software Engineer/`SE`, Operations Specialist/`OPS_SPEC`, Human Resources Specialist/`HR_SPEC`
 
-**Roles (existing):** `administrator`, `project_manager`, `employee`
+**Roles (existing; snake_case `name`):** `administrator`, `project_manager`, `employee`
+
+`name` is human-readable; `code` is the stable identifier on departments and job titles.
 
 ### Milestone 3 scope
 

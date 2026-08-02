@@ -2,7 +2,7 @@
 
 Physical schema companion to [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md).
 
-**Milestone 3 status:** Designed — not yet migrated/implemented.
+**Milestone 3 status:** Phase 3.1 Organization Foundation implemented (departments / job_titles). Users ERD remains Phase 3.2.
 
 ---
 
@@ -28,7 +28,8 @@ No `organizations` table in Milestone 3.
 | Column | Notes |
 |--------|-------|
 | id | PK |
-| name | unique, lowercase snake_case |
+| name | unique, human-readable display name |
+| code | unique, stable identifier (uppercase) |
 | description | nullable text |
 | created_at | timestamp |
 | updated_at | timestamp |
@@ -36,15 +37,17 @@ No `organizations` table in Milestone 3.
 
 **Milestone 3:** seeded by default; read-only via API; CRUD postponed.
 
+**Convention:** `name` is human-readable; `code` is the stable machine identifier.
+
 **Approved seed list:**
 
-| name | description |
-|------|-------------|
-| `administration` | Company administration and leadership |
-| `operations` | Day-to-day operations |
-| `engineering` | Product and engineering |
-| `human_resources` | People and talent |
-| `finance` | Finance and accounting |
+| name | code | description |
+|------|------|-------------|
+| Administration | `ADMIN` | Company administration and leadership |
+| Operations | `OPS` | Day-to-day operations |
+| Engineering | `ENG` | Product and engineering |
+| Human Resources | `HR` | People and talent |
+| Finance | `FIN` | Finance and accounting |
 
 ---
 
@@ -53,7 +56,8 @@ No `organizations` table in Milestone 3.
 | Column | Notes |
 |--------|-------|
 | id | PK |
-| name | unique, lowercase snake_case |
+| name | unique, human-readable display name |
+| code | unique, stable identifier (uppercase) |
 | description | nullable text |
 | created_at | timestamp |
 | updated_at | timestamp |
@@ -61,17 +65,19 @@ No `organizations` table in Milestone 3.
 
 **Milestone 3:** seeded by default; read-only via API; CRUD postponed.
 
+**Convention:** `name` is human-readable; `code` is the stable machine identifier.
+
 **Approved seed list:**
 
-| name | description |
-|------|-------------|
-| `administrator` | Company / system administrator position |
-| `project_manager` | Delivers projects and coordinates teams |
-| `software_engineer` | Builds and maintains software |
-| `operations_specialist` | Supports operational processes |
-| `human_resources_specialist` | Supports HR processes |
+| name | code | description |
+|------|------|-------------|
+| Administrator | `ADMIN` | Company / system administrator position |
+| Project Manager | `PM` | Delivers projects and coordinates teams |
+| Software Engineer | `SE` | Builds and maintains software |
+| Operations Specialist | `OPS_SPEC` | Supports operational processes |
+| Human Resources Specialist | `HR_SPEC` | Supports HR processes |
 
-> Job title names may coincide with role names linguistically; they are **not** the same records or permissions.
+> Job title names/codes may coincide with role language linguistically; they are **not** the same records or permissions.
 
 ---
 
@@ -230,11 +236,8 @@ Use Laravel `Relation::enforceMorphMap`.
 
 - `user` → `App\Models\User`
 - `role` → `App\Models\Role`
-
-### Add when Milestone 3 models are introduced
-
-- `department` → `App\Models\Department`
-- `job_title` → `App\Models\JobTitle`
+- `department` → `App\Models\Department` (Phase 3.1)
+- `job_title` → `App\Models\JobTitle` (Phase 3.1)
 
 ### Future aliases (later phases)
 

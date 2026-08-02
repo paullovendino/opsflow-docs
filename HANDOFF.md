@@ -106,11 +106,13 @@ Details: `ARCHITECTURE.md`, `CODING_STANDARDS.md`, `docs/DOMAIN_MODEL.md`
 - Sanctum **`personal_access_tokens`**
 - Sessions / cache / jobs as Laravel defaults require
 
-### Milestone 3 ERD (design approved — not migrated)
+### Milestone 3 ERD (design approved)
 
-- **`departments`**: approved seeds; soft deletes; read-only API
-- **`job_titles`**: approved seeds; soft deletes; read-only API
-- **`users`**: `role_id`, `department_id` (nullable), `job_title_id` (nullable), `first_name`, `middle_name` (nullable), `last_name`, `email`, `email_verified_at` (kept), `password`, `avatar` (nullable), `status`, `last_login_at` (nullable), timestamps, soft deletes
+- **`departments`**: `name` (human-readable, unique), `code` (stable, unique), description, soft deletes; approved seeds (e.g. Administration/`ADMIN`)
+- **`job_titles`**: same shape; approved seeds (e.g. Project Manager/`PM`)
+- **Phase 3.1:** foundation tables/models/seeders only — no users FK columns; no `User::department()` / `User::jobTitle()` yet
+- **Phase 3.2:** users ERD + FKs + User belongsTo relations + User Management APIs
+- **`users` (planned 3.2):** `role_id`, `department_id` (nullable), `job_title_id` (nullable), structured names, `email_verified_at` (kept), `status`, `last_login_at`, soft deletes, …
 - FK delete behavior: **RESTRICT** for role / department / job title (no `SET NULL`)
 
 ### Later phases — do not invent early
@@ -120,12 +122,12 @@ Details: `ARCHITECTURE.md`, `CODING_STANDARDS.md`, `docs/DOMAIN_MODEL.md`
 
 ### Morph map (`Relation::enforceMorphMap`)
 
-Registered only for existing models:
+Registered for existing models:
 
 - `user` → `App\Models\User`
 - `role` → `App\Models\Role`
-
-Add when Milestone 3 models exist: `department`, `job_title`.
+- `department` → `App\Models\Department` (Phase 3.1)
+- `job_title` → `App\Models\JobTitle` (Phase 3.1)
 
 ADRs: `DATABASE_DESIGN.md`, `decisions/Database.md`, `decisions/Organization-User-Management.md`
 

@@ -123,6 +123,7 @@ Groups users by organizational unit (for example Operations, Engineering, Human 
 - `department_id` on User is **nullable** (onboarding / flexible structures)
 - Milestone 3: **read-only**, seeded by default; CRUD postponed
 - Soft deletes are supported at the persistence layer
+- Persistence uses human-readable `name` plus stable unique `code` (see `DATABASE_DESIGN.md`)
 
 ### Future Expansion
 
@@ -156,6 +157,7 @@ Describes an employee’s position or title within the organization (for example
 - `job_title_id` on User is **nullable**
 - Milestone 3: **read-only**, seeded by default; CRUD postponed
 - Soft deletes are supported at the persistence layer
+- Persistence uses human-readable `name` plus stable unique `code` (see `DATABASE_DESIGN.md`)
 - A Job Title must **not** be treated as a Role (permissions live on Role only)
 
 ### Future Expansion

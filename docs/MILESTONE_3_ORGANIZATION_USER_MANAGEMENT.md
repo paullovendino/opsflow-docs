@@ -55,13 +55,36 @@ Each user belongs to **one Role** (required), **one Department** (nullable), **o
 
 ### Seed data (approved)
 
-**Departments:** `administration`, `operations`, `engineering`, `human_resources`, `finance`
+**Departments** (`name` / `code`):
 
-**Job Titles:** `administrator`, `project_manager`, `software_engineer`, `operations_specialist`, `human_resources_specialist`
+| name | code |
+|------|------|
+| Administration | `ADMIN` |
+| Operations | `OPS` |
+| Engineering | `ENG` |
+| Human Resources | `HR` |
+| Finance | `FIN` |
 
-**Roles:** `administrator`, `project_manager`, `employee`
+**Job Titles** (`name` / `code`):
 
-Full descriptions: [DATABASE_DESIGN.md](../DATABASE_DESIGN.md)
+| name | code |
+|------|------|
+| Administrator | `ADMIN` |
+| Project Manager | `PM` |
+| Software Engineer | `SE` |
+| Operations Specialist | `OPS_SPEC` |
+| Human Resources Specialist | `HR_SPEC` |
+
+**Roles** (unchanged; snake_case `name`): `administrator`, `project_manager`, `employee`
+
+Full schema: [DATABASE_DESIGN.md](../DATABASE_DESIGN.md)
+
+### Implementation phasing
+
+| Phase | Scope |
+|-------|-------|
+| **3.1 Organization Foundation** | `departments` / `job_titles` tables (incl. `code`), models, seeders, morph aliases; `Department`/`JobTitle` → `users` relation methods only |
+| **3.2 User Management** | Users ERD + FKs; `User::department()` / `User::jobTitle()`; CRUD/APIs/auth status rules |
 
 ### API (all Planned until implemented)
 

@@ -8,8 +8,20 @@ Format follows a lightweight Keep a Changelog style.
 
 ## [Unreleased] — v1.0.0 (Development)
 
+### Organization Foundation (Phase 3.1) — Implemented (pending review)
+
+- `departments` and `job_titles` migrations (`name`, `code`, nullable `description`, soft deletes)
+- `Department` and `JobTitle` models with SoftDeletes and `users()` hasMany
+- `DepartmentCode` / `JobTitleCode` enums (stable codes; human-readable labels)
+- `DepartmentSeeder` / `JobTitleSeeder` registered in `DatabaseSeeder` (RolesSeeder unchanged)
+- Morph map aliases: `department`, `job_title`
+- PHPUnit Feature suite: `tests/Feature/Organization/OrganizationFoundationTest.php`
+- No users table changes; no User belongsTo; no User Management APIs
+
 ### Documentation — Milestone 3 Organization & User Management (Design approved)
 
+- Departments / Job Titles: human-readable `name` + unique stable `code` (e.g. Administration/`ADMIN`, Project Manager/`PM`)
+- Split Phase 3 into 3.1 Organization Foundation and 3.2 User Management (User belongsTo relations deferred to 3.2 with FKs)
 - Adopted organizational domain model: Organization → Departments, Job Titles, Roles, Users
 - Added [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md) as the primary business-domain reference
 - Added [docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md](docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md) implementation specification

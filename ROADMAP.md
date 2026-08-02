@@ -73,11 +73,19 @@ Organization
     └── Users
 ```
 
-### Planned work
+### Phase 3.1 — Organization Foundation
+
+**Status: Implemented (API foundation) — pending review**
+
+- [x] `departments` table (`name`, `code`, …) + approved seeder (soft deletes)
+- [x] `job_titles` table (`name`, `code`, …) + approved seeder (soft deletes)
+- [x] Models + morph aliases; no users FK / User belongsTo yet
+- [x] PHPUnit Feature tests (`OrganizationFoundationTest`)
+
+### Phase 3.2 — User Management
 
 - [ ] Align `users` schema with ERD (`role_id`, names, `department_id`, `job_title_id`, `status`, soft deletes, keep `email_verified_at`, …)
-- [ ] `departments` table + approved seeder (read-only API; soft deletes)
-- [ ] `job_titles` table + approved seeder (read-only API; soft deletes)
+- [ ] `User::department()` / `User::jobTitle()` with FK migrations
 - [ ] Roles remain seeded and read-only (`GET /roles`, `GET /roles/{id}`) — all authenticated users
 - [ ] Department / Job Title lookups — all authenticated users
 - [ ] User CRUD + `PATCH /users/{id}/status`

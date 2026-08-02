@@ -17,7 +17,8 @@ Central documentation for the OpsFlow SaaS platform.
 | Phase 1 — Project Setup (API foundation) | Completed (backend) |
 | Phase 2 — Authentication (API) | Completed |
 | Phase 2 — Pinia auth (Vue) | Pending |
-| Phase 3 — Organization & User Management | Design approved — awaiting implementation approval |
+| Phase 3.1 — Organization Foundation | Implemented (pending review) |
+| Phase 3.2 — User Management | Design approved — not started |
 
 ## Documentation Index
 
