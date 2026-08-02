@@ -2,22 +2,25 @@
 
 OpsFlow development roadmap by phase.
 
-**Status legend:** Completed · In progress · Pending · Designed (docs only)
+**Status legend:** ✅ Completed / Implemented · Pending
 
 ---
 
-## Completed milestones
+## Completed / implemented milestones
 
 | Phase | Milestone | Status |
 |-------|-----------|--------|
-| Phase 1 | Backend Foundation (API) | Completed |
-| Phase 2 | Authentication (API) | Completed |
+| Phase 1 | Backend Foundation (API) | ✅ Completed |
+| Phase 2 | Authentication (API) | ✅ Completed |
+| Phase 3.1 | Organization Foundation | ✅ Implemented |
+| Phase 3.2 | User Domain Foundation | ✅ Implemented |
+| Phase 3.3 | User Management APIs | ✅ Implemented |
 
 ---
 
 ## Phase 1 — Project Setup / Backend Foundation
 
-**Status: Completed (backend)**
+**Status: ✅ Completed (backend)**
 
 - [x] Laravel 13 API (`opsflow-api`)
 - [ ] Vue 3 frontend repository
@@ -38,7 +41,7 @@ OpsFlow development roadmap by phase.
 
 ## Phase 2 — Authentication
 
-**Status: Completed (API)** · Pinia/Vue pending
+**Status: ✅ Completed (API)** · Pinia/Vue pending
 
 - [x] Sanctum SPA cookie login/logout
 - [x] CSRF cookie flow (configured; frontend consumes `/sanctum/csrf-cookie`)
@@ -55,7 +58,7 @@ OpsFlow development roadmap by phase.
 
 ## Phase 3 — Organization & User Management
 
-**Status: Design approved — awaiting implementation approval**
+**Status: Phases 3.1–3.3 implemented · Phases 3.4–3.6 remaining**
 
 Specification:
 
@@ -75,28 +78,60 @@ Organization
 
 ### Phase 3.1 — Organization Foundation
 
-**Status: Implemented (API foundation) — pending review**
+**Status: ✅ Implemented**
 
 - [x] `departments` table (`name`, `code`, …) + approved seeder (soft deletes)
 - [x] `job_titles` table (`name`, `code`, …) + approved seeder (soft deletes)
-- [x] Models + morph aliases; no users FK / User belongsTo yet
+- [x] Models + morph aliases
 - [x] PHPUnit Feature tests (`OrganizationFoundationTest`)
 
-### Phase 3.2 — User Management
+### Phase 3.2 — User Domain Foundation
 
-- [ ] Align `users` schema with ERD (`role_id`, names, `department_id`, `job_title_id`, `status`, soft deletes, keep `email_verified_at`, …)
-- [ ] `User::department()` / `User::jobTitle()` with FK migrations
-- [ ] Roles remain seeded and read-only (`GET /roles`, `GET /roles/{id}`) — all authenticated users
-- [ ] Department / Job Title lookups — all authenticated users
-- [ ] User CRUD + `PATCH /users/{id}/status`
-- [ ] User list filters: `search`, `role_id`, `department_id`, `job_title_id`, `status` + pagination
-- [ ] FK RESTRICT for role / department / job title references
-- [ ] Inactive login → dedicated `403`
+**Status: ✅ Implemented**
+
+- [x] Align `users` schema with ERD (`role_id`, names, `department_id`, `job_title_id`, `status`, soft deletes, keep `email_verified_at`, …)
+- [x] `User::department()` / `User::jobTitle()` / `User::role()` with FK RESTRICT
+- [x] `UserStatus` enum + `full_name` accessor
+- [x] Expanded `UserResource` + auth compatibility (inactive login `403`, `last_login_at`)
+- [x] PHPUnit Feature tests (`UserDomainFoundationTest`) + existing auth suite green
+
+### Phase 3.3 — User Management APIs
+
+**Status: ✅ Implemented**
+
+- [x] User CRUD + `PATCH /users/{id}/status` (`UserController` / `UserService`)
+- [x] `StoreUserRequest` / `UpdateUserRequest` / `UpdateUserStatusRequest`
+- [x] `RoleResource` / `DepartmentResource` / `JobTitleResource` + updated `UserResource`
+- [x] Soft delete; password hashing via `Hash::make`; status-only patch
+- [x] PHPUnit Feature tests (`UserManagementApiTest`) + prior suites green
+- [x] Auth remains `auth:sanctum` (role policies deferred to 3.6)
+
+### Phase 3.4 — Lookup APIs
+
+**Status: Pending**
+
+- [ ] `GET /api/v1/roles`, `GET /api/v1/roles/{id}`
+- [ ] `GET /api/v1/departments`, `GET /api/v1/departments/{id}`
+- [ ] `GET /api/v1/job-titles`, `GET /api/v1/job-titles/{id}`
+- [ ] Accessible to all authenticated users
+
+### Phase 3.5 — Search, Filtering & Pagination
+
+**Status: Pending**
+
+- [ ] User list `search`
+- [ ] Filters: `role_id`, `department_id`, `job_title_id`, `status`
+- [ ] Pagination with standard `meta` fields
+
+### Phase 3.6 — Authorization (RBAC)
+
+**Status: Pending**
+
 - [ ] Coarse authorization (Administrator / Project Manager / Employee)
-- [ ] Update auth `UserResource` for expanded profile
-- [ ] Feature tests + documentation status flip Planned → Implemented
+- [ ] Policies/gates for User Management
+- [ ] Not advanced permission matrices
 
-### Explicitly out of scope
+### Explicitly out of scope (Milestone 3)
 
 Department/Job Title CRUD, multi-role / multi-department users, teams, branches, organization settings, invitation emails, force password change, permission management, advanced RBAC.
 

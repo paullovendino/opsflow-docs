@@ -2,13 +2,13 @@
 
 ## Status
 
-Accepted (Documentation) — Design decisions finalized; implementation not started
+Accepted — Phases 3.1–3.3 implemented; 3.4–3.6 remaining
 
 ## Context
 
-OpsFlow completed API foundation and authentication with a default Laravel `users` table and a seeded `roles` table. The product now needs a clear organizational people model before User Management is implemented.
+OpsFlow completed API foundation and authentication with a default Laravel `users` table and a seeded `roles` table. The product needed a clear organizational people model before User Management.
 
-Earlier docs treated Phase 3 as “User Management” only. The approved direction expands that milestone to **Organization & User Management**, introducing Departments and Job Titles as independent concepts alongside Roles and Users.
+Phase 3 was expanded from “User Management” alone to **Organization & User Management**, introducing Departments and Job Titles as independent concepts alongside Roles and Users.
 
 ## Decision
 
@@ -32,23 +32,44 @@ Organization
 
 **Job Titles** (`name` / `code`): Administrator/`ADMIN`, Project Manager/`PM`, Software Engineer/`SE`, Operations Specialist/`OPS_SPEC`, Human Resources Specialist/`HR_SPEC`
 
-**Roles (existing; snake_case `name`):** `administrator`, `project_manager`, `employee`
+**Roles** (snake_case `name`): `administrator`, `project_manager`, `employee`
 
-`name` is human-readable; `code` is the stable identifier on departments and job titles.
+### Implementation status
 
-### Milestone 3 scope
+| Area | Status |
+|------|--------|
+| Departments / Job Titles foundation (3.1) | Implemented |
+| Users ERD + auth compatibility (3.2) | Implemented |
+| User CRUD APIs (3.3) | Implemented |
+| Lookup APIs (3.4) | Pending |
+| Search / filters / pagination (3.5) | Pending |
+| Coarse authorization (3.6) | Pending |
 
-| Area | Decision |
-|------|----------|
-| Departments | Seeded (approved list); read-only API (list/show); soft deletes; CRUD postponed |
-| Job Titles | Seeded (approved list); read-only API (list/show); soft deletes; CRUD postponed |
-| Roles | Keep seeded roles; read-only API |
-| Users | Full ERD alignment; CRUD + status patch; soft deletes |
-| Authorization | Coarse role checks only (not advanced RBAC) |
-| Lookups | All authenticated users may read roles, departments, job titles |
-| Organization settings / teams / branches | Out of scope |
+### Users ERD
 
-### Coarse authorization
+Users store: `role_id`, `department_id` (nullable), `job_title_id` (nullable), `first_name`, `middle_name` (nullable), `last_name` (nullable for legacy splits), `email`, `email_verified_at` (kept), `password`, `avatar` (nullable), `status`, `last_login_at` (nullable), timestamps, soft deletes.
+
+FK delete: **RESTRICT** for role / department / job title.
+
+### Inactive account login
+
+Inactive users (`status = inactive`) must not authenticate → HTTP `403` (`Account is inactive.`). **Implemented** in Phase 3.2.
+
+### API paths
+
+**Implemented (3.3):**
+
+- Users: `GET/POST /api/v1/users`, `GET/PUT/DELETE /api/v1/users/{user}`, `PATCH /api/v1/users/{user}/status`
+
+**Pending (3.4):**
+
+- Roles / Departments / Job Titles list + show
+
+### Filtering (Phase 3.5)
+
+User list filters: `search`, `role_id`, `department_id`, `job_title_id`, `status`, plus pagination.
+
+### Coarse authorization (Phase 3.6)
 
 | Role | User Management |
 |------|-----------------|
@@ -56,48 +77,10 @@ Organization
 | Project Manager | Read-only user directory |
 | Employee | View own profile |
 
-### Users ERD (approved)
-
-Users store: `role_id`, `department_id` (nullable), `job_title_id` (nullable), `first_name`, `middle_name` (nullable), `last_name`, `email`, `email_verified_at` (kept for future compatibility), `password`, `avatar` (nullable), `status`, `last_login_at` (nullable), timestamps, soft deletes.
-
-Legacy single `name` column is replaced by structured name fields during ERD alignment. Keep `email_verified_at`.
-
-### Foreign keys (approved)
-
-`users.role_id`, `users.department_id`, and `users.job_title_id` use **ON DELETE RESTRICT** while referencing users exist. Do **not** use `SET NULL`.
-
-### Inactive account login (approved)
-
-Inactive users (`status = inactive`) must not authenticate. Login returns HTTP `403` with a dedicated inactive-account message (for example `Account is inactive.`), distinct from invalid credentials (`401`).
-
-### API paths (Planned)
-
-- Users: `/api/v1/users`, `/api/v1/users/{id}`, `/api/v1/users/{id}/status`
-- Roles: `/api/v1/roles`, `/api/v1/roles/{id}`
-- Departments: `/api/v1/departments`, `/api/v1/departments/{id}`
-- Job Titles: `/api/v1/job-titles`, `/api/v1/job-titles/{id}`
-
-### Filtering (approved)
-
-User list filters:
-
-| Parameter | Notes |
-|-----------|-------|
-| `search` | Name fields / email |
-| `role_id` | ID only |
-| `department_id` | ID only |
-| `job_title_id` | ID only |
-| `status` | `active` / `inactive` |
-| pagination | `meta` page fields |
-
 ## Consequences
 
-- Phase 3 documentation and roadmap refer to **Organization & User Management**
-- `DATABASE_DESIGN.md`, `API_SPECIFICATION.md`, and `docs/DOMAIN_MODEL.md` are the specs for implementation
-- Auth `UserResource` must be updated when the users schema changes
-- Authentication must enforce inactive-account rejection (`403`)
-- `User::role()` becomes usable only after `role_id` exists
-- Morph aliases `department` and `job_title` are registered when those models are introduced
+- Auth `UserResource` uses structured profile + nested Role/Department/JobTitle resources
+- User Management currently authenticates only (`auth:sanctum`); role policies arrive in 3.6
 - Hard-deleting referenced departments/job titles/roles is blocked while users reference them
 - Advanced RBAC, invitations, multi-role/multi-department, and org settings remain future work
 

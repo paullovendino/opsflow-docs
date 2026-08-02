@@ -86,10 +86,15 @@ v1.0.0 (Development)
 
 ### Milestone progress
 
-- Phase 1 API foundation: completed
-- Phase 2 Authentication (API): completed
+- ✅ Phase 1 API foundation: completed
+- ✅ Phase 2 Authentication (API): completed
 - Phase 2 Authentication (Vue/Pinia): pending
-- Phase 3 Organization & User Management: design approved — awaiting implementation approval
+- ✅ Phase 3.1 Organization Foundation: implemented
+- ✅ Phase 3.2 User Domain Foundation: implemented
+- ✅ Phase 3.3 User Management APIs: implemented
+- Phase 3.4 Lookup APIs: pending
+- Phase 3.5 Search, Filtering & Pagination: pending
+- Phase 3.6 Authorization (RBAC): pending
 
 ---
 

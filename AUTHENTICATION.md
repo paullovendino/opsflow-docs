@@ -147,7 +147,7 @@ Auth-specific conventions:
 | Invalid credentials | 401 | `Invalid credentials.` |
 | Unauthenticated | 401 | `Unauthenticated.` |
 | Already authenticated (login) | 403 | `Already authenticated.` |
-| Inactive account (login) | 403 | `Account is inactive.` (Milestone 3 — Planned) |
+| Inactive account (login) | 403 | `Account is inactive.` (Phase 3.2) |
 | Rate limited | 429 | Too many attempts |
 
 ---
@@ -183,14 +183,21 @@ See also: [decisions/Authentication.md](decisions/Authentication.md)
 
 ## Future Authentication Improvements
 
-### Milestone 3 touchpoints (Planned)
+### Milestone 3 touchpoints
 
-When Organization & User Management is implemented:
+**Phase 3.2 (implemented):**
 
 - Users ERD alignment (`role_id`, structured names, `department_id`, `job_title_id`, `status`, soft deletes, keep `email_verified_at`, …)
-- Expand `UserResource` used by login and `/me`
-- Set `last_login_at` on successful login
-- Reject inactive users at login with dedicated HTTP `403` (`Account is inactive.`)
+- Expanded `UserResource` used by login and `/me`
+- `last_login_at` set on successful login
+- Inactive users rejected at login with HTTP `403` (`Account is inactive.`)
+
+**Phase 3.3 (implemented):**
+
+- User CRUD APIs under `/api/v1/users` (authenticated; role policies deferred to Phase 3.6)
+
+**Phase 3.6 (planned):**
+
 - Coarse authorization for User Management endpoints (not advanced RBAC)
 
 Domain: [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md)  

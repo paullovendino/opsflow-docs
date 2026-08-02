@@ -6,21 +6,21 @@
 - [x] User logout (`POST /api/v1/auth/logout`)
 - [x] Protected routes (`auth:sanctum`)
 - [x] Current authenticated user (`GET /api/v1/auth/me`)
-- [ ] Coarse role-based access for User Management (Milestone 3 — Planned)
-- [ ] Inactive users cannot log in (`403` dedicated inactive-account response) (Milestone 3 — Planned)
+- [x] Inactive users cannot log in (`403` / `Account is inactive.`)
+- [ ] Coarse role-based access for User Management (Phase 3.6)
 - [ ] Frontend Pinia authentication
 
 ---
 
 ## Organization Structure
 
-> Milestone 3 — Planned (read-only reference data)
+> Phases 3.1–3.2 foundation implemented; lookup APIs Phase 3.4
 
-- [ ] Seeded Departments (list/show) — approved seed list
-- [ ] Seeded Job Titles (list/show) — approved seed list
-- [ ] Seeded Roles remain available (list/show)
-- [ ] Lookup endpoints accessible to all authenticated users
-- [ ] Users belong to one Role; optional Department and Job Title
+- [x] Seeded Departments (approved list; soft deletes)
+- [x] Seeded Job Titles (approved list; soft deletes)
+- [x] Seeded Roles remain available
+- [x] Users belong to one Role; optional Department and Job Title
+- [ ] Lookup endpoints (list/show) for roles, departments, job titles — all authenticated users (Phase 3.4)
 
 Department CRUD, Job Title CRUD, teams, branches, and organization settings are out of scope for Milestone 3.
 
@@ -37,17 +37,19 @@ Department CRUD, Job Title CRUD, teams, branches, and organization settings are 
 
 ## User Management
 
-> Milestone 3 — Planned
+> Phase 3.3 — Implemented (CRUD APIs)
 
-- [ ] Create users
-- [ ] Update users
-- [ ] Soft-delete users
-- [ ] Activate / deactivate users (`PATCH /users/{id}/status`)
-- [ ] Assign role (required)
-- [ ] Assign department (optional)
-- [ ] Assign job title (optional)
-- [ ] List users with filters: `search`, `role_id`, `department_id`, `job_title_id`, `status` + pagination
-- [ ] Coarse authorization:
+- [x] Create users (`POST /api/v1/users`)
+- [x] Update users (`PUT /api/v1/users/{user}`)
+- [x] Soft-delete users (`DELETE /api/v1/users/{user}`)
+- [x] Activate / deactivate users (`PATCH /api/v1/users/{user}/status`)
+- [x] List users (`GET /api/v1/users`) — no filters/pagination yet
+- [x] Show user (`GET /api/v1/users/{user}`)
+- [x] Assign role (required)
+- [x] Assign department (optional)
+- [x] Assign job title (optional)
+- [ ] List filters: `search`, `role_id`, `department_id`, `job_title_id`, `status` + pagination (Phase 3.5)
+- [ ] Coarse authorization (Phase 3.6):
   - Administrator — full user management
   - Project Manager — read-only directory
   - Employee — view own profile

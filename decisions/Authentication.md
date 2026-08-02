@@ -40,18 +40,17 @@ Use **Laravel Sanctum SPA cookie authentication**.
 - `Auth::attempt()` receives only `email` and `password` (credential allowlist)
 - Session regenerated after login; invalidated on logout
 
-### Future RBAC preparation
+### RBAC preparation
 
-- Roles table + `RoleName` enum + seeder already exist
-- `User::role()` relationship is defined for later use
-- Do not enforce authorization until Milestone 3 aligns the users schema (`role_id`, status, department, job title, etc.)
-- Milestone 3 uses **coarse** role checks only (Administrator / Project Manager / Employee) — not advanced RBAC
+- Roles table + `RoleName` enum + seeder exist; `User::role()` is usable (users ERD Phase 3.2)
+- Coarse User Management authorization is **Phase 3.6** (not advanced RBAC)
+- Until then, `/api/v1/users` requires `auth:sanctum` only
 - See [decisions/Organization-User-Management.md](Organization-User-Management.md)
 
-### Inactive accounts (Milestone 3 — approved)
+### Inactive accounts (Phase 3.2 — implemented)
 
 - Users with `status = inactive` must not be able to log in
-- Login rejection uses HTTP `403` with a dedicated message (e.g. `Account is inactive.`)
+- Login rejection uses HTTP `403` with a dedicated message (`Account is inactive.`)
 - Do not collapse inactive accounts into invalid-credentials `401`
 
 ## Local CORS / Stateful Defaults

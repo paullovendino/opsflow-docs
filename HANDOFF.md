@@ -40,7 +40,13 @@ Organization
 | `opsflow-docs` | Documentation + ADRs (this repo)                              |
 | `opsflow-web`  | Vue 3 SPA (exists as folder; frontend auth/app not built yet) |
 
-**Current focus:** Backend API is past Foundation + Authentication. Milestone 3 (**Organization & User Management**) design is **approved**; wait for explicit go-ahead before implementation. Vue Pinia auth is still pending.
+**Current focus:** Milestone 3 Phases **3.1–3.3 are implemented**. Next backend work:
+
+1. **Phase 3.4** — Lookup APIs  
+2. **Phase 3.5** — Search, Filtering & Pagination  
+3. **Phase 3.6** — Authorization (RBAC)
+
+Vue Pinia auth is still pending.
 
 ---
 
@@ -85,12 +91,16 @@ opsflow-web (Vue)  --cookie + CSRF-->  opsflow-api (Laravel)  -->  PostgreSQL
 | Services               | Business logic                      |
 | Models                 | Persistence / relationships         |
 | Enums                  | Domain constants (no magic strings) |
-| Policies               | Coarse authorization (Milestone 3+) |
+| Policies               | Coarse authorization (Phase 3.6)    |
 | `ApiExceptionRenderer` | Consistent API errors               |
 
 Auth example path:
 
 `AuthController` → `LoginRequest` → `AuthenticationService` → session/`User` → `UserResource`
+
+User Management example path:
+
+`UserController` → Form Request → `UserService` → `User` + relations → `UserResource`
 
 Details: `ARCHITECTURE.md`, `CODING_STANDARDS.md`, `docs/DOMAIN_MODEL.md`
 
@@ -100,20 +110,29 @@ Details: `ARCHITECTURE.md`, `CODING_STANDARDS.md`, `docs/DOMAIN_MODEL.md`
 
 ### Implemented now
 
-- **`roles`**: `id`, `name` (unique snake_case), `description`, timestamps  
-  Seeded: `administrator`, `project_manager`, `employee` (`RoleName` enum)
-- Laravel default **`users`** (still `name`/`email`/`password` — **not** full ERD yet)
-- Sanctum **`personal_access_tokens`**
-- Sessions / cache / jobs as Laravel defaults require
+- **`roles`**: seeded `administrator`, `project_manager`, `employee` (`RoleName` enum)
+- **`departments`**: human-readable `name` + unique `code` + soft deletes; seeded (e.g. Administration/`ADMIN`)
+- **`job_titles`**: same shape; seeded (e.g. Project Manager/`PM`)
+- **`users`** (ERD aligned):
+  - `role_id` (required, RESTRICT)
+  - `department_id` / `job_title_id` (nullable, RESTRICT)
+  - `first_name`, `middle_name` (nullable), `last_name` (nullable for legacy name-split compatibility)
+  - `email`, `email_verified_at` (kept), `password`, `avatar` (nullable)
+  - `status` (`UserStatus`: `active` / `inactive`)
+  - `last_login_at` (nullable)
+  - timestamps + soft deletes
+- Sanctum **`personal_access_tokens`**, sessions / cache / jobs as Laravel defaults require
 
-### Milestone 3 ERD (design approved)
+### Milestone 3 phasing
 
-- **`departments`**: `name` (human-readable, unique), `code` (stable, unique), description, soft deletes; approved seeds (e.g. Administration/`ADMIN`)
-- **`job_titles`**: same shape; approved seeds (e.g. Project Manager/`PM`)
-- **Phase 3.1:** foundation tables/models/seeders only — no users FK columns; no `User::department()` / `User::jobTitle()` yet
-- **Phase 3.2:** users ERD + FKs + User belongsTo relations + User Management APIs
-- **`users` (planned 3.2):** `role_id`, `department_id` (nullable), `job_title_id` (nullable), structured names, `email_verified_at` (kept), `status`, `last_login_at`, soft deletes, …
-- FK delete behavior: **RESTRICT** for role / department / job title (no `SET NULL`)
+| Phase | Scope | Status |
+|-------|--------|--------|
+| **3.1** | Departments / Job Titles foundation | ✅ Implemented |
+| **3.2** | Users ERD + relations + auth inactive `403` + `UserResource` | ✅ Implemented |
+| **3.3** | User CRUD APIs (`/api/v1/users`) | ✅ Implemented |
+| **3.4** | Lookup APIs (roles / departments / job titles) | Pending |
+| **3.5** | Search, filtering & pagination | Pending |
+| **3.6** | Authorization (coarse RBAC) | Pending |
 
 ### Later phases — do not invent early
 
@@ -122,12 +141,10 @@ Details: `ARCHITECTURE.md`, `CODING_STANDARDS.md`, `docs/DOMAIN_MODEL.md`
 
 ### Morph map (`Relation::enforceMorphMap`)
 
-Registered for existing models:
-
 - `user` → `App\Models\User`
 - `role` → `App\Models\Role`
-- `department` → `App\Models\Department` (Phase 3.1)
-- `job_title` → `App\Models\JobTitle` (Phase 3.1)
+- `department` → `App\Models\Department`
+- `job_title` → `App\Models\JobTitle`
 
 ADRs: `DATABASE_DESIGN.md`, `decisions/Database.md`, `decisions/Organization-User-Management.md`
 
@@ -140,22 +157,24 @@ Canonical backend layout (`CODING_STANDARDS.md`):
 ```text
 app/
 ├── Actions/
-├── Enums/                  # e.g. RoleName, UserStatus (planned)
-├── Exceptions/             # ApiExceptionRenderer, InvalidCredentialsException
+├── Enums/                  # RoleName, UserStatus, DepartmentCode, JobTitleCode
+├── Exceptions/             # ApiExceptionRenderer, InvalidCredentialsException, AccountInactiveException
 ├── Helpers/
 ├── Http/
 │   ├── Controllers/
 │   │   └── Api/
 │   │       ├── BaseApiController.php
-│   │       └── V1/         # AuthController, HealthController, …
+│   │       └── V1/         # AuthController, HealthController, UserController
 │   ├── Middleware/
-│   ├── Requests/Api/V1/…
-│   └── Resources/Api/V1/…
-├── Models/                 # User, Role (+ Department, JobTitle in M3)
-├── Policies/               # Coarse UserPolicy in M3
+│   ├── Requests/Api/V1/…   # Auth/, Users/
+│   └── Resources/Api/V1/…  # User, Role, Department, JobTitle
+├── Models/                 # User, Role, Department, JobTitle
+├── Policies/               # Coarse UserPolicy planned in Phase 3.6
 ├── Providers/              # AppServiceProvider (morph map, RateLimiter)
 ├── Repositories/
-├── Services/               # e.g. Services/Auth/AuthenticationService
+├── Services/
+│   ├── Auth/AuthenticationService.php
+│   └── Users/UserService.php
 └── Traits/                 # ApiResponse
 ```
 
@@ -195,11 +214,11 @@ Rules:
 
 - Success: `success: true`, `errors: null`
 - Errors: `success: false`; validation details in `errors` (HTTP `422`)
-- Pagination: items in `data`, page info in `meta`
+- Pagination: items in `data`, page info in `meta` (Phase 3.5 — not yet on users list)
 - Use `App\Traits\ApiResponse` via `BaseApiController`
 - Never return raw Eloquent models
 
-Auth note: login puts the user under **`data.user`** for future extensibility; `/me` returns the user object in **`data`**.
+Auth note: login puts the user under **`data.user`**; `/me` returns the user object in **`data`**.
 
 ---
 
@@ -218,9 +237,11 @@ Auth note: login puts the user under **`data.user`** for future extensibility; `
 
 ### Behaviors
 
-- Login: attempt **only** `email` + `password`; regenerate session
+- Login: attempt **only** `email` + `password`; regenerate session; set `last_login_at`
+- Eager-load `role`, `department`, `jobTitle` for auth responses
 - Logout: logout + invalidate session + regenerate CSRF token
 - Invalid credentials → `401` (`InvalidCredentialsException`)
+- Inactive account → `403` (`AccountInactiveException`, message `Account is inactive.`)
 - Validation failure → `422`
 - Already authenticated login → `403` (`Already authenticated.`)
 - Rate limit: named limiter `login` — **5/min** per `email|ip` → `429`
@@ -232,6 +253,7 @@ Auth note: login puts the user under **`data.user`** for future extensibility; `
 - `App\Services\Auth\AuthenticationService`
 - `App\Http\Requests\Api\V1\Auth\LoginRequest`
 - `App\Http\Resources\Api\V1\UserResource`
+- `App\Exceptions\AccountInactiveException`
 
 ### SPA client requirements
 
@@ -243,9 +265,9 @@ Docs: `AUTHENTICATION.md`, `decisions/Authentication.md`, `API_SPECIFICATION.md`
 
 ---
 
-## 9. Milestone 3 — Organization & User Management (design approved)
+## 9. Milestone 3 — Organization & User Management
 
-**Implementation has not started — wait for explicit go-ahead.** Specs:
+Specs:
 
 | Document | Role |
 |----------|------|
@@ -253,26 +275,56 @@ Docs: `AUTHENTICATION.md`, `decisions/Authentication.md`, `API_SPECIFICATION.md`
 | [docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md](docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md) | Implementation specification |
 | [decisions/Organization-User-Management.md](decisions/Organization-User-Management.md) | ADR |
 | [DATABASE_DESIGN.md](DATABASE_DESIGN.md) | Physical ERD |
-| [API_SPECIFICATION.md](API_SPECIFICATION.md) | Planned endpoints |
+| [API_SPECIFICATION.md](API_SPECIFICATION.md) | Endpoint contracts |
 
 ### Final architecture decisions (approved)
 
-1. Approved Department seed list (`administration`, `operations`, `engineering`, `human_resources`, `finance`)
-2. Approved Job Title seed list (`administrator`, `project_manager`, `software_engineer`, `operations_specialist`, `human_resources_specialist`)
-3. User list filters use IDs: `search`, `role_id`, `department_id`, `job_title_id` (+ `status`, pagination)
-4. Inactive users cannot log in → HTTP `403` (`Account is inactive.`)
-5. Keep `email_verified_at` for future compatibility
-6. FK **RESTRICT** for Department, Job Title, and Role references (no `SET NULL`)
-7. All authenticated users may access Roles / Departments / Job Titles lookups
+1. Department seeds: Administration/`ADMIN`, Operations/`OPS`, Engineering/`ENG`, Human Resources/`HR`, Finance/`FIN`
+2. Job Title seeds: Administrator/`ADMIN`, Project Manager/`PM`, Software Engineer/`SE`, Operations Specialist/`OPS_SPEC`, Human Resources Specialist/`HR_SPEC`
+3. User list filters (Phase 3.5): `search`, `role_id`, `department_id`, `job_title_id`, `status` + pagination
+4. Inactive users cannot log in → HTTP `403` (`Account is inactive.`) — **implemented**
+5. Keep `email_verified_at` for future compatibility — **implemented**
+6. FK **RESTRICT** for Department, Job Title, and Role — **implemented**
+7. Lookup endpoints for Roles / Departments / Job Titles: all authenticated users — **Phase 3.4**
+8. Coarse authorization matrix — **Phase 3.6**
 
-### Planned APIs (all marked Planned)
+### Implemented User APIs (Phase 3.3)
 
-- Users: `GET/POST /users`, `GET/PUT/DELETE /users/{id}`, `PATCH /users/{id}/status`
-- Roles: `GET /roles`, `GET /roles/{id}`
-- Departments: `GET /departments`, `GET /departments/{id}`
-- Job Titles: `GET /job-titles`, `GET /job-titles/{id}`
+| Method | Path | Notes |
+|--------|------|-------|
+| GET | `/api/v1/users` | List (no filters/pagination yet) |
+| POST | `/api/v1/users` | Create (`StoreUserRequest`) |
+| GET | `/api/v1/users/{user}` | Show |
+| PUT | `/api/v1/users/{user}` | Update (`UpdateUserRequest`; password optional) |
+| DELETE | `/api/v1/users/{user}` | Soft delete |
+| PATCH | `/api/v1/users/{user}/status` | Status only (`UpdateUserStatusRequest`; `active` / `inactive`) |
 
-### Coarse authorization
+**Auth:** `auth:sanctum`  
+**Authorization:** not enforced yet (any authenticated user) — Phase 3.6
+
+**Behaviors:** `UserService` owns create/update/delete/status/list/find; passwords via `Hash::make`; nested resources via `whenLoaded()`.
+
+### Key classes (User Management)
+
+- `App\Http\Controllers\Api\V1\UserController` — thin HTTP layer
+- `App\Services\Users\UserService` — business logic
+- `App\Http\Requests\Api\V1\Users\StoreUserRequest`
+- `App\Http\Requests\Api\V1\Users\UpdateUserRequest`
+- `App\Http\Requests\Api\V1\Users\UpdateUserStatusRequest`
+- `App\Enums\UserStatus`
+- Resources: `UserResource`, `RoleResource`, `DepartmentResource`, `JobTitleResource`
+
+### Remaining (Phases 3.4–3.6)
+
+**3.4 Lookup APIs**
+
+- `GET /api/v1/roles`, `GET /api/v1/roles/{id}`
+- `GET /api/v1/departments`, `GET /api/v1/departments/{id}`
+- `GET /api/v1/job-titles`, `GET /api/v1/job-titles/{id}`
+
+**3.5 Search, Filtering & Pagination** — user list `search`, ID filters, `meta` pagination
+
+**3.6 Authorization (RBAC)** — coarse matrix only:
 
 | Role | Capability |
 |------|------------|
@@ -280,7 +332,7 @@ Docs: `AUTHENTICATION.md`, `decisions/Authentication.md`, `API_SPECIFICATION.md`
 | Project Manager | Read-only user directory |
 | Employee | View own profile |
 
-### Out of scope
+### Out of scope (later)
 
 Department/Job Title CRUD, multi-role/multi-department users, teams, branches, organization settings, invitation emails, force password change, permission management, advanced RBAC.
 
@@ -288,26 +340,31 @@ Department/Job Title CRUD, multi-role/multi-department users, teams, branches, o
 
 ## 10. Completed milestones
 
-| Phase | Milestone                | Status        |
-| ----- | ------------------------ | ------------- |
-| 1     | Backend Foundation (API) | **Completed** |
-| 2     | Authentication (API)     | **Completed** |
+| Phase | Milestone | Status |
+| ----- | --------- | ------ |
+| 1 | Backend Foundation (API) | **Completed** |
+| 2 | Authentication (API) | **Completed** |
+| 3.1 | Organization Foundation | ✅ **Implemented** |
+| 3.2 | User Domain Foundation | ✅ **Implemented** |
+| 3.3 | User Management APIs | ✅ **Implemented** |
 
-Phase 1 includes: PostgreSQL config, Sanctum install, `/api/v1`, CORS, envelope, exception renderer, morph map, roles seed, health check, folder structure.
+Phase 1: PostgreSQL, Sanctum, `/api/v1`, CORS, envelope, exception renderer, morph map, roles seed, health check, folder structure.
 
-Phase 2 API includes: login/logout/me, rate limit, guest login, credential allowlist, feature tests, auth docs.
+Phase 2: login/logout/me, rate limit, guest login, credential allowlist, feature tests, auth docs.
 
-See `CHANGELOG.md`, `ROADMAP.md`.
+Phase 3.1–3.3: org reference data, users ERD, user CRUD APIs — see `CHANGELOG.md`, `ROADMAP.md`.
 
 ---
 
 ## 11. Remaining roadmap
 
-**Immediate next (backend):** Phase 3 — Organization & User Management **implementation** (design approved; wait for explicit implementation go-ahead)
+**Immediate next (backend):** Phase **3.4** — Lookup APIs
+
+Then: **3.5** Search/Filtering/Pagination → **3.6** Authorization (RBAC)
 
 **Still pending from earlier phases:**
 
-- Vue 3 repo / Pinia authentication
+- Vue 3 / Pinia authentication
 - GitHub repos finalized (as applicable)
 
 **Later phases:** Projects → Tasks → Dashboard → Reports → broader Testing → Deployment
@@ -328,13 +385,16 @@ See `CHANGELOG.md`, `ROADMAP.md`.
 | Envelope            | Fixed JSON shape for all API responses                 |
 | Morph map           | `enforceMorphMap`; existing models only                |
 | Roles seed          | snake_case unique names via enum                       |
+| Dept/Job Title name | Human-readable `name` + stable unique `code`           |
 | Org model           | Dept / Job Title / Role / User are independent         |
 | Organization table  | Not in Milestone 3 (logical single-tenant)             |
-| Users ERD           | Design approved for Milestone 3; not migrated yet      |
-| User list filters   | `search`, `role_id`, `department_id`, `job_title_id`, `status` |
+| Users ERD           | Implemented in Phase 3.2                               |
+| User CRUD APIs      | Implemented in Phase 3.3 (authz deferred)              |
+| User list filters   | Designed; implement in Phase 3.5                       |
 | FK deletes          | RESTRICT for role / department / job title             |
 | Inactive login      | HTTP `403` dedicated inactive-account response         |
-| Lookups             | All authenticated users                                |
+| Lookups             | All authenticated users (Phase 3.4)                    |
+| Coarse authz        | Phase 3.6                                              |
 | Packages            | No new packages unless approved                        |
 | Ask vs assume       | Unclear requirements → ask first                       |
 
@@ -374,18 +434,25 @@ Root of `opsflow-docs/` (plus `docs/` for domain/milestone specs):
 ## 14. Testing strategy
 
 - PHPUnit via `php artisan test`
-- Auth suite: `tests/Feature/Auth/AuthenticationTest.php`
-- Run: `php artisan test --filter=AuthenticationTest`
-- DB: PostgreSQL **`opsflow_testing`** (configured in `phpunit.xml`; no SQLite driver in current PHP)
+- DB: PostgreSQL **`opsflow_testing`** (`phpunit.xml`; no SQLite driver in current PHP)
 - `RefreshDatabase`; session driver `cookie` in tests
 - Stateful SPA simulated with `Origin: http://localhost:5173`
 - After logout/guest follow-ups, tests may call `auth()->forgetGuards()` (Laravel 13 test-client quirk)
 
-Coverage today: login success/fail/validation, guest rejection, `/me` auth/unauth, logout.
+### Suites
 
-Milestone 3 planned coverage: users CRUD/status/ID filters, lookups for all authenticated users, inactive login `403`, coarse authorization, auth regression after `UserResource` change.
+| Suite | Path | Coverage |
+|-------|------|----------|
+| Auth | `tests/Feature/Auth/AuthenticationTest.php` | login/logout/me, guest, validation |
+| Organization | `tests/Feature/Organization/OrganizationFoundationTest.php` | dept/job title migrate/seed/unique/soft delete |
+| User domain | `tests/Feature/User/UserDomainFoundationTest.php` | users ERD, relations, `full_name`, inactive login |
+| User APIs | `tests/Feature/User/UserManagementApiTest.php` | CRUD, status, validation, hashing, resources |
 
-Deferred: dedicated `429` test, CSRF failure cases, frontend tests.
+```bash
+php artisan test --filter="AuthenticationTest|OrganizationFoundationTest|UserDomainFoundationTest|UserManagementApiTest"
+```
+
+Deferred: dedicated `429` test, CSRF failure cases, lookup/filter/authz tests (Phases 3.4–3.6), frontend tests.
 
 Details: `TESTING.md`
 
@@ -398,40 +465,42 @@ _(Captured 2026-08-02 — re-check with `git status` before committing.)_
 ### `opsflow-api`
 
 - Branch: `feature/backend-foundation` (tracks `origin/feature/backend-foundation`)
-- Latest commit on branch: `feat: setup backend foundation`
-- **Note:** `main` commit message still says “Initialize Laravel 12 project” but app runs **Laravel 13** — trust `composer.json` / Tech Stack ADR
-- Working tree: **Authentication work largely uncommitted**
-  - Modified: `ApiExceptionRenderer`, `AppServiceProvider`, `bootstrap/app.php`, `phpunit.xml`, `routes/api.php`, `tests/TestCase.php`
-  - Untracked: Auth controller/service/requests/resources, `InvalidCredentialsException`, `tests/Feature/Auth/`
+- Recent commits on branch include:
+  - `feat(auth): implement authentication module`
+  - `feat(organization): add organization foundation`
+  - `feat(user): implement user domain foundation`
+- Working tree (Phase 3.3 largely uncommitted at capture time):
+  - Modified: `UserResource.php`, `routes/api.php`
+  - Untracked: `UserController`, `UserService`, Users Form Requests, Role/Department/JobTitle Resources, `UserManagementApiTest`
 
 ### `opsflow-docs`
 
 - Branch: `main` (tracks `origin/main`)
-- Latest: `updated docs`
-- Working tree: **many doc updates uncommitted** (including Milestone 3 design docs)
+- Working tree: doc updates for Milestone 3 / Phase 3.x (including this handoff) often uncommitted — re-check before commit
 
 ### Monorepo folder `OpsFlow/`
 
-- Not a meaningful single git root (`No commits yet on master`); treat **api** and **docs** as separate repos
-- `opsflow-web/` present as untracked sibling (frontend not started in earnest)
+- Not a meaningful single git root; treat **api** and **docs** as separate repos
+- `opsflow-web/` present as sibling (frontend not started in earnest)
 
-**Convention:** one feature = one commit. Consider committing auth API and docs as separate focused commits when the user requests.
+**Convention:** one feature = one commit. Prefer separate focused commits (e.g. auth, organization foundation, user domain, user APIs, docs).
 
 ---
 
 ## 16. Known technical debt
 
-1. **Users schema ≠ ERD** — still default Laravel `users`; Milestone 3 designed, not migrated
-2. **`User::role()` exists without `role_id` column** — do not eager-load/use until migration exists
-3. **`phpunit.xml` embeds DB credentials** — move to env/local override later
-4. **Laravel 13 HTTP tests** — guard caching requires `forgetGuards()` in some multi-request auth tests
-5. **Draw.io diagrams empty** — future docs milestone
-6. **No Postman/Bruno collection checked in** — future
-7. **`opsflow-web` / Pinia auth not implemented**
-8. **Historical “Laravel 12” wording** in old git commits vs actual Laravel 13
-9. **Resource wrapping inconsistency** — login uses `data.user` + `resolve()`; `/me` uses Resource in `data` (intentional for now; unify carefully later)
-10. **Environment-config hardening** deferred (secrets, production cookie domain strategy)
-11. **Auth `UserResource` still legacy `name` shape** — must expand during Milestone 3 implementation
+1. **Lookup APIs not implemented** — roles/departments/job-titles list/show; Phase 3.4
+2. **Users list has no filters/pagination** — designed; Phase 3.5
+3. **No coarse authorization yet** — User APIs accept any authenticated user; Phase 3.6 policies/gates
+4. **`phpunit.xml` embeds DB credentials** — move to env/local override later
+5. **Laravel 13 HTTP tests** — guard caching requires `forgetGuards()` in some multi-request auth tests
+6. **Draw.io diagrams empty** — future docs milestone
+7. **No Postman/Bruno collection checked in** — future
+8. **`opsflow-web` / Pinia auth not implemented**
+9. **Historical “Laravel 12” wording** in old git commits vs actual Laravel 13
+10. **Resource wrapping inconsistency** — login uses `data.user` + `resolve()`; `/me` uses Resource in `data` (intentional for now)
+11. **Environment-config hardening** deferred (secrets, production cookie domain strategy)
+12. **`last_name` nullable** — supports legacy name split; CRUD validation currently requires `last_name` on create/update
 
 ---
 
@@ -445,7 +514,7 @@ _(Captured 2026-08-02 — re-check with `git status` before committing.)_
 6. **Form Requests + API Resources**
 7. **PHP Enums** instead of magic strings
 8. **Sanctum SPA cookies** for first-party auth — do not replace with ad-hoc JWT without an ADR
-9. **Guest + `throttle:login`** on login; **`auth:sanctum`** on logout/me
+9. **Guest + `throttle:login`** on login; **`auth:sanctum`** on logout/me/users
 10. **Credential allowlist** into `Auth::attempt()`
 11. **Morph aliases only for existing models**
 12. **Do not expand schema beyond the approved ERD** without updating `decisions/Database.md`
@@ -462,9 +531,9 @@ _(Captured 2026-08-02 — re-check with `git status` before committing.)_
 
 1. Read this handoff + `docs/DOMAIN_MODEL.md` + `ROADMAP.md` + relevant ADR
 2. Confirm git branch/status in `opsflow-api` / `opsflow-docs`
-3. Next backend work is **Phase 3 Organization & User Management implementation** — design is approved; wait for explicit implementation go-ahead
+3. Next backend work is typically **Phase 3.4 Lookup APIs** — wait for explicit user approval/scope
 4. Do **not** modify code when the user asks for docs-only tasks
-5. Prefer matching patterns in `AuthenticationService` / `AuthController` / `ApiResponse` for new modules
+5. Prefer matching patterns in `UserService` / `UserController` / `AuthenticationService` / `ApiResponse` for new modules
 
 ### Essential commands
 
@@ -476,7 +545,7 @@ cp .env.example .env   # if needed
 php artisan migrate
 php artisan db:seed
 php artisan serve
-php artisan test --filter=AuthenticationTest
+php artisan test --filter="AuthenticationTest|OrganizationFoundationTest|UserDomainFoundationTest|UserManagementApiTest"
 
 # Docs
 cd opsflow-docs

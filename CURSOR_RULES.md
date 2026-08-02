@@ -22,6 +22,8 @@
 - Prefer `opsflow-docs/docs/DOMAIN_MODEL.md` for business concepts.
 - Prefer milestone specs under `opsflow-docs/docs/` before implementing a phase.
 - Do not implement future modules early (Projects/Tasks/Remarks/advanced RBAC) unless the milestone says so.
+- Current Milestone 3 remaining work is Phase 3.4 (lookups), 3.5 (filters/pagination), 3.6 (coarse auth) — do not combine without approval.
+- Match existing User Management patterns: `UserController` → Form Request → `UserService` → Resources.
 
 ## API
 

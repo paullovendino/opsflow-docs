@@ -8,7 +8,30 @@ Format follows a lightweight Keep a Changelog style.
 
 ## [Unreleased] — v1.0.0 (Development)
 
-### Organization Foundation (Phase 3.1) — Implemented (pending review)
+### Documentation sync — Phase 3.3 complete
+
+- Roadmap split remaining work into Phase 3.4 Lookup APIs, 3.5 Search/Filtering/Pagination, 3.6 Authorization (RBAC)
+- Synchronized README, HANDOFF, ROADMAP, DEVELOPMENT_ROADMAP, ARCHITECTURE, REQUIREMENTS, TESTING, API spec, milestone spec, ADRs
+
+### User Management APIs (Phase 3.3) — ✅ Implemented
+
+- `GET/POST /api/v1/users`, `GET/PUT/DELETE /api/v1/users/{user}`, `PATCH /api/v1/users/{user}/status`
+- `UserController` + `UserService` (soft delete, status-only patch, Hash::make passwords)
+- Form Requests: store/update/status; Resources: Role/Department/JobTitle + UserResource `whenLoaded`
+- Auth required (`auth:sanctum`); role policies / filters / pagination / lookup APIs deferred to 3.4–3.6
+- PHPUnit Feature suite: `tests/Feature/User/UserManagementApiTest.php`
+
+### User Domain Foundation (Phase 3.2) — ✅ Implemented
+
+- Users ERD migration (`role_id`, `department_id`, `job_title_id`, structured names, `avatar`, `status`, `last_login_at`, soft deletes)
+- Best-effort legacy `name` → `first_name` / `middle_name` / `last_name`; drop `name`
+- `UserStatus` enum; User SoftDeletes; belongsTo Role / Department / JobTitle; `full_name` accessor
+- `UserResource` expanded; auth loads relations; inactive login → `403` `Account is inactive.`
+- `last_login_at` set on successful login
+- PHPUnit Feature suite: `tests/Feature/User/UserDomainFoundationTest.php`
+- No User CRUD / controllers / services / lookup APIs
+
+### Organization Foundation (Phase 3.1) — ✅ Implemented
 
 - `departments` and `job_titles` migrations (`name`, `code`, nullable `description`, soft deletes)
 - `Department` and `JobTitle` models with SoftDeletes and `users()` hasMany

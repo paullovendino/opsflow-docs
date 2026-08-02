@@ -63,6 +63,7 @@ OpsFlow is a production-quality portfolio SaaS for project and operations manage
 - [PROJECT_OVERVIEW.md](../PROJECT_OVERVIEW.md)
 - [ARCHITECTURE.md](../ARCHITECTURE.md)
 - [docs/DOMAIN_MODEL.md](../docs/DOMAIN_MODEL.md)
+- [HANDOFF.md](../HANDOFF.md)
 - [decisions/Database.md](Database.md)
 - [decisions/Authentication.md](Authentication.md)
 - [decisions/Organization-User-Management.md](Organization-User-Management.md)

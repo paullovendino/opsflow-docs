@@ -4,10 +4,6 @@
 
 OpsFlow API tests use PHPUnit via Laravel's testing harness.
 
-Authentication coverage lives in:
-
-`opsflow-api/tests/Feature/Auth/AuthenticationTest.php`
-
 ---
 
 ## Test Database Requirements
@@ -44,15 +40,15 @@ From `opsflow-api`:
 # All tests
 php artisan test
 
-# Authentication suite only
-php artisan test --filter=AuthenticationTest
+# Milestone suites (Phases 2–3.3)
+php artisan test --filter="AuthenticationTest|OrganizationFoundationTest|UserDomainFoundationTest|UserManagementApiTest"
 ```
 
 ---
 
 ## Authentication Feature Tests
 
-Current cases:
+Path: `tests/Feature/Auth/AuthenticationTest.php`
 
 | Test | Expectation |
 |------|-------------|
@@ -71,38 +67,46 @@ Notes:
 
 ---
 
-## Expected Coverage (Authentication Milestone)
+## Organization Foundation (Phase 3.1)
 
-Must remain green:
+Path: `tests/Feature/Organization/OrganizationFoundationTest.php`
 
-- Login success / failure / validation
-- Guest rejection on login
-- `/me` authenticated and unauthenticated
-- Logout ends session for subsequent `/me`
-
-Recommended later (not required to close this milestone):
-
-- Explicit `429` rate-limit assertion
-- CSRF rejection cases
-- Frontend Pinia auth tests
+Coverage: departments/job_titles migrations, seeders, unique constraints, soft deletes.
 
 ---
 
-## Organization & User Management (Milestone 3 — Planned)
+## User Domain Foundation (Phase 3.2)
 
-When implementation begins, add feature coverage for:
+Path: `tests/Feature/User/UserDomainFoundationTest.php`
+
+Coverage: users ERD migration / legacy name split, relationships, `UserStatus`, `full_name`, soft deletes, inactive login `403`, expanded auth `UserResource`.
+
+---
+
+## User Management APIs (Phase 3.3)
+
+Path: `tests/Feature/User/UserManagementApiTest.php`
 
 | Area | Expectations |
 |------|----------------|
-| Users CRUD | Create/update/show/list/soft-delete with envelope |
-| Status patch | Activate / deactivate |
-| Filters | `search`, `role_id`, `department_id`, `job_title_id`, `status` + pagination `meta` |
-| Lookups | Roles / Departments / Job Titles list + show for any authenticated user |
-| Authorization | Administrator write; Project Manager read directory; Employee own profile |
-| Inactive login | Credentials valid but `status = inactive` → HTTP `403` (`Account is inactive.`) |
-| Auth regression | Login/`/me` still green after `UserResource` expansion |
-| `last_login_at` | Updated on successful login |
+| Create user | `201`, envelope, nested resources |
+| Update user | `200`, fields updated |
+| Show / list | `200`, relations loaded |
+| Soft delete | `200`, `assertSoftDeleted` |
+| Status patch | Only `status` changes (`active` / `inactive`) |
+| Validation | `422` for missing fields |
+| Unique email | `422` on duplicate |
+| Password hashing | `Hash::check` succeeds; plain text not stored |
+| Resource shape | `UserResource` + Role/Department/JobTitle resources |
+| Guest access | `401` |
 
-Seeders for roles, departments, and job titles must be available in the test database (`RefreshDatabase` + seed as needed).
+---
 
-Spec: [docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md](docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md)
+## Remaining Milestone 3 coverage (not yet)
+
+- Lookup API tests (Phase 3.4)
+- Filters / search / pagination (Phase 3.5)
+- Coarse authorization matrix (Phase 3.6)
+- Explicit `429` rate-limit assertion
+- CSRF rejection cases
+- Frontend Pinia auth tests

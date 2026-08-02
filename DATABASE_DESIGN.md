@@ -2,7 +2,7 @@
 
 Physical schema companion to [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md).
 
-**Milestone 3 status:** Phase 3.1 Organization Foundation implemented (departments / job_titles). Users ERD remains Phase 3.2.
+**Milestone 3 status:** Phases 3.1–3.3 implemented (org foundation, users ERD, User CRUD APIs). Remaining: 3.4 lookups, 3.5 filters/pagination, 3.6 authorization.
 
 ---
 
@@ -115,18 +115,18 @@ Represented in code with `App\Enums\RoleName`.
 | job_title_id | nullable FK → `job_titles.id` |
 | first_name | string |
 | middle_name | nullable string |
-| last_name | string |
+| last_name | nullable string (nullable to preserve best-effort legacy `name` splits; CRUD may require later) |
 | email | unique string (login identifier) |
 | email_verified_at | nullable timestamp — **kept** for future compatibility (not enforced in Milestone 3) |
 | password | hashed string |
 | avatar | nullable string (path/URL) |
-| status | enum-backed string (see below) |
+| status | enum-backed string (`UserStatus`: `active`, `inactive`) |
 | last_login_at | nullable timestamp |
 | created_at | timestamp |
 | updated_at | timestamp |
 | deleted_at | soft deletes |
 
-**Status values** (`UserStatus` enum — planned):
+**Status values** (`UserStatus`):
 
 | value | Meaning |
 |-------|---------|
@@ -135,12 +135,14 @@ Represented in code with `App\Enums\RoleName`.
 
 **ERD alignment notes:**
 
-- Replaces legacy Laravel `name` with structured name fields
+- Replaces legacy Laravel `name` with structured name fields (Phase 3.2 migration)
+- Existing `name` values are split best-effort; single-token names keep `last_name` null
+- Existing users receive default role `employee` during migration when backfilling `role_id`
 - **Keep** Laravel `email_verified_at` for future compatibility (verification not required in Milestone 3)
 - `role_id` required; `department_id` / `job_title_id` nullable for onboarding flexibility
-- Indexes recommended: `role_id`, `department_id`, `job_title_id`, `status`, unique `email`
+- Indexes: FKs + `status`; unique `email`
 
-**Implemented today (pre–Milestone 3):** default Laravel `users` (`name`, `email`, `password`, …) — **not** full ERD yet.
+**Phase status:** Phase 3.2 schema/model/auth + Phase 3.3 User CRUD APIs implemented. Lookups/filters/authz remain 3.4–3.6.
 
 ---
 

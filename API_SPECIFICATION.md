@@ -78,11 +78,21 @@ Authenticate a user and start a session.
   "data": {
     "user": {
       "id": 1,
-      "name": "Jane Doe",
+      "first_name": "Jane",
+      "middle_name": null,
+      "last_name": "Doe",
+      "full_name": "Jane Doe",
       "email": "jane@example.com",
-      "email_verified_at": "2026-08-02T00:00:00.000000Z",
-      "created_at": "2026-08-02T00:00:00.000000Z",
-      "updated_at": "2026-08-02T00:00:00.000000Z"
+      "avatar": null,
+      "status": "active",
+      "last_login_at": "2026-08-02T00:00:00.000000Z",
+      "role": {
+        "id": 3,
+        "name": "employee",
+        "description": "Assigned work and updates"
+      },
+      "department": null,
+      "job_title": null
     }
   },
   "errors": null,
@@ -90,7 +100,7 @@ Authenticate a user and start a session.
 }
 ```
 
-> **Milestone 3 note (Planned):** After users ERD alignment, `UserResource` will expose structured profile fields (`first_name`, `last_name`, `role`, `department`, `job_title`, `status`, etc.) instead of the legacy `name` shape. Auth responses must follow the updated resource.
+> **Phase 3.2:** `UserResource` exposes structured profile fields. Auth login/`/me` eager-load `role`, `department`, and `jobTitle`.
 
 **Error responses:**
 
@@ -181,18 +191,28 @@ Return the currently authenticated user.
   "message": "Authenticated user retrieved successfully.",
   "data": {
     "id": 1,
-    "name": "Jane Doe",
+    "first_name": "Jane",
+    "middle_name": null,
+    "last_name": "Doe",
+    "full_name": "Jane Doe",
     "email": "jane@example.com",
-    "email_verified_at": "2026-08-02T00:00:00.000000Z",
-    "created_at": "2026-08-02T00:00:00.000000Z",
-    "updated_at": "2026-08-02T00:00:00.000000Z"
+    "avatar": null,
+    "status": "active",
+    "last_login_at": "2026-08-02T00:00:00.000000Z",
+    "role": {
+      "id": 3,
+      "name": "employee",
+      "description": "Assigned work and updates"
+    },
+    "department": null,
+    "job_title": null
   },
   "errors": null,
   "meta": null
 }
 ```
 
-> **Milestone 3 note (Planned):** Same `UserResource` expansion as login (`data` holds the user object directly).
+> **Phase 3.2:** Same expanded `UserResource` as login (`data` holds the user object directly).
 
 **Error responses:**
 
@@ -214,13 +234,13 @@ Cookie: <session-cookie>
 
 ## Organization & User Management
 
-> **Planned — Milestone 3 (Organization & User Management)**  
-> Implementation has not started. All endpoints in this section are **Planned**.
+> **Phases 3.1–3.3 implemented.**  
+> Remaining: Phase 3.4 Lookup APIs · Phase 3.5 Search/Filtering/Pagination · Phase 3.6 Authorization (RBAC).
 
 Domain reference: [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md)  
 Milestone spec: [docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md](docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md)
 
-### Authorization (coarse — Planned)
+### Authorization (coarse — Phase 3.6 Pending)
 
 | Role | Capability |
 |------|------------|
@@ -228,11 +248,13 @@ Milestone spec: [docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md](docs/MILESTON
 | Project Manager | Read-only user directory |
 | Employee | View own profile |
 
-Lookup reads (roles / departments / job titles): **all authenticated users** (`auth:sanctum`).
+Until Phase 3.6, User Management routes require `auth:sanctum` only (any authenticated user).
 
-Advanced RBAC is out of scope for this milestone.
+Lookup reads (roles / departments / job titles): **all authenticated users** — Phase 3.4.
 
-### Planned User resource shape
+Advanced RBAC / permission matrices remain out of scope.
+
+### User resource shape (Phase 3.3)
 
 ```json
 {
@@ -240,8 +262,8 @@ Advanced RBAC is out of scope for this milestone.
   "first_name": "Jane",
   "middle_name": null,
   "last_name": "Doe",
+  "full_name": "Jane Doe",
   "email": "jane@example.com",
-  "email_verified_at": null,
   "avatar": null,
   "status": "active",
   "last_login_at": null,
@@ -252,61 +274,49 @@ Advanced RBAC is out of scope for this milestone.
   },
   "department": {
     "id": 1,
-    "name": "engineering",
+    "name": "Engineering",
+    "code": "ENG",
     "description": "Product and engineering"
   },
   "job_title": {
     "id": 2,
-    "name": "project_manager",
+    "name": "Project Manager",
+    "code": "PM",
     "description": "Delivers projects and coordinates teams"
-  },
-  "created_at": "2026-08-02T00:00:00.000000Z",
-  "updated_at": "2026-08-02T00:00:00.000000Z"
+  }
 }
 ```
 
-Password is never returned. `department` / `job_title` may be `null`.
+Password is never returned. `department` / `job_title` may be `null`. Nested objects use `RoleResource` / `DepartmentResource` / `JobTitleResource` when relations are loaded.
 
 ---
 
 ## Users
 
-> Planned — Milestone 3
+> **Phase 3.3 — Implemented (CRUD APIs)**  
+> Filtering, pagination, lookup APIs, and role-based authorization are **not** implemented in this phase.
 
 ### GET /api/v1/users
 
-**Status:** Planned
+**Status:** Implemented (Phase 3.3)
 
 List users (directory).
 
 **Authentication:** `auth:sanctum`  
-**Authorization (Planned):** Administrator, Project Manager (read-only)
+**Authorization:** Deferred (any authenticated user for now)
 
-**Query parameters (approved filters):**
-
-| Parameter | Description |
-|-----------|-------------|
-| `search` | Match against name fields and/or email |
-| `role_id` | Filter by role ID |
-| `department_id` | Filter by department ID |
-| `job_title_id` | Filter by job title ID |
-| `status` | Filter by user status (`active`, `inactive`) |
-| `page` / `per_page` | Pagination |
-
-Do not use name-based FK filters (`role`, `department`, `job_title`). Standardize on IDs.
-
-**Success:** `200` with user collection in `data` and pagination in `meta`.
+**Success:** `200` with user collection in `data` (`meta` null). Filtering/pagination deferred.
 
 ---
 
 ### GET /api/v1/users/{id}
 
-**Status:** Planned
+**Status:** Implemented (Phase 3.3)
 
 Show a single user.
 
 **Authentication:** `auth:sanctum`  
-**Authorization (Planned):** Administrator; Project Manager (read); Employee only when `{id}` is self
+**Authorization:** Deferred (any authenticated user for now)
 
 **Success:** `200` with user object in `data`.
 
@@ -314,14 +324,14 @@ Show a single user.
 
 ### POST /api/v1/users
 
-**Status:** Planned
+**Status:** Implemented (Phase 3.3)
 
 Create a user.
 
 **Authentication:** `auth:sanctum`  
-**Authorization (Planned):** Administrator only
+**Authorization:** Deferred (any authenticated user for now)
 
-**Request body (Planned):**
+**Request body:**
 
 ```json
 {
@@ -342,7 +352,8 @@ Create a user.
 
 - `role_id` required
 - `department_id` / `job_title_id` nullable
-- Password hashed server-side
+- Password hashed server-side via `Hash::make`
+- `status` uses `UserStatus` values: `active`, `inactive`
 
 **Success:** `201` with created user in `data`.
 
@@ -350,14 +361,14 @@ Create a user.
 
 ### PUT /api/v1/users/{id}
 
-**Status:** Planned
+**Status:** Implemented (Phase 3.3)
 
 Update a user.
 
 **Authentication:** `auth:sanctum`  
-**Authorization (Planned):** Administrator only
+**Authorization:** Deferred (any authenticated user for now)
 
-**Request body (Planned):** same fields as create; password optional on update.
+**Request body:** same fields as create; password optional on update (unchanged when omitted).
 
 **Success:** `200` with updated user in `data`.
 
@@ -365,33 +376,35 @@ Update a user.
 
 ### DELETE /api/v1/users/{id}
 
-**Status:** Planned
+**Status:** Implemented (Phase 3.3)
 
 Soft-delete a user.
 
 **Authentication:** `auth:sanctum`  
-**Authorization (Planned):** Administrator only
+**Authorization:** Deferred (any authenticated user for now)
 
-**Success:** `200` (or `204` if team standardizes on no body — prefer envelope `200` for consistency).
+**Success:** `200` with standard envelope.
 
 ---
 
 ### PATCH /api/v1/users/{id}/status
 
-**Status:** Planned
+**Status:** Implemented (Phase 3.3)
 
-Activate or deactivate a user.
+Activate or deactivate a user. Updates `status` only.
 
 **Authentication:** `auth:sanctum`  
-**Authorization (Planned):** Administrator only
+**Authorization:** Deferred (any authenticated user for now)
 
-**Request body (Planned):**
+**Request body:**
 
 ```json
 {
   "status": "inactive"
 }
 ```
+
+Accepted `status` values (`UserStatus`): `active`, `inactive`.
 
 **Success:** `200` with updated user in `data`.
 

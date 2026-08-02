@@ -1,11 +1,10 @@
 # Milestone 3 — Organization & User Management
 
-**Status:** Design approved — awaiting implementation approval  
+**Status:** Phases 3.1–3.3 implemented · Phases 3.4–3.6 remaining  
 **Product version:** v1.0.0 (Development)  
 **Last updated:** 2026-08-02
 
-> This document is the **implementation specification** for Phase 3.  
-> Final architecture decisions below are approved. Wait for explicit go-ahead before writing code.  
+> Implementation specification for Phase 3.  
 > Domain reference: [DOMAIN_MODEL.md](DOMAIN_MODEL.md)
 
 ---
@@ -18,7 +17,7 @@ Establish OpsFlow’s organizational people model and deliver User Management on
 - Introduce Departments and Job Titles (seeded, read-only)
 - Keep Roles seeded and read-only
 - Expose User CRUD + status changes
-- Apply coarse role-based authorization for User Management only
+- Apply coarse role-based authorization for User Management only (Phase 3.6)
 
 ---
 
@@ -43,57 +42,81 @@ Each user belongs to **one Role** (required), **one Department** (nullable), **o
 
 ---
 
-## 3. In Scope
+## 3. Implementation phasing
 
-### Schema
+| Phase | Scope | Status |
+|-------|--------|--------|
+| **3.1 Organization Foundation** | `departments` / `job_titles` tables (`name` + `code`), models, seeders, morph aliases | ✅ Implemented |
+| **3.2 User Domain Foundation** | Users ERD + FKs; relations; `UserStatus`; auth inactive `403`; `UserResource` | ✅ Implemented |
+| **3.3 User Management APIs** | `UserController` / `UserService` / Form Requests / CRUD + status | ✅ Implemented |
+| **3.4 Lookup APIs** | Roles / Departments / Job Titles list + show | Pending |
+| **3.5 Search, Filtering & Pagination** | User list `search`, ID filters, pagination `meta` | Pending |
+| **3.6 Authorization (RBAC)** | Coarse role matrix for User Management | Pending |
 
-- Align `users` with the approved ERD (see [DATABASE_DESIGN.md](../DATABASE_DESIGN.md))
-- Add `departments` table (soft deletes)
-- Add `job_titles` table (soft deletes)
-- Keep `roles` as seeded read-only reference data
-- Register morph aliases when models are introduced: `department`, `job_title`
+---
 
-### Seed data (approved)
+## 4. Seed data (approved)
 
-**Departments** (`name` / `code`):
+**Departments** (`name` / `code`): Administration/`ADMIN`, Operations/`OPS`, Engineering/`ENG`, Human Resources/`HR`, Finance/`FIN`
 
-| name | code |
-|------|------|
-| Administration | `ADMIN` |
-| Operations | `OPS` |
-| Engineering | `ENG` |
-| Human Resources | `HR` |
-| Finance | `FIN` |
+**Job Titles** (`name` / `code`): Administrator/`ADMIN`, Project Manager/`PM`, Software Engineer/`SE`, Operations Specialist/`OPS_SPEC`, Human Resources Specialist/`HR_SPEC`
 
-**Job Titles** (`name` / `code`):
-
-| name | code |
-|------|------|
-| Administrator | `ADMIN` |
-| Project Manager | `PM` |
-| Software Engineer | `SE` |
-| Operations Specialist | `OPS_SPEC` |
-| Human Resources Specialist | `HR_SPEC` |
-
-**Roles** (unchanged; snake_case `name`): `administrator`, `project_manager`, `employee`
+**Roles** (snake_case `name`): `administrator`, `project_manager`, `employee`
 
 Full schema: [DATABASE_DESIGN.md](../DATABASE_DESIGN.md)
 
-### Implementation phasing
+---
 
-| Phase | Scope |
-|-------|-------|
-| **3.1 Organization Foundation** | `departments` / `job_titles` tables (incl. `code`), models, seeders, morph aliases; `Department`/`JobTitle` → `users` relation methods only |
-| **3.2 User Management** | Users ERD + FKs; `User::department()` / `User::jobTitle()`; CRUD/APIs/auth status rules |
+## 5. Phase 3.3 — User Management APIs (implemented)
 
-### API (all Planned until implemented)
+### Routes (`auth:sanctum`)
 
-- Users: list, show, create, update, soft-delete, status patch
-- Roles: list, show (all authenticated users)
-- Departments: list, show (all authenticated users)
-- Job Titles: list, show (all authenticated users)
+| Method | Path | Behavior |
+|--------|------|----------|
+| GET | `/api/v1/users` | List users (no filters/pagination yet) |
+| GET | `/api/v1/users/{user}` | Show user |
+| POST | `/api/v1/users` | Create user |
+| PUT | `/api/v1/users/{user}` | Update user |
+| DELETE | `/api/v1/users/{user}` | Soft delete |
+| PATCH | `/api/v1/users/{user}/status` | Update `status` only |
 
-### Filtering (Users list — approved)
+### Layering
+
+| Concern | Class |
+|---------|-------|
+| Controller | `App\Http\Controllers\Api\V1\UserController` (thin) |
+| Service | `App\Services\Users\UserService` |
+| Store validation | `StoreUserRequest` |
+| Update validation | `UpdateUserRequest` |
+| Status validation | `UpdateUserStatusRequest` |
+| Resources | `UserResource`, `RoleResource`, `DepartmentResource`, `JobTitleResource` |
+| Status enum | `App\Enums\UserStatus` (`active`, `inactive`) |
+
+### Behaviors
+
+- Passwords hashed with `Hash::make`; never returned; unchanged on update when omitted
+- Soft delete only (no hard delete)
+- Status endpoint accepts `UserStatus` values only; does not modify other fields
+- Relations eager-loaded for responses; nested via API Resources + `whenLoaded()`
+- Authentication (login/logout/me) remains compatible; inactive login still `403`
+
+### Not in 3.3
+
+Lookup APIs · search/filters/pagination · policies/authorization
+
+---
+
+## 6. Remaining API surface
+
+### Roles / Departments / Job Titles (Phase 3.4)
+
+| Method | Path |
+|--------|------|
+| GET | `/api/v1/roles`, `/api/v1/roles/{id}` |
+| GET | `/api/v1/departments`, `/api/v1/departments/{id}` |
+| GET | `/api/v1/job-titles`, `/api/v1/job-titles/{id}` |
+
+### Filtering (Phase 3.5)
 
 | Parameter | Type |
 |-----------|------|
@@ -104,9 +127,7 @@ Full schema: [DATABASE_DESIGN.md](../DATABASE_DESIGN.md)
 | `status` | `active` \| `inactive` |
 | `page` / `per_page` | pagination (`meta`) |
 
-Use IDs for FK filters — not names.
-
-### Authorization (coarse only)
+### Authorization (Phase 3.6)
 
 | Role | Capability |
 |------|------------|
@@ -114,182 +135,44 @@ Use IDs for FK filters — not names.
 | Project Manager | Read-only user directory |
 | Employee | View own profile |
 
-Lookup endpoints (roles / departments / job titles): **all authenticated users**.
-
-### Auth / account status (approved)
-
-- Inactive users (`status = inactive`) **must not** log in
-- Response: HTTP `403` with dedicated message (e.g. `Account is inactive.`)
-- Do not treat inactive accounts as generic invalid credentials (`401`)
-
-### Quality bar for completion
-
-- Passing feature tests for User Management + lookup endpoints
-- Updated documentation reflecting implemented behavior
-- Git commit (and push when requested)
-
 ---
 
-## 4. Out of Scope (Future Work)
-
-Documented deferred items:
+## 7. Out of Scope (Future Work)
 
 - Department CRUD
 - Job Title CRUD
 - Multi-role users
 - Multi-department users
-- Teams
-- Branches
-- Organization Settings
-- Invitation Emails
-- Force Password Change
-- Permission Management
-- Advanced RBAC
-- Projects, Tasks, Remarks, Activity Logs (later phases)
-- Vue UI for User Management (frontend milestone; API-first here)
+- Teams / Branches / Organization Settings
+- Invitation Emails / Force Password Change
+- Permission Management / Advanced RBAC
+- Vue UI for User Management
 
 ---
 
-## 5. Business Rules Summary
+## 8. Acceptance Criteria
 
-### Departments
+### Done (3.1–3.3)
 
-- Read-only in this milestone
-- Seeded by default
-- Soft deletes supported at persistence layer
-- CRUD postponed
+- [x] Users schema matches ERD (soft deletes + FKs RESTRICT)
+- [x] Departments and Job Titles migrated, seeded, soft-deletable
+- [x] Morph map includes `department`, `job_title`
+- [x] User CRUD + status endpoints with standard envelope
+- [x] Inactive login rejected with dedicated `403`
+- [x] `last_login_at` updated on successful login
+- [x] `email_verified_at` retained
+- [x] Feature tests green for 3.1–3.3
+- [x] Docs synchronized for implemented behavior
 
-### Job Titles
+### Remaining
 
-- Read-only in this milestone
-- Seeded by default
-- Soft deletes supported at persistence layer
-- CRUD postponed
-
-### Roles
-
-- Continue using Administrator, Project Manager, Employee
-- Remain read-only (list/show)
-- Drive coarse authorization only
-
-### Users
-
-Required / notable fields:
-
-| Field | Notes |
-|-------|-------|
-| `role_id` | Required FK → roles |
-| `department_id` | Nullable FK → departments |
-| `job_title_id` | Nullable FK → job_titles |
-| `first_name` | Required |
-| `middle_name` | Nullable |
-| `last_name` | Required |
-| `email` | Unique; login identifier |
-| `email_verified_at` | Kept for future compatibility; not enforced in M3 |
-| `password` | Hashed; never returned |
-| `avatar` | Nullable |
-| `status` | Enum-backed (`active` / `inactive`) |
-| `last_login_at` | Nullable; set on successful login |
-| timestamps | `created_at`, `updated_at` |
-| soft deletes | `deleted_at` |
-
-Replace legacy single `name` column with structured name fields as part of ERD alignment. Keep `email_verified_at`.
-
-FK delete behavior: **RESTRICT** for `role_id`, `department_id`, and `job_title_id` while users exist. Do not use `SET NULL`.
+- [ ] Lookup endpoints (3.4)
+- [ ] User list filters + pagination (3.5)
+- [ ] Coarse authorization enforced (3.6)
 
 ---
 
-## 6. Relationships
-
-| From | Type | To |
-|------|------|-----|
-| Department | hasMany | Users |
-| JobTitle | hasMany | Users |
-| Role | hasMany | Users |
-| User | belongsTo | Department (optional) |
-| User | belongsTo | JobTitle (optional) |
-| User | belongsTo | Role (required) |
-
----
-
-## 7. API Surface (Planned)
-
-All endpoints below are **Planned** — not implemented yet.
-
-### Users
-
-| Method | Path | Notes |
-|--------|------|-------|
-| GET | `/api/v1/users` | Directory; filterable; paginated |
-| GET | `/api/v1/users/{id}` | Show user |
-| POST | `/api/v1/users` | Create user |
-| PUT | `/api/v1/users/{id}` | Update user |
-| DELETE | `/api/v1/users/{id}` | Soft delete |
-| PATCH | `/api/v1/users/{id}/status` | Activate / deactivate |
-
-### Roles
-
-| Method | Path | Notes |
-|--------|------|-------|
-| GET | `/api/v1/roles` | List roles |
-| GET | `/api/v1/roles/{id}` | Show role |
-
-### Departments
-
-| Method | Path | Notes |
-|--------|------|-------|
-| GET | `/api/v1/departments` | List departments |
-| GET | `/api/v1/departments/{id}` | Show department |
-
-### Job Titles
-
-| Method | Path | Notes |
-|--------|------|-------|
-| GET | `/api/v1/job-titles` | List job titles |
-| GET | `/api/v1/job-titles/{id}` | Show job title |
-
-Full request/response contracts: [API_SPECIFICATION.md](../API_SPECIFICATION.md).
-
----
-
-## 8. Implementation Layering (when coding begins)
-
-Follow existing auth patterns:
-
-| Concern | Location |
-|---------|----------|
-| Controllers | `App\Http\Controllers\Api\V1\...` |
-| Form Requests | `App\Http\Requests\Api\V1\...` |
-| API Resources | `App\Http\Resources\Api\V1\...` |
-| Services | `App\Services\...` (e.g. User management service) |
-| Enums | `App\Enums\...` (`RoleName`, `UserStatus`, …) |
-| Policies (coarse) | `App\Policies\UserPolicy` (or equivalent) |
-| Seeders | Departments, Job Titles, Roles (existing) |
-
-Auth responses (`/auth/login`, `/auth/me`) must be updated to the expanded `UserResource` shape when the users schema changes.
-
----
-
-## 9. Acceptance Criteria (Definition of Done)
-
-- [ ] Users schema matches ERD (including soft deletes and FKs)
-- [ ] Departments and Job Titles migrated, seeded, soft-deletable
-- [ ] Morph map includes aliases for introduced models
-- [ ] Planned endpoints implemented with standard envelope
-- [ ] User list supports approved ID filters + `search` + `status` + pagination
-- [ ] Coarse authorization enforced per role matrix
-- [ ] Lookups available to all authenticated users
-- [ ] Inactive login rejected with dedicated `403`
-- [ ] `last_login_at` updated on successful login
-- [ ] FK constraints use RESTRICT for role/department/job title
-- [ ] `email_verified_at` retained on users
-- [ ] Feature tests green
-- [ ] Docs updated from Planned → Implemented where accurate
-- [ ] Focused git commit for the milestone
-
----
-
-## 10. References
+## 9. References
 
 - [DOMAIN_MODEL.md](DOMAIN_MODEL.md)
 - [DATABASE_DESIGN.md](../DATABASE_DESIGN.md)
@@ -298,3 +181,4 @@ Auth responses (`/auth/login`, `/auth/me`) must be updated to the expanded `User
 - [decisions/Organization-User-Management.md](../decisions/Organization-User-Management.md)
 - [decisions/Database.md](../decisions/Database.md)
 - [ROADMAP.md](../ROADMAP.md)
+- [HANDOFF.md](../HANDOFF.md)

@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted
+Accepted — Users ERD and organization reference tables implemented (Phases 3.1–3.2)
 
 ## Context
 
@@ -49,7 +49,7 @@ Approved columns:
 - `role_id` (required)
 - `department_id` (nullable)
 - `job_title_id` (nullable)
-- `first_name`, `middle_name` (nullable), `last_name`
+- `first_name`, `middle_name` (nullable), `last_name` (nullable for legacy name-split compatibility)
 - `email`, `email_verified_at` (kept for future compatibility; not enforced in M3)
 - `password`
 - `avatar` (nullable)

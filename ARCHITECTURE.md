@@ -57,16 +57,16 @@ Follows `CODING_STANDARDS.md`:
 | Services | Business logic |
 | Models | Persistence / relationships |
 | Enums | Domain constants |
-| Policies | Coarse authorization (Milestone 3+) |
+| Policies | Coarse authorization (Phase 3.6) |
 | Exceptions + `ApiExceptionRenderer` | Consistent API errors |
 
 Authentication example:
 
 `AuthController` → `LoginRequest` → `AuthenticationService` → `User` / session → `UserResource`
 
-User Management example (Planned — Milestone 3):
+User Management example (Phase 3.3 — implemented):
 
-`UserController` → Form Request → User service → `User` + relations → `UserResource`
+`UserController` → `StoreUserRequest` / `UpdateUserRequest` / `UpdateUserStatusRequest` → `UserService` → `User` + relations → `UserResource` (+ nested `RoleResource` / `DepartmentResource` / `JobTitleResource`)
 
 ---
 
@@ -83,17 +83,18 @@ User Management example (Planned — Milestone 3):
 
 - Laravel Sanctum SPA cookie mode
 - `web` guard for session auth
-- `auth:sanctum` for protected API routes
+- `auth:sanctum` for protected API routes (including `/users`)
 - Named `login` RateLimiter
 - `guest` middleware on login
+- Inactive accounts blocked at login (`403` / `Account is inactive.`)
 
 Details: [AUTHENTICATION.md](AUTHENTICATION.md)
 
 ---
 
-## Authorization Architecture (Milestone 3 — Planned)
+## Authorization Architecture
 
-Coarse role checks only — not advanced RBAC:
+**Phase 3.6 — Pending.** Coarse role checks only — not advanced RBAC:
 
 | Role | User Management |
 |------|-----------------|
@@ -101,11 +102,9 @@ Coarse role checks only — not advanced RBAC:
 | Project Manager | Read-only user directory |
 | Employee | View own profile |
 
-Lookup endpoints (roles / departments / job titles): **all authenticated users**.
+Until Phase 3.6, User Management APIs require authentication only (`auth:sanctum`).
 
-Inactive accounts cannot log in (`403` dedicated message).
-
-Permission management UIs, ability matrices, and multi-role users are deferred.
+Lookup endpoints (Phase 3.4): all authenticated users.
 
 ---
 
@@ -127,15 +126,14 @@ API routes (`api/*`) render through `App\Exceptions\ApiExceptionRenderer` using 
 
 | Status | Aliases |
 |--------|---------|
-| Registered today | `user`, `role` |
-| Milestone 3 (when models exist) | `department`, `job_title` |
+| Registered | `user`, `role`, `department`, `job_title` |
 | Later | `project`, `task`, `remark`, `activity_log` |
 
 ### Reference Data
 
-- Roles: seeded; read-only in Milestone 3
-- Departments: seeded; read-only in Milestone 3
-- Job Titles: seeded; read-only in Milestone 3
+- Roles: seeded; lookup APIs Phase 3.4
+- Departments: seeded; soft deletes; lookup APIs Phase 3.4
+- Job Titles: seeded; soft deletes; lookup APIs Phase 3.4
 
 ---
 
@@ -143,9 +141,14 @@ API routes (`api/*`) render through `App\Exceptions\ApiExceptionRenderer` using 
 
 | Area | Status |
 |------|--------|
-| API foundation | Implemented |
-| Authentication (API) | Implemented |
-| Organization & User Management (API) | Planned (Milestone 3 — design approved) |
+| API foundation | ✅ Implemented |
+| Authentication (API) | ✅ Implemented |
+| Organization Foundation (3.1) | ✅ Implemented |
+| User Domain Foundation (3.2) | ✅ Implemented |
+| User Management APIs (3.3) | ✅ Implemented |
+| Lookup APIs (3.4) | Pending |
+| Search / filters / pagination (3.5) | Pending |
+| Coarse authorization (3.6) | Pending |
 | Projects / Tasks / Remarks / Activity Logs | Planned |
 | Vue Pinia auth | Planned |
 | Deployment | Planned |

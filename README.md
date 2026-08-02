@@ -14,11 +14,15 @@ Central documentation for the OpsFlow SaaS platform.
 
 | Milestone | Status |
 |-----------|--------|
-| Phase 1 — Project Setup (API foundation) | Completed (backend) |
-| Phase 2 — Authentication (API) | Completed |
+| Phase 1 — Project Setup (API foundation) | ✅ Completed |
+| Phase 2 — Authentication (API) | ✅ Completed |
 | Phase 2 — Pinia auth (Vue) | Pending |
-| Phase 3.1 — Organization Foundation | Implemented (pending review) |
-| Phase 3.2 — User Management | Design approved — not started |
+| Phase 3.1 — Organization Foundation | ✅ Implemented |
+| Phase 3.2 — User Domain Foundation | ✅ Implemented |
+| Phase 3.3 — User Management APIs | ✅ Implemented |
+| Phase 3.4 — Lookup APIs | Not started |
+| Phase 3.5 — Search, Filtering & Pagination | Not started |
+| Phase 3.6 — Authorization (RBAC) | Not started |
 
 ## Documentation Index
 
@@ -47,7 +51,8 @@ Central documentation for the OpsFlow SaaS platform.
 ## Quick Links
 
 - Domain model: [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md)
-- Auth endpoints: `/api/v1/auth/login`, `/api/v1/auth/logout`, `/api/v1/auth/me`
+- Auth: `/api/v1/auth/login`, `/api/v1/auth/logout`, `/api/v1/auth/me`
+- Users (implemented): `/api/v1/users`, `/api/v1/users/{user}`, `/api/v1/users/{user}/status`
 - Health: `GET /api/v1/health`
 - CSRF cookie: `GET /sanctum/csrf-cookie`
-- Milestone 3 (Planned): `/api/v1/users`, `/api/v1/roles`, `/api/v1/departments`, `/api/v1/job-titles`
+- Lookups (Phase 3.4): `/api/v1/roles`, `/api/v1/departments`, `/api/v1/job-titles`

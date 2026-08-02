@@ -108,8 +108,20 @@ Rules:
 - Protect authenticated routes with `auth:sanctum`
 - Keep login guest-only and rate-limited (`guest`, `throttle:login`)
 - Pass only `email` and `password` into `Auth::attempt()`
+- Reject inactive accounts with dedicated `403` (`AccountInactiveException`)
 
 Details: [AUTHENTICATION.md](AUTHENTICATION.md)
+
+---
+
+## User Management (Phase 3.3)
+
+- Thin `UserController`; business logic in `App\Services\Users\UserService`
+- Validate with `StoreUserRequest` / `UpdateUserRequest` / `UpdateUserStatusRequest`
+- Respond with `UserResource` and nested `RoleResource` / `DepartmentResource` / `JobTitleResource` via `whenLoaded()`
+- Hash passwords with `Hash::make`; never return passwords; omit password on update to leave unchanged
+- Soft-delete users only
+- Status patch updates `status` only (`UserStatus`)
 
 ---
 
