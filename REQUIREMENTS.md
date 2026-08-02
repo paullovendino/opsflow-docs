@@ -7,20 +7,20 @@
 - [x] Protected routes (`auth:sanctum`)
 - [x] Current authenticated user (`GET /api/v1/auth/me`)
 - [x] Inactive users cannot log in (`403` / `Account is inactive.`)
-- [ ] Coarse role-based access for User Management (Phase 3.6)
+- [x] Coarse role-based access for User Management (Phase 3.6)
 - [ ] Frontend Pinia authentication
 
 ---
 
 ## Organization Structure
 
-> Phases 3.1–3.2 foundation implemented; lookup APIs Phase 3.4
+> Phases 3.1–3.6 implemented (Milestone 3 complete)
 
 - [x] Seeded Departments (approved list; soft deletes)
 - [x] Seeded Job Titles (approved list; soft deletes)
 - [x] Seeded Roles remain available
 - [x] Users belong to one Role; optional Department and Job Title
-- [ ] Lookup endpoints (list/show) for roles, departments, job titles — all authenticated users (Phase 3.4)
+- [x] Lookup collection endpoints under `/api/v1/lookups` for roles, departments, job titles — all authenticated users (Phase 3.4)
 
 Department CRUD, Job Title CRUD, teams, branches, and organization settings are out of scope for Milestone 3.
 
@@ -43,13 +43,13 @@ Department CRUD, Job Title CRUD, teams, branches, and organization settings are 
 - [x] Update users (`PUT /api/v1/users/{user}`)
 - [x] Soft-delete users (`DELETE /api/v1/users/{user}`)
 - [x] Activate / deactivate users (`PATCH /api/v1/users/{user}/status`)
-- [x] List users (`GET /api/v1/users`) — no filters/pagination yet
+- [x] List users (`GET /api/v1/users`) — search, filters, sorting, pagination (Phase 3.5)
 - [x] Show user (`GET /api/v1/users/{user}`)
 - [x] Assign role (required)
 - [x] Assign department (optional)
 - [x] Assign job title (optional)
-- [ ] List filters: `search`, `role_id`, `department_id`, `job_title_id`, `status` + pagination (Phase 3.5)
-- [ ] Coarse authorization (Phase 3.6):
+- [x] User list: `search`, filters (`role_id`, `department_id`, `job_title_id`, `status`), sorting, pagination (Phase 3.5)
+- [x] Coarse authorization (Phase 3.6):
   - Administrator — full user management
   - Project Manager — read-only directory
   - Employee — view own profile
@@ -58,11 +58,16 @@ Department CRUD, Job Title CRUD, teams, branches, and organization settings are 
 
 ## Project Management
 
-- Create project
-- Update project
-- Delete project
-- Archive project
-- View project details
+> Phase 4 — Pending (next implementation milestone)
+
+High-level scope (see [ROADMAP.md](ROADMAP.md) / [HANDOFF.md](HANDOFF.md)):
+
+- [ ] Project CRUD
+- [ ] Project Members
+- [ ] Project Status
+- [ ] Project Queries
+- [ ] Project Policies
+- [ ] Project Tests
 
 ---
 

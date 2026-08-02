@@ -36,6 +36,7 @@ app/
 ├── Models/
 ├── Policies/
 ├── Providers/
+├── Queries/          # List/search/filter/sort/pagination query objects
 ├── Repositories/
 ├── Services/
 ├── Traits/
@@ -114,14 +115,27 @@ Details: [AUTHENTICATION.md](AUTHENTICATION.md)
 
 ---
 
-## User Management (Phase 3.3)
+## User Management (Phase 3.3–3.6)
 
 - Thin `UserController`; business logic in `App\Services\Users\UserService`
-- Validate with `StoreUserRequest` / `UpdateUserRequest` / `UpdateUserStatusRequest`
+- List query concerns in `App\Queries\Users\UserQuery`; validate index params with `IndexUsersRequest`
+- Validate mutations with `StoreUserRequest` / `UpdateUserRequest` / `UpdateUserStatusRequest`
+- Authorize with `App\Policies\UserPolicy` via `$this->authorize()` (no scattered role checks)
 - Respond with `UserResource` and nested `RoleResource` / `DepartmentResource` / `JobTitleResource` via `whenLoaded()`
 - Hash passwords with `Hash::make`; never return passwords; omit password on update to leave unchanged
 - Soft-delete users only
 - Status patch updates `status` only (`UserStatus`)
+- Unauthorized → HTTP `403` via `ApiExceptionRenderer` envelope
+
+---
+
+## Lookups (Phase 3.4)
+
+- Thin `LookupController`; business logic in `App\Services\Lookups\LookupService`
+- Routes under `/api/v1/lookups` (`roles`, `departments`, `job-titles`) — collections only (no show)
+- Respond with `RoleResource` / `DepartmentResource` / `JobTitleResource`
+- Exclude soft-deleted departments and job titles; order by `name`
+- Protect with `auth:sanctum` (all authenticated users)
 
 ---
 

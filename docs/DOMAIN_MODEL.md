@@ -197,18 +197,18 @@ Defines permission posture for a user. Roles answer: *what is this user allowed 
 | `project_manager` | Manage projects and tasks; limited directory access |
 | `employee` | Assigned work; limited self-service |
 
-- Milestone 3: Roles remain **read-only** (lookup list/show in Phase 3.4)
+- Milestone 3: Roles remain **read-only** (lookup collection via `/api/v1/lookups/roles` in Phase 3.4)
 - Advanced permission matrices and custom roles are out of scope
 
-### Milestone 3 Authorization (coarse — Phase 3.6)
+### Milestone 3 Authorization (coarse — Phase 3.6 — implemented)
 
 | Role | User Management |
 |------|-----------------|
-| Administrator | Full user management |
-| Project Manager | Read-only user directory |
-| Employee | View own profile |
+| `administrator` | Full user management |
+| `project_manager` | Read-only user directory |
+| `employee` | View own profile |
 
-User CRUD APIs exist (Phase 3.3); coarse enforcement is Phase 3.6.
+Enforced via `UserPolicy` on User Management endpoints.
 
 ### Future Expansion
 

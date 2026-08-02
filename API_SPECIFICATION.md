@@ -234,13 +234,12 @@ Cookie: <session-cookie>
 
 ## Organization & User Management
 
-> **Phases 3.1–3.3 implemented.**  
-> Remaining: Phase 3.4 Lookup APIs · Phase 3.5 Search/Filtering/Pagination · Phase 3.6 Authorization (RBAC).
+> **Phases 3.1–3.6 implemented (Milestone 3 complete).**
 
 Domain reference: [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md)  
 Milestone spec: [docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md](docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md)
 
-### Authorization (coarse — Phase 3.6 Pending)
+### Authorization (coarse — Phase 3.6 Implemented)
 
 | Role | Capability |
 |------|------------|
@@ -248,9 +247,9 @@ Milestone spec: [docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md](docs/MILESTON
 | Project Manager | Read-only user directory |
 | Employee | View own profile |
 
-Until Phase 3.6, User Management routes require `auth:sanctum` only (any authenticated user).
+User Management routes require `auth:sanctum` and `UserPolicy` checks. Unauthorized → HTTP `403` with the standard API envelope.
 
-Lookup reads (roles / departments / job titles): **all authenticated users** — Phase 3.4.
+Lookup reads (roles / departments / job titles): **all authenticated users** — Phase 3.4 (not role-gated).
 
 Advanced RBAC / permission matrices remain out of scope.
 
@@ -293,43 +292,59 @@ Password is never returned. `department` / `job_title` may be `null`. Nested obj
 
 ## Users
 
-> **Phase 3.3 — Implemented (CRUD APIs)**  
-> Filtering, pagination, lookup APIs, and role-based authorization are **not** implemented in this phase.
+> **Phase 3.3 — Implemented (CRUD APIs)** · **Phase 3.5 — Implemented (list query)** · **Phase 3.6 — Implemented (authorization)**  
+> Lookup APIs are Phase 3.4 (`/api/v1/lookups/*`).
 
 ### GET /api/v1/users
 
-**Status:** Implemented (Phase 3.3)
+**Status:** Implemented (Phases 3.3 + 3.5 + 3.6)
 
-List users (directory).
+List users (directory) with search, filtering, sorting, and pagination.
 
 **Authentication:** `auth:sanctum`  
-**Authorization:** Deferred (any authenticated user for now)
+**Authorization:** Administrator, Project Manager
 
-**Success:** `200` with user collection in `data` (`meta` null). Filtering/pagination deferred.
+**Query parameters:**
+
+| Param | Rules / notes |
+|-------|----------------|
+| `search` | Optional string; matches `first_name`, `middle_name`, `last_name`, `email` (case-insensitive) |
+| `role_id` | Optional integer; must exist in `roles` |
+| `department_id` | Optional integer; must exist in `departments` |
+| `job_title_id` | Optional integer; must exist in `job_titles` |
+| `status` | Optional; `active` \| `inactive` |
+| `sort` | Optional; one of `first_name`, `last_name`, `email`, `created_at`, `last_login_at`, `status` (default `created_at`) |
+| `direction` | Optional; `asc` \| `desc` (default `desc`) |
+| `page` | Optional integer ≥ 1 (default `1`) |
+| `per_page` | Optional integer 1–100 (default `15`); values above 100 are clamped to 100 |
+
+Filters are composable (e.g. `status` + `department_id` + `search` together).
+
+**Success:** `200` with user collection in `data` and pagination in `meta` (`current_page`, `last_page`, `per_page`, `total`, `from`, `to`). Invalid query params → `422`. Unauthorized → `403`.
 
 ---
 
 ### GET /api/v1/users/{id}
 
-**Status:** Implemented (Phase 3.3)
+**Status:** Implemented (Phase 3.3 + 3.6)
 
 Show a single user.
 
 **Authentication:** `auth:sanctum`  
-**Authorization:** Deferred (any authenticated user for now)
+**Authorization:** Administrator, Project Manager; Employee may view **own** profile only
 
-**Success:** `200` with user object in `data`.
+**Success:** `200` with user object in `data`. Unauthorized → `403`.
 
 ---
 
 ### POST /api/v1/users
 
-**Status:** Implemented (Phase 3.3)
+**Status:** Implemented (Phase 3.3 + 3.6)
 
 Create a user.
 
 **Authentication:** `auth:sanctum`  
-**Authorization:** Deferred (any authenticated user for now)
+**Authorization:** Administrator only
 
 **Request body:**
 
@@ -361,40 +376,40 @@ Create a user.
 
 ### PUT /api/v1/users/{id}
 
-**Status:** Implemented (Phase 3.3)
+**Status:** Implemented (Phase 3.3 + 3.6)
 
 Update a user.
 
 **Authentication:** `auth:sanctum`  
-**Authorization:** Deferred (any authenticated user for now)
+**Authorization:** Administrator only
 
 **Request body:** same fields as create; password optional on update (unchanged when omitted).
 
-**Success:** `200` with updated user in `data`.
+**Success:** `200` with updated user in `data`. Unauthorized → `403`.
 
 ---
 
 ### DELETE /api/v1/users/{id}
 
-**Status:** Implemented (Phase 3.3)
+**Status:** Implemented (Phase 3.3 + 3.6)
 
 Soft-delete a user.
 
 **Authentication:** `auth:sanctum`  
-**Authorization:** Deferred (any authenticated user for now)
+**Authorization:** Administrator only
 
-**Success:** `200` with standard envelope.
+**Success:** `200` with standard envelope. Unauthorized → `403`.
 
 ---
 
 ### PATCH /api/v1/users/{id}/status
 
-**Status:** Implemented (Phase 3.3)
+**Status:** Implemented (Phase 3.3 + 3.6)
 
 Activate or deactivate a user. Updates `status` only.
 
 **Authentication:** `auth:sanctum`  
-**Authorization:** Deferred (any authenticated user for now)
+**Authorization:** Administrator only
 
 **Request body:**
 
@@ -410,87 +425,45 @@ Accepted `status` values (`UserStatus`): `active`, `inactive`.
 
 ---
 
-## Roles
+## Lookups
 
-> Planned — Milestone 3 (read-only)
+> **Phase 3.4 — Implemented** (read-only reference collections)
 
-### GET /api/v1/roles
+Shared prefix: `/api/v1/lookups`. Collection endpoints only (no show/`{id}` routes). Soft-deleted departments and job titles are excluded. Results are sorted alphabetically by `name`.
 
-**Status:** Planned
+### GET /api/v1/lookups/roles
+
+**Status:** Implemented (Phase 3.4)
 
 List seeded roles.
 
 **Authentication:** `auth:sanctum` (all authenticated users)
 
-**Success:** `200` with roles collection in `data`.
+**Success:** `200` with roles collection in `data` (`RoleResource`).
 
 ---
 
-### GET /api/v1/roles/{id}
+### GET /api/v1/lookups/departments
 
-**Status:** Planned
+**Status:** Implemented (Phase 3.4)
 
-Show a role.
+List departments (non-soft-deleted).
 
 **Authentication:** `auth:sanctum` (all authenticated users)
 
-**Success:** `200` with role object in `data`.
+**Success:** `200` with departments collection in `data` (`DepartmentResource`).
 
 ---
 
-## Departments
+### GET /api/v1/lookups/job-titles
 
-> Planned — Milestone 3 (read-only; seeded)
+**Status:** Implemented (Phase 3.4)
 
-### GET /api/v1/departments
-
-**Status:** Planned
-
-List departments.
+List job titles (non-soft-deleted).
 
 **Authentication:** `auth:sanctum` (all authenticated users)
 
-**Success:** `200` with departments collection in `data`.
-
----
-
-### GET /api/v1/departments/{id}
-
-**Status:** Planned
-
-Show a department.
-
-**Authentication:** `auth:sanctum` (all authenticated users)
-
-**Success:** `200` with department object in `data`.
-
----
-
-## Job Titles
-
-> Planned — Milestone 3 (read-only; seeded)
-
-### GET /api/v1/job-titles
-
-**Status:** Planned
-
-List job titles.
-
-**Authentication:** `auth:sanctum` (all authenticated users)
-
-**Success:** `200` with job titles collection in `data`.
-
----
-
-### GET /api/v1/job-titles/{id}
-
-**Status:** Planned
-
-Show a job title.
-
-**Authentication:** `auth:sanctum` (all authenticated users)
-
-**Success:** `200` with job title object in `data`.
+**Success:** `200` with job titles collection in `data` (`JobTitleResource`).
 
 ---
 

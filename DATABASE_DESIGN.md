@@ -2,7 +2,7 @@
 
 Physical schema companion to [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md).
 
-**Milestone 3 status:** Phases 3.1–3.3 implemented (org foundation, users ERD, User CRUD APIs). Remaining: 3.4 lookups, 3.5 filters/pagination, 3.6 authorization.
+**Milestone 3 status:** Phases 3.1–3.6 implemented (Milestone 3 complete).
 
 ---
 
@@ -142,13 +142,13 @@ Represented in code with `App\Enums\RoleName`.
 - `role_id` required; `department_id` / `job_title_id` nullable for onboarding flexibility
 - Indexes: FKs + `status`; unique `email`
 
-**Phase status:** Phase 3.2 schema/model/auth + Phase 3.3 User CRUD APIs implemented. Lookups/filters/authz remain 3.4–3.6.
+**Phase status:** Phase 3.2–3.6 complete (schema, CRUD, lookups, list query, coarse authorization).
 
 ---
 
 ### Projects
 
-> Planned — later phase
+> Phase 4 — Pending (schema to be confirmed at implementation; do not invent beyond ADR updates)
 
 - id
 - name
@@ -265,7 +265,7 @@ Notes:
 - Nullable `department_id` / `job_title_id` still allows users without a department or job title
 - Hard-deleting a referenced Department, Job Title, or Role must fail while users exist
 - Soft deletes on Departments / Job Titles do not remove the row; RESTRICT applies to hard deletes
-- List endpoints typically exclude soft-deleted reference rows unless explicitly requested later
+- Lookup list endpoints (`/api/v1/lookups/*`) exclude soft-deleted reference rows unless explicitly requested later
 
 ---
 

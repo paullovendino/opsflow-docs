@@ -12,9 +12,13 @@ OpsFlow development roadmap by phase.
 |-------|-----------|--------|
 | Phase 1 | Backend Foundation (API) | ✅ Completed |
 | Phase 2 | Authentication (API) | ✅ Completed |
+| **Milestone 3** | **Organization & User Management** | ✅ **Complete** |
 | Phase 3.1 | Organization Foundation | ✅ Implemented |
 | Phase 3.2 | User Domain Foundation | ✅ Implemented |
 | Phase 3.3 | User Management APIs | ✅ Implemented |
+| Phase 3.4 | Lookup APIs | ✅ Implemented |
+| Phase 3.5 | Search, Filtering & Pagination | ✅ Implemented |
+| Phase 3.6 | Authorization (RBAC) | ✅ Implemented |
 
 ---
 
@@ -58,7 +62,7 @@ OpsFlow development roadmap by phase.
 
 ## Phase 3 — Organization & User Management
 
-**Status: Phases 3.1–3.3 implemented · Phases 3.4–3.6 remaining**
+**Status: Milestone 3 complete (Phases 3.1–3.6 implemented)**
 
 Specification:
 
@@ -104,32 +108,39 @@ Organization
 - [x] `RoleResource` / `DepartmentResource` / `JobTitleResource` + updated `UserResource`
 - [x] Soft delete; password hashing via `Hash::make`; status-only patch
 - [x] PHPUnit Feature tests (`UserManagementApiTest`) + prior suites green
-- [x] Auth remains `auth:sanctum` (role policies deferred to 3.6)
+- [x] `auth:sanctum` required; coarse role policies added in Phase 3.6
 
 ### Phase 3.4 — Lookup APIs
 
-**Status: Pending**
+**Status: ✅ Implemented**
 
-- [ ] `GET /api/v1/roles`, `GET /api/v1/roles/{id}`
-- [ ] `GET /api/v1/departments`, `GET /api/v1/departments/{id}`
-- [ ] `GET /api/v1/job-titles`, `GET /api/v1/job-titles/{id}`
-- [ ] Accessible to all authenticated users
+- [x] `GET /api/v1/lookups/roles`
+- [x] `GET /api/v1/lookups/departments`
+- [x] `GET /api/v1/lookups/job-titles`
+- [x] Shared `LookupController` / `LookupService` (collections only; no show)
+- [x] Soft-deleted departments/job titles excluded; sorted by `name`
+- [x] Accessible to all authenticated users
+- [x] PHPUnit Feature tests (`LookupApiTest`) + prior suites green
 
 ### Phase 3.5 — Search, Filtering & Pagination
 
-**Status: Pending**
+**Status: ✅ Implemented**
 
-- [ ] User list `search`
-- [ ] Filters: `role_id`, `department_id`, `job_title_id`, `status`
-- [ ] Pagination with standard `meta` fields
+- [x] User list `search` (`first_name`, `middle_name`, `last_name`, `email`)
+- [x] Filters: `role_id`, `department_id`, `job_title_id`, `status` (composable)
+- [x] Sorting: `sort` + `direction` (allowed: `first_name`, `last_name`, `email`, `created_at`, `last_login_at`, `status`; default `created_at`/`desc`)
+- [x] Pagination: `page` / `per_page` (default 15, max 100 clamped) with standard `meta` fields
+- [x] `UserQuery` + `IndexUsersRequest`; PHPUnit `UserListQueryTest`
+- [x] Out of scope preserved: Authorization (RBAC), Frontend, Projects, Tasks, Remarks, Dashboard, Reports
 
 ### Phase 3.6 — Authorization (RBAC)
 
-**Status: Pending**
+**Status: ✅ Implemented**
 
-- [ ] Coarse authorization (Administrator / Project Manager / Employee)
-- [ ] Policies/gates for User Management
-- [ ] Not advanced permission matrices
+- [x] Coarse authorization (Administrator / Project Manager / Employee)
+- [x] `UserPolicy` + registration; controller `$this->authorize()`
+- [x] PHPUnit `UserAuthorizationTest`
+- [x] Not advanced permission matrices
 
 ### Explicitly out of scope (Milestone 3)
 
@@ -139,10 +150,14 @@ Department/Job Title CRUD, multi-role / multi-department users, teams, branches,
 
 ## Phase 4 — Project Management
 
-**Status: Pending**
+**Status: Pending** — next implementation milestone (wait for explicit approval)
 
-- CRUD Projects
-- Project Dashboard
+- Project CRUD
+- Project Members
+- Project Status
+- Project Queries
+- Project Policies
+- Project Tests
 
 ---
 

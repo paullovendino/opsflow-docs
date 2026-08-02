@@ -16,7 +16,7 @@
 
 > Frontend pages planned. Backend User CRUD APIs implemented (Phase 3.3).
 
-- User List (filters/pagination planned Phase 3.5)
+- User List (API: search/filters/sorting/pagination + authz — Milestone 3 complete; UI pending)
 - Create User
 - Edit User
 - User Details
@@ -24,7 +24,7 @@
 
 ### Reference data (read-only UI)
 
-> Lookup APIs planned in Phase 3.4
+> Lookup APIs implemented in Phase 3.4 (`/api/v1/lookups/*`); Vue screens later
 
 - Roles lookup (no CRUD screens in Milestone 3)
 - Departments lookup (no CRUD screens in Milestone 3)

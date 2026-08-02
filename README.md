@@ -17,12 +17,14 @@ Central documentation for the OpsFlow SaaS platform.
 | Phase 1 — Project Setup (API foundation) | ✅ Completed |
 | Phase 2 — Authentication (API) | ✅ Completed |
 | Phase 2 — Pinia auth (Vue) | Pending |
+| **Milestone 3 — Organization & User Management** | ✅ **Complete** (3.1–3.6) |
 | Phase 3.1 — Organization Foundation | ✅ Implemented |
 | Phase 3.2 — User Domain Foundation | ✅ Implemented |
 | Phase 3.3 — User Management APIs | ✅ Implemented |
-| Phase 3.4 — Lookup APIs | Not started |
-| Phase 3.5 — Search, Filtering & Pagination | Not started |
-| Phase 3.6 — Authorization (RBAC) | Not started |
+| Phase 3.4 — Lookup APIs | ✅ Implemented |
+| Phase 3.5 — Search, Filtering & Pagination (incl. Sorting) | ✅ Implemented |
+| Phase 3.6 — Authorization (RBAC) | ✅ Implemented |
+| Phase 4 — Project Management | Pending (next) |
 
 ## Documentation Index
 
@@ -55,4 +57,7 @@ Central documentation for the OpsFlow SaaS platform.
 - Users (implemented): `/api/v1/users`, `/api/v1/users/{user}`, `/api/v1/users/{user}/status`
 - Health: `GET /api/v1/health`
 - CSRF cookie: `GET /sanctum/csrf-cookie`
-- Lookups (Phase 3.4): `/api/v1/roles`, `/api/v1/departments`, `/api/v1/job-titles`
+- Lookups (Phase 3.4): `/api/v1/lookups/roles`, `/api/v1/lookups/departments`, `/api/v1/lookups/job-titles`
+- Users list (Phase 3.5): search / filters / sorting / pagination on `GET /api/v1/users`
+- Authorization (Phase 3.6): coarse User Management policies (`UserPolicy`)
+- Next: Phase 4 — Project Management — see [HANDOFF.md](HANDOFF.md)

@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted — Phases 3.1–3.3 implemented; 3.4–3.6 remaining
+Accepted — Phases 3.1–3.6 implemented (Milestone 3 complete)
 
 ## Context
 
@@ -41,9 +41,9 @@ Organization
 | Departments / Job Titles foundation (3.1) | Implemented |
 | Users ERD + auth compatibility (3.2) | Implemented |
 | User CRUD APIs (3.3) | Implemented |
-| Lookup APIs (3.4) | Pending |
-| Search / filters / pagination (3.5) | Pending |
-| Coarse authorization (3.6) | Pending |
+| Lookup APIs (3.4) | Implemented |
+| Search / filters / sorting / pagination (3.5) | Implemented |
+| Coarse authorization (3.6) | Implemented |
 
 ### Users ERD
 
@@ -57,19 +57,16 @@ Inactive users (`status = inactive`) must not authenticate → HTTP `403` (`Acco
 
 ### API paths
 
-**Implemented (3.3):**
+**Implemented (3.3–3.5):**
 
 - Users: `GET/POST /api/v1/users`, `GET/PUT/DELETE /api/v1/users/{user}`, `PATCH /api/v1/users/{user}/status`
+- List query: search, filters, sorting, pagination
 
-**Pending (3.4):**
+**Implemented (3.4):**
 
-- Roles / Departments / Job Titles list + show
+- Lookups (collections only): `GET /api/v1/lookups/roles`, `/lookups/departments`, `/lookups/job-titles`
 
-### Filtering (Phase 3.5)
-
-User list filters: `search`, `role_id`, `department_id`, `job_title_id`, `status`, plus pagination.
-
-### Coarse authorization (Phase 3.6)
+### Coarse authorization (Phase 3.6) — Implemented
 
 | Role | User Management |
 |------|-----------------|
@@ -77,10 +74,14 @@ User list filters: `search`, `role_id`, `department_id`, `job_title_id`, `status
 | Project Manager | Read-only user directory |
 | Employee | View own profile |
 
+Enforced via `UserPolicy` + controller `$this->authorize()`. Unauthorized → `403` API envelope.
+
+Lookups remain available to all authenticated users (not role-gated).
+
 ## Consequences
 
 - Auth `UserResource` uses structured profile + nested Role/Department/JobTitle resources
-- User Management currently authenticates only (`auth:sanctum`); role policies arrive in 3.6
+- User Management requires `auth:sanctum` **and** coarse role policy checks
 - Hard-deleting referenced departments/job titles/roles is blocked while users reference them
 - Advanced RBAC, invitations, multi-role/multi-department, and org settings remain future work
 

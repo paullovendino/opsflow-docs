@@ -40,11 +40,11 @@ Use **Laravel Sanctum SPA cookie authentication**.
 - `Auth::attempt()` receives only `email` and `password` (credential allowlist)
 - Session regenerated after login; invalidated on logout
 
-### RBAC preparation
+### RBAC (Phase 3.6 — implemented)
 
-- Roles table + `RoleName` enum + seeder exist; `User::role()` is usable (users ERD Phase 3.2)
-- Coarse User Management authorization is **Phase 3.6** (not advanced RBAC)
-- Until then, `/api/v1/users` requires `auth:sanctum` only
+- Roles table + `RoleName` enum + seeder; `User::role()` relation
+- Coarse User Management authorization via `UserPolicy` (not advanced RBAC)
+- Unauthorized User Management actions return HTTP `403` with the standard API envelope
 - See [decisions/Organization-User-Management.md](Organization-User-Management.md)
 
 ### Inactive accounts (Phase 3.2 — implemented)

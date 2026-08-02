@@ -12,14 +12,19 @@ Implemented endpoints:
 - `POST /api/v1/auth/logout`
 - `GET /api/v1/auth/me`
 
-Out of scope for this milestone:
+Out of scope for the authentication module:
 
 - Registration
 - Password reset / forgot password
 - Email verification
 - Social login
-- RBAC enforcement
-- User CRUD
+- Advanced RBAC / permission matrices
+- Token auth for mobile clients
+
+Related (implemented in Milestone 3, not part of this auth guide):
+
+- User Management CRUD + status APIs
+- Coarse User Management authorization (`UserPolicy`)
 
 ---
 
@@ -194,11 +199,11 @@ See also: [decisions/Authentication.md](decisions/Authentication.md)
 
 **Phase 3.3 (implemented):**
 
-- User CRUD APIs under `/api/v1/users` (authenticated; role policies deferred to Phase 3.6)
+- User CRUD APIs under `/api/v1/users` (authenticated)
 
-**Phase 3.6 (planned):**
+**Phase 3.6 (implemented):**
 
-- Coarse authorization for User Management endpoints (not advanced RBAC)
+- Coarse authorization for User Management via `UserPolicy` (not advanced RBAC)
 
 Domain: [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md)  
 ADR: [decisions/Organization-User-Management.md](decisions/Organization-User-Management.md)

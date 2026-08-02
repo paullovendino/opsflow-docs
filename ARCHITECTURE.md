@@ -55,9 +55,10 @@ Follows `CODING_STANDARDS.md`:
 | Form Requests | Validation |
 | API Resources | Response shaping |
 | Services | Business logic |
+| Queries | List search / filter / sort / pagination |
 | Models | Persistence / relationships |
 | Enums | Domain constants |
-| Policies | Coarse authorization (Phase 3.6) |
+| Policies | Coarse User Management authorization (`UserPolicy`) |
 | Exceptions + `ApiExceptionRenderer` | Consistent API errors |
 
 Authentication example:
@@ -67,6 +68,14 @@ Authentication example:
 User Management example (Phase 3.3 — implemented):
 
 `UserController` → `StoreUserRequest` / `UpdateUserRequest` / `UpdateUserStatusRequest` → `UserService` → `User` + relations → `UserResource` (+ nested `RoleResource` / `DepartmentResource` / `JobTitleResource`)
+
+User list example (Phase 3.5 — implemented):
+
+`UserController::index` → `IndexUsersRequest` → `UserService::list` → `UserQuery` → paginated `UserResource` collection + `meta`
+
+Lookups example (Phase 3.4):
+
+`LookupController` → `LookupService` → `Role` / `Department` / `JobTitle` → `RoleResource` / `DepartmentResource` / `JobTitleResource`
 
 ---
 
@@ -94,7 +103,7 @@ Details: [AUTHENTICATION.md](AUTHENTICATION.md)
 
 ## Authorization Architecture
 
-**Phase 3.6 — Pending.** Coarse role checks only — not advanced RBAC:
+**Phase 3.6 — Implemented.** Coarse role checks only — not advanced RBAC:
 
 | Role | User Management |
 |------|-----------------|
@@ -102,9 +111,9 @@ Details: [AUTHENTICATION.md](AUTHENTICATION.md)
 | Project Manager | Read-only user directory |
 | Employee | View own profile |
 
-Until Phase 3.6, User Management APIs require authentication only (`auth:sanctum`).
+Enforced via `App\Policies\UserPolicy` and `$this->authorize()` in `UserController`. Unauthorized → HTTP `403` API envelope.
 
-Lookup endpoints (Phase 3.4): all authenticated users.
+Lookup endpoints (Phase 3.4): `GET /api/v1/lookups/{roles,departments,job-titles}` — all authenticated users; collections only.
 
 ---
 
@@ -131,9 +140,9 @@ API routes (`api/*`) render through `App\Exceptions\ApiExceptionRenderer` using 
 
 ### Reference Data
 
-- Roles: seeded; lookup APIs Phase 3.4
-- Departments: seeded; soft deletes; lookup APIs Phase 3.4
-- Job Titles: seeded; soft deletes; lookup APIs Phase 3.4
+- Roles: seeded; lookup via `/api/v1/lookups/roles`
+- Departments: seeded; soft deletes; lookup via `/api/v1/lookups/departments`
+- Job Titles: seeded; soft deletes; lookup via `/api/v1/lookups/job-titles`
 
 ---
 
@@ -146,9 +155,11 @@ API routes (`api/*`) render through `App\Exceptions\ApiExceptionRenderer` using 
 | Organization Foundation (3.1) | ✅ Implemented |
 | User Domain Foundation (3.2) | ✅ Implemented |
 | User Management APIs (3.3) | ✅ Implemented |
-| Lookup APIs (3.4) | Pending |
-| Search / filters / pagination (3.5) | Pending |
-| Coarse authorization (3.6) | Pending |
-| Projects / Tasks / Remarks / Activity Logs | Planned |
+| Lookup APIs (3.4) | ✅ Implemented |
+| Search / filters / sorting / pagination (3.5) | ✅ Implemented |
+| Coarse authorization (3.6) | ✅ Implemented |
+| **Milestone 3** | ✅ **Complete** |
+| Phase 4 — Project Management | Pending (next) |
+| Tasks / Remarks / Activity Logs | Planned |
 | Vue Pinia auth | Planned |
 | Deployment | Planned |

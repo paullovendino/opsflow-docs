@@ -8,6 +8,50 @@ Format follows a lightweight Keep a Changelog style.
 
 ## [Unreleased] — v1.0.0 (Development)
 
+### Documentation sync — Milestone 3 complete / handoff for Phase 4
+
+- HANDOFF rewritten as next-session starting context (Milestone 3 complete)
+- Roadmap marks **✅ Milestone 3 — Complete**; next implementation milestone is **Phase 4 — Project Management**
+- Phase 4 approved scope listed: Project CRUD, Members, Status, Queries, Policies, Tests
+- Synchronized README, ROADMAP, DEVELOPMENT_ROADMAP, ADRs, API spec, AUTHENTICATION, ARCHITECTURE, REQUIREMENTS, TESTING, CURSOR_RULES, and related docs
+- Stale “Phase 3.6 pending / deferred” wording removed from ADRs and roadmap notes
+
+### Authorization Foundation (Phase 3.6) — ✅ Implemented
+
+- Coarse User Management RBAC via `UserPolicy` (Administrator / Project Manager / Employee)
+- Policy registered in `AppServiceProvider`; controller `$this->authorize()` on user endpoints
+- Unauthorized actions return API envelope with HTTP `403`
+- PHPUnit Feature suite: `tests/Feature/User/UserAuthorizationTest.php`
+- Existing user list/management tests updated to use Administrator actors
+- Docs synchronized; Milestone 3 backend complete
+
+### Search, Filtering & Pagination (Phase 3.5) — ✅ Implemented
+
+- `GET /api/v1/users` supports composable `search`, filters (`role_id`, `department_id`, `job_title_id`, `status`), sorting, and pagination
+- Search fields: `first_name`, `middle_name`, `last_name`, `email` (case-insensitive)
+- Sort: `sort` + `direction` (allowed: `first_name`, `last_name`, `email`, `created_at`, `last_login_at`, `status`); default `created_at` / `desc`
+- Pagination: `page` / `per_page` (default 15, max 100; values above 100 clamped); standard `meta` fields
+- `UserQuery` owns list query concerns; `IndexUsersRequest` validates query params; `UserService` delegates listing
+- `paginatedResponse` accepts Resource-shaped `data` (never raw models)
+- PHPUnit Feature suite: `tests/Feature/User/UserListQueryTest.php`
+- Docs synchronized; Milestone 3 backend complete; next is Phase 4 (see later documentation sync)
+
+### Documentation sync — Phase 3.4 complete / handoff for 3.5
+
+- HANDOFF rewritten as next-session starting context (Phases 3.1–3.4 complete)
+- Phase 3.5 planned scope clarified: Search, Filtering, **Sorting**, Pagination
+- Phase 3.5 out of scope stated: Authorization (RBAC), Frontend, Projects, Tasks, Remarks, Dashboard, Reports
+- Synchronized ROADMAP, milestone spec, ADR, API spec, REQUIREMENTS, TESTING, ARCHITECTURE, and related docs
+
+### Lookup APIs (Phase 3.4) — ✅ Implemented
+
+- `GET /api/v1/lookups/roles`, `/lookups/departments`, `/lookups/job-titles`
+- Shared `LookupController` + `LookupService` (collections only; no show/`{id}`)
+- Soft-deleted departments/job titles excluded; results ordered by `name`
+- Existing `RoleResource` / `DepartmentResource` / `JobTitleResource`; `auth:sanctum`
+- PHPUnit Feature suite: `tests/Feature/Lookup/LookupApiTest.php`
+- Docs synchronized to `/lookups` prefix contract
+
 ### Documentation sync — Phase 3.3 complete
 
 - Roadmap split remaining work into Phase 3.4 Lookup APIs, 3.5 Search/Filtering/Pagination, 3.6 Authorization (RBAC)

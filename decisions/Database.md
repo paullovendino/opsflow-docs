@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted — Users ERD and organization reference tables implemented (Phases 3.1–3.2)
+Accepted — Milestone 3 complete (Phases 3.1–3.6); organization reference tables, Users ERD, User Management APIs, lookups, list query, and coarse authorization implemented
 
 ## Context
 
@@ -69,8 +69,8 @@ Legacy single `name` column is replaced during ERD alignment. Keep `email_verifi
 |-------|--------|
 | Phase 1 | `roles` (+ Sanctum tokens); default Laravel `users` |
 | Phase 2 | Auth only — no ERD expansion |
-| Phase 3 | Users ERD + `departments` + `job_titles` |
-| Later | Projects, Tasks, Remarks, Activity Logs |
+| Phase 3 | Users ERD + `departments` + `job_titles` (**complete**) |
+| Phase 4+ | Projects (and later Tasks, Remarks, Activity Logs) |
 
 Do not invent schema beyond the approved ERD without updating this decision and `DATABASE_DESIGN.md`.
 

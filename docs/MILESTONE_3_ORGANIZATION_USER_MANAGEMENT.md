@@ -1,10 +1,11 @@
 # Milestone 3 — Organization & User Management
 
-**Status:** Phases 3.1–3.3 implemented · Phases 3.4–3.6 remaining  
+**Status:** Phases 3.1–3.6 implemented (Milestone 3 complete)  
 **Product version:** v1.0.0 (Development)  
 **Last updated:** 2026-08-02
 
-> Implementation specification for Phase 3.  
+> Implementation specification for Milestone 3 — **complete**.  
+> Next product milestone: Phase 4 — Project Management ([ROADMAP.md](../ROADMAP.md)).  
 > Domain reference: [DOMAIN_MODEL.md](DOMAIN_MODEL.md)
 
 ---
@@ -49,9 +50,9 @@ Each user belongs to **one Role** (required), **one Department** (nullable), **o
 | **3.1 Organization Foundation** | `departments` / `job_titles` tables (`name` + `code`), models, seeders, morph aliases | ✅ Implemented |
 | **3.2 User Domain Foundation** | Users ERD + FKs; relations; `UserStatus`; auth inactive `403`; `UserResource` | ✅ Implemented |
 | **3.3 User Management APIs** | `UserController` / `UserService` / Form Requests / CRUD + status | ✅ Implemented |
-| **3.4 Lookup APIs** | Roles / Departments / Job Titles list + show | Pending |
-| **3.5 Search, Filtering & Pagination** | User list `search`, ID filters, pagination `meta` | Pending |
-| **3.6 Authorization (RBAC)** | Coarse role matrix for User Management | Pending |
+| **3.4 Lookup APIs** | `/lookups` collections for Roles / Departments / Job Titles | ✅ Implemented |
+| **3.5 Search, Filtering & Pagination** | User list search, filters, sorting, pagination `meta` | ✅ Implemented |
+| **3.6 Authorization (RBAC)** | Coarse role matrix for User Management | ✅ Implemented |
 
 ---
 
@@ -73,7 +74,7 @@ Full schema: [DATABASE_DESIGN.md](../DATABASE_DESIGN.md)
 
 | Method | Path | Behavior |
 |--------|------|----------|
-| GET | `/api/v1/users` | List users (no filters/pagination yet) |
+| GET | `/api/v1/users` | List users (search/filters/sorting/pagination — Phase 3.5) |
 | GET | `/api/v1/users/{user}` | Show user |
 | POST | `/api/v1/users` | Create user |
 | PUT | `/api/v1/users/{user}` | Update user |
@@ -86,9 +87,12 @@ Full schema: [DATABASE_DESIGN.md](../DATABASE_DESIGN.md)
 |---------|-------|
 | Controller | `App\Http\Controllers\Api\V1\UserController` (thin) |
 | Service | `App\Services\Users\UserService` |
+| List query | `App\Queries\Users\UserQuery` |
+| Authorization | `App\Policies\UserPolicy` (Phase 3.6) |
 | Store validation | `StoreUserRequest` |
 | Update validation | `UpdateUserRequest` |
 | Status validation | `UpdateUserStatusRequest` |
+| Index validation | `IndexUsersRequest` |
 | Resources | `UserResource`, `RoleResource`, `DepartmentResource`, `JobTitleResource` |
 | Status enum | `App\Enums\UserStatus` (`active`, `inactive`) |
 
@@ -99,45 +103,56 @@ Full schema: [DATABASE_DESIGN.md](../DATABASE_DESIGN.md)
 - Status endpoint accepts `UserStatus` values only; does not modify other fields
 - Relations eager-loaded for responses; nested via API Resources + `whenLoaded()`
 - Authentication (login/logout/me) remains compatible; inactive login still `403`
-
-### Not in 3.3
-
-Lookup APIs · search/filters/pagination · policies/authorization
+- Authorization enforced via Laravel Policies (Phase 3.6)
 
 ---
 
-## 6. Remaining API surface
-
-### Roles / Departments / Job Titles (Phase 3.4)
+## 6. Phase 3.4 — Lookup APIs (implemented)
 
 | Method | Path |
 |--------|------|
-| GET | `/api/v1/roles`, `/api/v1/roles/{id}` |
-| GET | `/api/v1/departments`, `/api/v1/departments/{id}` |
-| GET | `/api/v1/job-titles`, `/api/v1/job-titles/{id}` |
+| GET | `/api/v1/lookups/roles` |
+| GET | `/api/v1/lookups/departments` |
+| GET | `/api/v1/lookups/job-titles` |
 
-### Filtering (Phase 3.5)
-
-| Parameter | Type |
-|-----------|------|
-| `search` | string |
-| `role_id` | ID |
-| `department_id` | ID |
-| `job_title_id` | ID |
-| `status` | `active` \| `inactive` |
-| `page` / `per_page` | pagination (`meta`) |
-
-### Authorization (Phase 3.6)
-
-| Role | Capability |
-|------|------------|
-| Administrator | Full User Management |
-| Project Manager | Read-only user directory |
-| Employee | View own profile |
+`LookupController` + `LookupService`; collections only (no show/`{id}`); soft-deleted rows excluded; ordered by `name`; `auth:sanctum` (all authenticated users; not role-gated).
 
 ---
 
-## 7. Out of Scope (Future Work)
+## 7. Phase 3.5 — Search, Filtering & Pagination (implemented)
+
+Target: `GET /api/v1/users`
+
+| Concern | Behavior |
+|---------|----------|
+| Search | `search` against `first_name`, `middle_name`, `last_name`, `email` (case-insensitive) |
+| Filtering | `role_id`, `department_id`, `job_title_id`, `status` (composable with search) |
+| Sorting | `sort` + `direction`; allowed: `first_name`, `last_name`, `email`, `created_at`, `last_login_at`, `status`; default `created_at` / `desc` |
+| Pagination | `page` / `per_page` (default 15, max 100; values above 100 clamped to 100); items in `data`, page info in `meta` |
+
+**Classes:** `IndexUsersRequest`, `UserQuery`, `UserService::list()`, `UserController::index()`, `ApiResponse::paginatedResponse()`
+
+---
+
+## 8. Phase 3.6 — Authorization (RBAC) (implemented)
+
+Coarse role matrix for User Management only:
+
+| Role | Capability |
+|------|------------|
+| Administrator | Full User Management (list, view, create, update, delete, status) |
+| Project Manager | Read-only user directory (list, view) |
+| Employee | View own profile only (`GET /users/{self}`) |
+
+**Classes:** `App\Policies\UserPolicy`; registered via `Gate::policy` in `AppServiceProvider`; enforced with `$this->authorize()` in `UserController`.
+
+Unauthorized → HTTP `403` with standard API envelope (`This action is unauthorized.`).
+
+**Out of scope:** Permission tables, dynamic permissions, project/task/remark policies, frontend, advanced RBAC.
+
+---
+
+## 9. Out of Scope (Future Work)
 
 - Department CRUD
 - Job Title CRUD
@@ -150,29 +165,26 @@ Lookup APIs · search/filters/pagination · policies/authorization
 
 ---
 
-## 8. Acceptance Criteria
+## 10. Acceptance Criteria
 
-### Done (3.1–3.3)
+### Done (3.1–3.6)
 
 - [x] Users schema matches ERD (soft deletes + FKs RESTRICT)
 - [x] Departments and Job Titles migrated, seeded, soft-deletable
 - [x] Morph map includes `department`, `job_title`
 - [x] User CRUD + status endpoints with standard envelope
+- [x] Lookup collections under `/api/v1/lookups` (roles / departments / job titles)
 - [x] Inactive login rejected with dedicated `403`
 - [x] `last_login_at` updated on successful login
 - [x] `email_verified_at` retained
-- [x] Feature tests green for 3.1–3.3
+- [x] User list search + filters + sorting + pagination (3.5)
+- [x] Coarse authorization enforced (3.6)
+- [x] Feature tests green for 3.1–3.6
 - [x] Docs synchronized for implemented behavior
-
-### Remaining
-
-- [ ] Lookup endpoints (3.4)
-- [ ] User list filters + pagination (3.5)
-- [ ] Coarse authorization enforced (3.6)
 
 ---
 
-## 9. References
+## 11. References
 
 - [DOMAIN_MODEL.md](DOMAIN_MODEL.md)
 - [DATABASE_DESIGN.md](../DATABASE_DESIGN.md)

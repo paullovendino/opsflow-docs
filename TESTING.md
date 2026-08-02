@@ -40,8 +40,8 @@ From `opsflow-api`:
 # All tests
 php artisan test
 
-# Milestone suites (Phases 2–3.3)
-php artisan test --filter="AuthenticationTest|OrganizationFoundationTest|UserDomainFoundationTest|UserManagementApiTest"
+# Milestone suites (Phases 2–3.6)
+php artisan test --filter="AuthenticationTest|OrganizationFoundationTest|UserDomainFoundationTest|UserManagementApiTest|UserListQueryTest|LookupApiTest|UserAuthorizationTest"
 ```
 
 ---
@@ -102,11 +102,47 @@ Path: `tests/Feature/User/UserManagementApiTest.php`
 
 ---
 
-## Remaining Milestone 3 coverage (not yet)
+## Lookups (Phase 3.4)
 
-- Lookup API tests (Phase 3.4)
-- Filters / search / pagination (Phase 3.5)
-- Coarse authorization matrix (Phase 3.6)
+Path: `tests/Feature/Lookup/LookupApiTest.php`
+
+| Area | Expectations |
+|------|----------------|
+| Auth | Authenticated `200`; guest `401` |
+| Roles / Departments / Job Titles | Collections via `/api/v1/lookups/*` |
+| Soft deletes | Soft-deleted departments/job titles excluded |
+| Ordering | Alphabetical by `name` |
+
+---
+
+## User List Query (Phase 3.5)
+
+Path: `tests/Feature/User/UserListQueryTest.php`
+
+| Area | Expectations |
+|------|----------------|
+| Defaults | `per_page` 15; sort `created_at` desc; pagination `meta` present |
+| Search | Matches `first_name`, `middle_name`, `last_name`, `email` |
+| Filters | `role_id`, `department_id`, `job_title_id`, `status` (composable with search) |
+| Sorting | Allowed columns + `asc`/`desc` |
+| Pagination | `page` / `per_page`; `per_page` > 100 clamped to 100 |
+| Validation | Invalid `sort` / `status` / `direction` → `422` |
+| Guest | `401` |
+
+## User Authorization (Phase 3.6)
+
+Path: `tests/Feature/User/UserAuthorizationTest.php`
+
+| Area | Expectations |
+|------|----------------|
+| Administrator | Full list/view/create/update/delete/status |
+| Project Manager | List + view only; mutations `403` |
+| Employee | View own profile `200`; list/other/mutate `403` |
+| Envelope | Unauthorized uses `success: false`, HTTP `403` |
+
+## Remaining coverage (not yet)
+
 - Explicit `429` rate-limit assertion
 - CSRF rejection cases
 - Frontend Pinia auth tests
+- Phase 4 Project Management tests (when implemented)

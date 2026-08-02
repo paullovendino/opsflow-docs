@@ -6,19 +6,27 @@ The canonical roadmap lives in [ROADMAP.md](ROADMAP.md).
 
 - ✅ Phase 1 — Backend Foundation (API)
 - ✅ Phase 2 — Authentication (API)
-- ✅ Phase 3.1 — Organization Foundation
-- ✅ Phase 3.2 — User Domain Foundation
-- ✅ Phase 3.3 — User Management APIs
+- ✅ **Milestone 3 — Organization & User Management (Complete)**
+  - ✅ Phase 3.1 — Organization Foundation
+  - ✅ Phase 3.2 — User Domain Foundation
+  - ✅ Phase 3.3 — User Management APIs
+  - ✅ Phase 3.4 — Lookup APIs
+  - ✅ Phase 3.5 — Search, Filtering & Pagination (includes Sorting)
+  - ✅ Phase 3.6 — Authorization (RBAC)
 
-## Remaining (Milestone 3)
+## Next
 
-- Phase 3.4 — Lookup APIs
-- Phase 3.5 — Search, Filtering & Pagination
-- Phase 3.6 — Authorization (RBAC)
+**Phase 4 — Project Management Module** (pending approval)
 
-Spec: [docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md](docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md)  
-Domain: [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md)
+- Project CRUD
+- Project Members
+- Project Status
+- Project Queries
+- Project Policies
+- Project Tests
 
-## Also pending
+Also pending from earlier phases: Vue 3 / Pinia authentication (`opsflow-web`).
 
-- Phase 2 remaining: Pinia authentication on Vue
+## Later
+
+Phases 5–9 and future versions: see [ROADMAP.md](ROADMAP.md).
