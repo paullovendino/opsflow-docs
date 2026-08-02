@@ -1,6 +1,6 @@
 # Milestone 4 — Project Management
 
-**Status:** Phases 4.1–4.3 implemented · Phases 4.4–4.5 pending  
+**Status:** ✅ Phases 4.1–4.5 implemented · Milestone 4 complete  
 **Product version:** v1.0.0 (Development)  
 **Last updated:** 2026-08-02
 
@@ -46,8 +46,8 @@ User (owner via created_by)
 | **4.1 Project Domain Foundation** | `projects` / `project_members` tables; models; relations; `ProjectStatus` enum; morph alias `project` | ✅ Implemented |
 | **4.2 Project CRUD** | `ProjectController` / `ProjectService` / Form Requests / Resources / CRUD + status patch | ✅ Implemented |
 | **4.3 Project Members** | Member list / add / remove endpoints + service methods | ✅ Implemented |
-| **4.4 Project Queries** | Project list search, filters, sorting, pagination `meta` | ⏳ Pending |
-| **4.5 Project Authorization** | Coarse role matrix via `ProjectPolicy` | ⏳ Pending |
+| **4.4 Project Queries** | Project list search, filters, sorting, pagination `meta` | ✅ Implemented |
+| **4.5 Project Authorization** | Coarse role matrix via `ProjectPolicy` | ✅ Implemented |
 
 ---
 
@@ -136,7 +136,7 @@ Deliverables:
 
 | Method | Path | Behavior |
 |--------|------|----------|
-| GET | `/api/v1/projects` | List projects (simple collection; query polish in 4.4) |
+| GET | `/api/v1/projects` | List projects (search/filters/sorting/pagination — Phase 4.4) |
 | GET | `/api/v1/projects/{project}` | Show project |
 | POST | `/api/v1/projects` | Create project |
 | PUT | `/api/v1/projects/{project}` | Update project |
@@ -149,12 +149,12 @@ Deliverables:
 |---------|-------|
 | Controller | `App\Http\Controllers\Api\V1\ProjectController` (thin) |
 | Service | `App\Services\Projects\ProjectService` |
-| List query | `App\Queries\Projects\ProjectQuery` (wired in 4.4) |
-| Authorization | `App\Policies\ProjectPolicy` (wired in 4.5) |
+| List query | `App\Queries\Projects\ProjectQuery` |
+| Authorization | `App\Policies\ProjectPolicy` |
 | Store validation | `StoreProjectRequest` |
 | Update validation | `UpdateProjectRequest` |
 | Status validation | `UpdateProjectStatusRequest` |
-| Index validation | `IndexProjectsRequest` (wired in 4.4) |
+| Index validation | `IndexProjectsRequest` |
 | Resources | `ProjectResource` (+ nested owner `UserResource` when loaded) |
 | Status enum | `App\Enums\ProjectStatus` |
 
@@ -175,7 +175,7 @@ Deliverables:
 - Status endpoint accepts `ProjectStatus` values only; does not modify other fields
 - Eager-load owner for responses; nest via `ProjectResource` + `whenLoaded()`
 - Standard response envelope; never return raw models
-- List returns a collection without pagination (Phase 4.4)
+- List returns search/filter/sort/pagination via Phase 4.4 (`ProjectQuery`)
 - Match User Management patterns (`UserController` / `UserService` / status patch)
 - Feature tests: `tests/Feature/Project/ProjectManagementApiTest.php`
 
@@ -216,6 +216,8 @@ Deliverables:
 
 ## 8. Phase 4.4 — Project Queries
 
+**Status:** ✅ Implemented
+
 Target: `GET /api/v1/projects`
 
 | Concern | Behavior |
@@ -229,11 +231,15 @@ Target: `GET /api/v1/projects`
 
 Follow `UserQuery` / `IndexUsersRequest` conventions.
 
-**Note:** Authorization scoping (e.g. Employee sees only owned/member projects) is enforced in Phase 4.5 via policy/`viewAny` + query constraints — do not scatter ad-hoc role checks.
+Feature tests: `tests/Feature/Project/ProjectListQueryTest.php`
+
+**Note:** Authorization scoping (e.g. Employee sees only owned/member projects) is enforced in Phase 4.5 via policy/`viewAny` + `ProjectQuery` visibility constraints — do not scatter ad-hoc role checks.
 
 ---
 
 ## 9. Phase 4.5 — Project Authorization
+
+**Status:** ✅ Implemented
 
 Coarse role matrix for Project Management only:
 
@@ -243,9 +249,11 @@ Coarse role matrix for Project Management only:
 | Project Manager | all | all | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Employee | owned **or** member | owned **or** member | ❌ | ❌ | ❌ | ❌ | ❌ |
 
-**Classes:** `App\Policies\ProjectPolicy`; register via `Gate::policy` in `AppServiceProvider`; enforce with `$this->authorize()` in `ProjectController`.
+**Classes:** `App\Policies\ProjectPolicy`; register via `Gate::policy` in `AppServiceProvider`; enforce with `$this->authorize()` in `ProjectController`; Employee list scoping in `ProjectQuery`.
 
 Unauthorized → HTTP `403` with standard API envelope.
+
+Feature tests: `tests/Feature/Project/ProjectAuthorizationTest.php`
 
 **Out of scope:** Permission tables, project-level custom roles, member-level permissions, task/remark policies, frontend.
 
@@ -266,7 +274,7 @@ Unauthorized → HTTP `403` with standard API envelope.
 
 ## 11. Acceptance Criteria
 
-### Pending (4.1–4.5)
+### Completed (4.1–4.5)
 
 - [x] `projects` schema matches approved ERD (soft deletes; `created_by` RESTRICT)
 - [x] `project_members` pivot with unique (`project_id`, `user_id`), `joined_at`, timestamps
@@ -274,11 +282,10 @@ Unauthorized → HTTP `403` with standard API envelope.
 - [x] `ProjectStatus` enum values match approved list
 - [x] Project CRUD + status endpoints with standard envelope
 - [x] Member list / add / remove endpoints
-- [ ] Project list search + filters + sorting + pagination (4.4)
-- [ ] Coarse authorization enforced (4.5)
-- [x] Feature tests green for 4.1–4.3
-- [ ] Feature tests green for 4.4–4.5
-- [x] Docs synchronized for 4.1–4.3 implemented behavior
+- [x] Project list search + filters + sorting + pagination (4.4)
+- [x] Coarse authorization enforced (4.5)
+- [x] Feature tests green for 4.1–4.5
+- [x] Docs synchronized for 4.1–4.5 implemented behavior
 
 ---
 

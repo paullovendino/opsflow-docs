@@ -8,6 +8,25 @@ Format follows a lightweight Keep a Changelog style.
 
 ## [Unreleased] — v1.0.0 (Development)
 
+### Project Authorization (Phase 4.5) — ✅ Implemented · Milestone 4 complete
+
+- `ProjectPolicy` registered via `Gate::policy` in `AppServiceProvider`
+- `$this->authorize()` on all project/member controller actions
+- Administrator & Project Manager: full project management
+- Employee: list/view owned **or** member projects only; mutations denied
+- Employee list scoping in `ProjectQuery::applyVisibility`
+- PHPUnit Feature suite: `tests/Feature/Project/ProjectAuthorizationTest.php`
+- Docs synchronized; next is Phase 5 — Task Management (pending approval)
+
+### Project Queries (Phase 4.4) — ✅ Implemented
+
+- `ProjectQuery` / `IndexProjectsRequest` wired through `ProjectService::list()` / `ProjectController::index`
+- Search (`name`, `description`), filters (`status`, `created_by`), sorting, pagination `meta`
+- Defaults: `created_at` desc; `per_page` 15; max 100 clamped
+- Invalid query params → `422`; guest → `401`
+- PHPUnit Feature suite: `tests/Feature/Project/ProjectListQueryTest.php`
+- Docs synchronized; Phase 4.5 Project Authorization completed next
+
 ### Documentation sync — Phase 4.3 complete / handoff for Phase 4.4
 
 - HANDOFF updated as next-session starting context (Phases 4.1–4.3 complete; next is Phase 4.4)
@@ -23,7 +42,7 @@ Format follows a lightweight Keep a Changelog style.
 - Duplicate membership → HTTP `409` (`DuplicateProjectMemberException`)
 - Owner remains independent of membership; client `joined_at` ignored
 - PHPUnit Feature suite: `tests/Feature/Project/ProjectMembersApiTest.php`
-- Docs synchronized; next is Phase 4.4 — Project Queries (pending approval)
+- Docs synchronized; Phase 4.4 Project Queries completed next
 
 ### Project CRUD APIs (Phase 4.2) — ✅ Implemented
 
@@ -32,7 +51,7 @@ Format follows a lightweight Keep a Changelog style.
 - Create: `created_by` = auth user; status always `planning`; client `created_by`/`status` ignored
 - Update: name/description/dates only (not status or owner)
 - Soft delete; status-only patch via `UpdateProjectStatusRequest`
-- List returns simple collection (pagination/filters deferred to 4.4); no policies yet (4.5)
+- List pagination/filters delivered in Phase 4.4; no policies yet (4.5)
 - PHPUnit Feature suite: `tests/Feature/Project/ProjectManagementApiTest.php`
 - Docs synchronized; next is Phase 4.3 — Project Members (pending approval)
 

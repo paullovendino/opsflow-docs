@@ -77,9 +77,13 @@ Lookups example (Phase 3.4):
 
 `LookupController` → `LookupService` → `Role` / `Department` / `JobTitle` → `RoleResource` / `DepartmentResource` / `JobTitleResource`
 
-Project Management example (Phases 4.2–4.3 — implemented):
+Project Management example (Phases 4.2–4.4 — implemented):
 
 `ProjectController` → Form Requests → `ProjectService` → `Project` / members → `ProjectResource` / `ProjectMemberResource`
+
+Project list example (Phase 4.4 — implemented):
+
+`ProjectController::index` → `IndexProjectsRequest` → `ProjectService::list` → `ProjectQuery` → paginated `ProjectResource` collection + `meta`
 
 ---
 
@@ -119,7 +123,7 @@ Enforced via `App\Policies\UserPolicy` and `$this->authorize()` in `UserControll
 
 Lookup endpoints (Phase 3.4): `GET /api/v1/lookups/{roles,departments,job-titles}` — all authenticated users; collections only.
 
-**Phase 4.5 — Designed.** Coarse role checks for Project Management:
+**Phase 4.5 — Implemented.** Coarse role checks for Project Management:
 
 | Role | Project Management |
 |------|--------------------|
@@ -127,7 +131,7 @@ Lookup endpoints (Phase 3.4): `GET /api/v1/lookups/{roles,departments,job-titles
 | Project Manager | Full access to all projects |
 | Employee | List/view owned or member projects only |
 
-Enforced via `App\Policies\ProjectPolicy` (when implemented). See [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md).
+Enforced via `App\Policies\ProjectPolicy` and `$this->authorize()` in `ProjectController`. Employee list scoping in `ProjectQuery`. Unauthorized → HTTP `403` API envelope.
 
 ---
 
@@ -176,9 +180,9 @@ API routes (`api/*`) render through `App\Exceptions\ApiExceptionRenderer` using 
 | Phase 4.1 — Project Domain Foundation | ✅ Implemented |
 | Phase 4.2 — Project CRUD | ✅ Implemented |
 | Phase 4.3 — Project Members | ✅ Implemented |
-| Phase 4.4 — Project Queries | ⏳ Pending |
-| Phase 4.5 — Project Authorization | ⏳ Pending |
-| **Milestone 4** | In progress (4.1–4.3 done) |
+| Phase 4.4 — Project Queries | ✅ Implemented |
+| Phase 4.5 — Project Authorization | ✅ Implemented |
+| **Milestone 4** | ✅ **Complete** (4.1–4.5) |
 | Tasks / Remarks / Activity Logs | Planned |
 | Vue Pinia auth | Planned |
 | Deployment | Planned |

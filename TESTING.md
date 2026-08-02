@@ -196,8 +196,8 @@ Planned Feature suites (create during later phases):
 
 | Phase | Suggested path | Coverage |
 |-------|----------------|----------|
-| 4.4 | `tests/Feature/Project/ProjectListQueryTest.php` | search, filters, sort, pagination, clamp, validation |
-| 4.5 | `tests/Feature/Project/ProjectAuthorizationTest.php` | Admin / PM / Employee matrix (owned-or-member for Employee) |
+| 4.4 | `tests/Feature/Project/ProjectListQueryTest.php` | ✅ search, filters, sort, pagination, clamp, validation |
+| 4.5 | `tests/Feature/Project/ProjectAuthorizationTest.php` | ✅ Admin / PM / Employee matrix (owned-or-member for Employee) |
 
 ---
 
@@ -206,4 +206,3 @@ Planned Feature suites (create during later phases):
 - Explicit `429` rate-limit assertion
 - CSRF rejection cases
 - Frontend Pinia auth tests
-- Phase 4.4–4.5 Project Management query / policy tests

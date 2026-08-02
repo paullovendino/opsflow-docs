@@ -3,7 +3,7 @@
 Physical schema companion to [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md).
 
 **Milestone 3 status:** Phases 3.1–3.6 implemented (Milestone 3 complete).  
-**Milestone 4 status:** Phases 4.1–4.3 implemented · Phases 4.4–4.5 pending — see [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md).
+**Milestone 4 status:** ✅ Phases 4.1–4.5 implemented · Milestone 4 complete — see [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md).
 
 ---
 
@@ -149,7 +149,7 @@ Represented in code with `App\Enums\RoleName`.
 
 ### Projects
 
-> Milestone 4 — Phases 4.1–4.3 implemented (4.4–4.5 pending)  
+> Milestone 4 — ✅ Phases 4.1–4.5 implemented (complete)  
 > ADR: [decisions/Project-Management.md](decisions/Project-Management.md)
 
 | Column | Notes |
@@ -276,7 +276,7 @@ Eloquent expectations (Milestone 3):
 | `Role` | `hasMany(User::class)` |
 | `User` | `belongsTo(Role)`, `belongsTo(Department)`, `belongsTo(JobTitle)` |
 
-Eloquent expectations (Milestone 4 — Phases 4.1–4.3):
+Eloquent expectations (Milestone 4 — Phases 4.1–4.5):
 
 | Model | Relations |
 |-------|-----------|

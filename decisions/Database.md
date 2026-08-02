@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted — Milestone 3 complete (Phases 3.1–3.6); Milestone 4 Phases 4.1–4.3 (`projects` / `project_members` + member APIs)
+Accepted — Milestone 3 complete (Phases 3.1–3.6); Milestone 4 complete (Phases 4.1–4.5: `projects` / `project_members` + APIs + queries + `ProjectPolicy`)
 
 ## Context
 
@@ -70,7 +70,7 @@ Legacy single `name` column is replaced during ERD alignment. Keep `email_verifi
 | Phase 1 | `roles` (+ Sanctum tokens); default Laravel `users` |
 | Phase 2 | Auth only — no ERD expansion |
 | Phase 3 | Users ERD + `departments` + `job_titles` (**complete**) |
-| Phase 4 | `projects` + `project_members` (**Phase 4.1 complete**; member APIs **Phase 4.3 complete**) |
+| Phase 4 | `projects` + `project_members` (**Milestone 4 complete** — schema, CRUD, members, queries, authorization) |
 | Phase 5+ | Tasks, Remarks, Activity Logs |
 
 ### Projects ERD (Milestone 4 — Phase 4.1 migrated; member APIs Phase 4.3)

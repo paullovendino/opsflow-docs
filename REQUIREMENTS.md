@@ -58,7 +58,7 @@ Department CRUD, Job Title CRUD, teams, branches, and organization settings are 
 
 ## Project Management
 
-> Milestone 4 — Phases 4.1–4.3 implemented · Phases 4.4–4.5 pending  
+> Milestone 4 — ✅ Phases 4.1–4.5 implemented · Milestone 4 complete  
 > Spec: [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md)
 
 - [x] Project domain foundation (`projects`, `project_members`, `ProjectStatus`)
@@ -66,8 +66,8 @@ Department CRUD, Job Title CRUD, teams, branches, and organization settings are 
 - [x] Project status patch (`PATCH /api/v1/projects/{project}/status`)
 - [x] Project members (`GET/POST /api/v1/projects/{project}/members`, `DELETE .../members/{user}`)
   - Owner independent of membership; `joined_at` server-only; duplicate → `409`; active users only
-- [ ] Project list search / filters / sorting / pagination
-- [ ] Coarse authorization (`ProjectPolicy`):
+- [x] Project list search / filters / sorting / pagination
+- [x] Coarse authorization (`ProjectPolicy`):
   - Administrator — full project management (all projects)
   - Project Manager — full project management (all projects)
   - Employee — list/view owned or member projects only

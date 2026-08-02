@@ -139,14 +139,14 @@ Details: [AUTHENTICATION.md](AUTHENTICATION.md)
 
 ---
 
-## Project Management (Milestone 4 — Phases 4.1–4.3 implemented)
+## Project Management (Milestone 4 — Phases 4.1–4.5 implemented · complete)
 
-> Phase 4.3 member APIs are implemented. Query / Policy layers remain Phase 4.4+.
+> Query and Policy layers are implemented.
 
 - Thin `ProjectController`; business logic in `App\Services\Projects\ProjectService`
-- List is a simple collection until `ProjectQuery` / `IndexProjectsRequest` in Phase 4.4
+- List search/filter/sort/pagination via `ProjectQuery` / `IndexProjectsRequest`
 - Validate mutations with `StoreProjectRequest` / `UpdateProjectRequest` / `UpdateProjectStatusRequest` / `StoreProjectMemberRequest`
-- Authorize with `App\Policies\ProjectPolicy` via `$this->authorize()` (Phase 4.5)
+- Authorize with `App\Policies\ProjectPolicy` via `$this->authorize()`
 - Respond with `ProjectResource` / `ProjectMemberResource`
 - Soft-delete projects only; status patch updates `status` only (`ProjectStatus`)
 - Create always sets status `planning`; `created_by` set server-side; not transferable

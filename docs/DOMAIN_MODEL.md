@@ -211,7 +211,7 @@ Defines permission posture for a user. Roles answer: *what is this user allowed 
 
 Enforced via `UserPolicy` on User Management endpoints.
 
-### Milestone 4 Authorization (coarse — Phase 4.5 — designed)
+### Milestone 4 Authorization (coarse — Phase 4.5 — implemented)
 
 | Role | Project Management |
 |------|--------------------|
@@ -219,7 +219,7 @@ Enforced via `UserPolicy` on User Management endpoints.
 | `project_manager` | Full access to all projects |
 | `employee` | List/view owned or member projects only |
 
-Enforced via `ProjectPolicy` when Phase 4.5 is implemented.
+Enforced via `ProjectPolicy` and Employee list scoping in `ProjectQuery`.
 
 ### Future Expansion
 
@@ -331,8 +331,8 @@ A body of work with a defined scope, timeline, and ownership used to organize ta
 | 4.1 Domain Foundation | ✅ Implemented |
 | 4.2 Project CRUD | ✅ Implemented |
 | 4.3 Project Members | ✅ Implemented |
-| 4.4 Project Queries | Pending |
-| 4.5 Project Authorization | Pending |
+| 4.4 Project Queries | ✅ Implemented |
+| 4.5 Project Authorization | ✅ Implemented |
 
 ### Future Expansion
 

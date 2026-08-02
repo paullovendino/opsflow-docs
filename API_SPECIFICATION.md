@@ -469,7 +469,7 @@ List job titles (non-soft-deleted).
 
 ## Projects
 
-> **Milestone 4 — Phases 4.1–4.3 implemented** (4.4–4.5 pending)  
+> **Milestone 4 — ✅ Phases 4.1–4.5 implemented (complete)**  
 > Spec: [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md)  
 > ADR: [decisions/Project-Management.md](decisions/Project-Management.md)
 
@@ -481,7 +481,7 @@ List job titles (non-soft-deleted).
 | Project Manager | Full Project Management (all projects) |
 | Employee | List/view projects they own or are members of |
 
-Project routes currently require `auth:sanctum`. `ProjectPolicy` checks arrive in Phase 4.5.
+Project routes require `auth:sanctum` and `ProjectPolicy` checks via `$this->authorize()`. Unauthorized → `403`.
 
 ### Project resource shape
 
@@ -513,19 +513,34 @@ Project routes currently require `auth:sanctum`. `ProjectPolicy` checks arrive i
 
 ### GET /api/v1/projects
 
-**Status:** Implemented (Phase 4.2; query polish in 4.4; authz in 4.5)
+**Status:** Implemented (Phase 4.4 + 4.5)
 
-List projects (simple collection ordered by `created_at` desc; pagination/filters/sorting arrive in Phase 4.4).
+List projects with search, filtering, sorting, and pagination.
 
-**Authentication:** `auth:sanctum`
+**Authentication:** `auth:sanctum`  
+**Authorization:** Administrator, Project Manager (all projects); Employee (owned or member only)
 
-**Success:** `200` with project collection in `data` (`meta` null until 4.4).
+**Query parameters:**
+
+| Param | Rules / notes |
+|-------|----------------|
+| `search` | Optional string; matches `name`, `description` (case-insensitive) |
+| `status` | Optional; one of `planning`, `active`, `on_hold`, `completed`, `archived` |
+| `created_by` | Optional integer; must exist in `users` |
+| `sort` | Optional; one of `name`, `status`, `start_date`, `due_date`, `created_at` (default `created_at`) |
+| `direction` | Optional; `asc` \| `desc` (default `desc`) |
+| `page` | Optional integer ≥ 1 (default `1`) |
+| `per_page` | Optional integer 1–100 (default `15`); values above 100 are clamped to 100 |
+
+Filters are composable (e.g. `status` + `created_by` + `search` together).
+
+**Success:** `200` with paginated `ProjectResource` collection in `data` and pagination in `meta` (`current_page`, `last_page`, `per_page`, `total`, `from`, `to`). Invalid query params → `422` (standard API envelope). Unauthorized → `403`.
 
 ---
 
 ### GET /api/v1/projects/{id}
 
-**Status:** Implemented (Phase 4.2; authz in 4.5)
+**Status:** Implemented (Phase 4.2 + 4.5)
 
 Show a single project.
 
@@ -537,7 +552,7 @@ Show a single project.
 
 ### POST /api/v1/projects
 
-**Status:** Implemented (Phase 4.2; authz in 4.5)
+**Status:** Implemented (Phase 4.2 + 4.5)
 
 Create a project.
 
@@ -567,7 +582,7 @@ Create a project.
 
 ### PUT /api/v1/projects/{id}
 
-**Status:** Implemented (Phase 4.2; authz in 4.5)
+**Status:** Implemented (Phase 4.2 + 4.5)
 
 Update a project.
 
@@ -581,7 +596,7 @@ Update a project.
 
 ### DELETE /api/v1/projects/{id}
 
-**Status:** Implemented (Phase 4.2; authz in 4.5)
+**Status:** Implemented (Phase 4.2 + 4.5)
 
 Soft-delete a project.
 
@@ -593,7 +608,7 @@ Soft-delete a project.
 
 ### PATCH /api/v1/projects/{id}/status
 
-**Status:** Implemented (Phase 4.2; authz in 4.5)
+**Status:** Implemented (Phase 4.2 + 4.5)
 
 Update project status only.
 
@@ -615,7 +630,7 @@ Accepted `status` values (`ProjectStatus`): `planning`, `active`, `on_hold`, `co
 
 ### GET /api/v1/projects/{id}/members
 
-**Status:** Implemented (Phase 4.3; authz in 4.5)
+**Status:** Implemented (Phase 4.3 + 4.5)
 
 List members of a project.
 
@@ -627,7 +642,7 @@ List members of a project.
 
 ### POST /api/v1/projects/{id}/members
 
-**Status:** Implemented (Phase 4.3; authz in 4.5)
+**Status:** Implemented (Phase 4.3 + 4.5)
 
 Add a member to a project.
 
@@ -654,7 +669,7 @@ Add a member to a project.
 
 ### DELETE /api/v1/projects/{id}/members/{user}
 
-**Status:** Implemented (Phase 4.3; authz in 4.5)
+**Status:** Implemented (Phase 4.3 + 4.5)
 
 Remove a member from a project (hard-delete pivot row).
 

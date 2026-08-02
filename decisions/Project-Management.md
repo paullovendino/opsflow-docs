@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted — Phases 4.1–4.3 implemented; Phases 4.4–4.5 pending
+Accepted — Phases 4.1–4.5 implemented; Milestone 4 complete
 
 ## Context
 
@@ -52,15 +52,15 @@ Default on create: `planning` (status is **not** accepted on create/update bodie
 | 4.1 | Domain foundation (schema, models, enum, morph alias, relations, factory, tests) | ✅ Implemented |
 | 4.2 | Project CRUD + status patch | ✅ Implemented |
 | 4.3 | Project Members APIs | ✅ Implemented |
-| 4.4 | Search / filter / sort / pagination | ⏳ Pending |
-| 4.5 | Coarse `ProjectPolicy` authorization | ⏳ Pending |
+| 4.4 | Search / filter / sort / pagination | ✅ Implemented |
+| 4.5 | Coarse `ProjectPolicy` authorization | ✅ Implemented |
 
-### API paths (implemented through 4.3)
+### API paths (implemented through 4.5)
 
 - Projects: `GET/POST /api/v1/projects`, `GET/PUT/DELETE /api/v1/projects/{project}`, `PATCH /api/v1/projects/{project}/status`
 - Members: `GET/POST /api/v1/projects/{project}/members`, `DELETE /api/v1/projects/{project}/members/{user}`
 
-### Coarse authorization (Phase 4.5)
+### Coarse authorization (Phase 4.5 — implemented)
 
 | Role | Project Management |
 |------|--------------------|
@@ -68,9 +68,7 @@ Default on create: `planning` (status is **not** accepted on create/update bodie
 | Project Manager | Full access to all projects (CRUD, status, members) |
 | Employee | List/view only for projects they own or belong to as members |
 
-Enforced via `ProjectPolicy` + controller `$this->authorize()`. Unauthorized → `403` API envelope.
-
-Until Phase 4.5, project routes require `auth:sanctum` only.
+Enforced via `ProjectPolicy` + controller `$this->authorize()` + Employee list scoping in `ProjectQuery`. Unauthorized → `403` API envelope.
 
 ### Explicitly out of scope for Phase 4
 

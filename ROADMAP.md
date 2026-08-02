@@ -19,12 +19,12 @@ OpsFlow development roadmap by phase.
 | Phase 3.4 | Lookup APIs | ✅ Implemented |
 | Phase 3.5 | Search, Filtering & Pagination | ✅ Implemented |
 | Phase 3.6 | Authorization (RBAC) | ✅ Implemented |
-| **Milestone 4** | **Project Management** | In progress (4.1–4.3 done) |
+| **Milestone 4** | **Project Management** | ✅ **Complete** |
 | Phase 4.1 | Project Domain Foundation | ✅ Implemented |
 | Phase 4.2 | Project CRUD | ✅ Implemented |
 | Phase 4.3 | Project Members | ✅ Implemented |
-| Phase 4.4 | Project Queries | ⏳ Pending |
-| Phase 4.5 | Project Authorization | ⏳ Pending |
+| Phase 4.4 | Project Queries | ✅ Implemented |
+| Phase 4.5 | Project Authorization | ✅ Implemented |
 
 ---
 
@@ -156,7 +156,7 @@ Department/Job Title CRUD, multi-role / multi-department users, teams, branches,
 
 ## Phase 4 — Project Management
 
-**Status: Phases 4.1–4.3 implemented** · Phases 4.4–4.5 pending (wait for explicit approval per phase)
+**Status: ✅ Phases 4.1–4.5 implemented · Milestone 4 complete**
 
 Specification:
 
@@ -194,21 +194,21 @@ Specification:
 
 ### Phase 4.4 — Project Queries
 
-**Status: Pending**
+**Status: ✅ Implemented**
 
-- [ ] Project list `search` (`name`, `description`)
-- [ ] Filters: `status`, `created_by` (composable)
-- [ ] Sorting + pagination (follow UserQuery conventions)
-- [ ] `ProjectQuery` + `IndexProjectsRequest`; PHPUnit list query tests
+- [x] Project list `search` (`name`, `description`)
+- [x] Filters: `status`, `created_by` (composable)
+- [x] Sorting + pagination (follow UserQuery conventions)
+- [x] `ProjectQuery` + `IndexProjectsRequest`; PHPUnit list query tests (`ProjectListQueryTest`)
 
 ### Phase 4.5 — Project Authorization
 
-**Status: Pending**
+**Status: ✅ Implemented**
 
-- [ ] Coarse authorization (Administrator / Project Manager / Employee)
-- [ ] `ProjectPolicy` + registration; controller `$this->authorize()`
-- [ ] Employee: owned **or** member visibility only
-- [ ] PHPUnit authorization tests
+- [x] Coarse authorization (Administrator / Project Manager / Employee)
+- [x] `ProjectPolicy` + registration; controller `$this->authorize()`
+- [x] Employee: owned **or** member visibility only (`ProjectQuery` list scoping)
+- [x] PHPUnit authorization tests (`ProjectAuthorizationTest`)
 
 ### Explicitly out of scope (Milestone 4)
 
