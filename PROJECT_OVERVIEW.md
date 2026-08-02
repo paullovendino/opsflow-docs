@@ -90,7 +90,7 @@ v1.0.0 (Development)
 - ✅ Phase 2 Authentication (API): completed
 - Phase 2 Authentication (Vue/Pinia): pending
 - ✅ **Milestone 3 — Organization & User Management: complete** (Phases 3.1–3.6)
-- Phase 4 — Project Management: pending (next)
+- Milestone 4 — Project Management: Phase 4.1 complete; 4.2–4.5 pending
 
 ---
 

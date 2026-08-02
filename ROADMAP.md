@@ -19,6 +19,12 @@ OpsFlow development roadmap by phase.
 | Phase 3.4 | Lookup APIs | ✅ Implemented |
 | Phase 3.5 | Search, Filtering & Pagination | ✅ Implemented |
 | Phase 3.6 | Authorization (RBAC) | ✅ Implemented |
+| **Milestone 4** | **Project Management** | In progress (4.1 done) |
+| Phase 4.1 | Project Domain Foundation | ✅ Implemented |
+| Phase 4.2 | Project CRUD | Pending |
+| Phase 4.3 | Project Members | Pending |
+| Phase 4.4 | Project Queries | Pending |
+| Phase 4.5 | Project Authorization | Pending |
 
 ---
 
@@ -150,14 +156,63 @@ Department/Job Title CRUD, multi-role / multi-department users, teams, branches,
 
 ## Phase 4 — Project Management
 
-**Status: Pending** — next implementation milestone (wait for explicit approval)
+**Status: Phase 4.1 implemented** · Phases 4.2–4.5 pending (wait for explicit approval per phase)
 
-- Project CRUD
-- Project Members
-- Project Status
-- Project Queries
-- Project Policies
-- Project Tests
+Specification:
+
+- [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md)
+- [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md)
+- [decisions/Project-Management.md](decisions/Project-Management.md)
+
+### Phase 4.1 — Project Domain Foundation
+
+**Status: ✅ Implemented**
+
+- [x] `projects` table (soft deletes; `created_by` RESTRICT; `ProjectStatus`)
+- [x] `project_members` pivot (`project_id`, `user_id`, `joined_at`, timestamps; unique pair)
+- [x] Models + relations + morph alias `project`
+- [x] `ProjectFactory`
+- [x] PHPUnit Feature tests (`ProjectDomainFoundationTest`)
+
+### Phase 4.2 — Project CRUD
+
+**Status: Pending**
+
+- [ ] Project CRUD + `PATCH /projects/{id}/status` (`ProjectController` / `ProjectService`)
+- [ ] Form Requests + `ProjectResource`
+- [ ] Soft delete; status-only patch; `created_by` set server-side
+- [ ] PHPUnit Feature tests for CRUD
+
+### Phase 4.3 — Project Members
+
+**Status: Pending**
+
+- [ ] `GET/POST /api/v1/projects/{project}/members`
+- [ ] `DELETE /api/v1/projects/{project}/members/{user}`
+- [ ] No member roles / invitations / pivot permissions
+- [ ] PHPUnit Feature tests for members
+
+### Phase 4.4 — Project Queries
+
+**Status: Pending**
+
+- [ ] Project list `search` (`name`, `description`)
+- [ ] Filters: `status`, `created_by` (composable)
+- [ ] Sorting + pagination (follow UserQuery conventions)
+- [ ] `ProjectQuery` + `IndexProjectsRequest`; PHPUnit list query tests
+
+### Phase 4.5 — Project Authorization
+
+**Status: Pending**
+
+- [ ] Coarse authorization (Administrator / Project Manager / Employee)
+- [ ] `ProjectPolicy` + registration; controller `$this->authorize()`
+- [ ] Employee: owned **or** member visibility only
+- [ ] PHPUnit authorization tests
+
+### Explicitly out of scope (Milestone 4)
+
+Tasks, Remarks, Activity Logs, Dashboard, Reports, ownership transfer, member roles/invitations, advanced RBAC, Vue Project UI.
 
 ---
 

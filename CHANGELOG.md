@@ -8,6 +8,23 @@ Format follows a lightweight Keep a Changelog style.
 
 ## [Unreleased] — v1.0.0 (Development)
 
+### Project Domain Foundation (Phase 4.1) — ✅ Implemented
+
+- `projects` table with soft deletes, `ProjectStatus`, `created_by` RESTRICT
+- `project_members` pivot with unique (`project_id`, `user_id`), `joined_at`, FK RESTRICT
+- `App\Models\Project` + `User` owned/member relations; morph alias `project`
+- `App\Enums\ProjectStatus`; `ProjectFactory`
+- PHPUnit Feature suite: `tests/Feature/Project/ProjectDomainFoundationTest.php` (15 tests)
+- Docs synchronized; next is Phase 4.2 — Project CRUD (pending approval)
+
+### Documentation — Milestone 4 Design Package
+
+- Created [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md) and [decisions/Project-Management.md](decisions/Project-Management.md)
+- Approved Phase 4 architecture: soft deletes; `ProjectStatus` enum; owner `created_by` RESTRICT; `project_members` pivot (no member roles/invitations)
+- Phased into 4.1 Domain Foundation → 4.2 CRUD → 4.3 Members → 4.4 Queries → 4.5 Authorization
+- Synchronized DOMAIN_MODEL, DATABASE_DESIGN, API_SPECIFICATION, ROADMAP, DEVELOPMENT_ROADMAP, ARCHITECTURE, REQUIREMENTS, TESTING, HANDOFF, CODING_STANDARDS, CURSOR_RULES, README, and Database ADR
+- **No Phase 4 implementation code yet** — wait for explicit approval to start Phase 4.1
+
 ### Documentation sync — Milestone 3 complete / handoff for Phase 4
 
 - HANDOFF rewritten as next-session starting context (Milestone 3 complete)

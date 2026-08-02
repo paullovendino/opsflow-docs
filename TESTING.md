@@ -40,8 +40,8 @@ From `opsflow-api`:
 # All tests
 php artisan test
 
-# Milestone suites (Phases 2–3.6)
-php artisan test --filter="AuthenticationTest|OrganizationFoundationTest|UserDomainFoundationTest|UserManagementApiTest|UserListQueryTest|LookupApiTest|UserAuthorizationTest"
+# Milestone suites (Phases 2–4.1)
+php artisan test --filter="AuthenticationTest|OrganizationFoundationTest|UserDomainFoundationTest|UserManagementApiTest|UserListQueryTest|LookupApiTest|UserAuthorizationTest|ProjectDomainFoundationTest"
 ```
 
 ---
@@ -140,9 +140,42 @@ Path: `tests/Feature/User/UserAuthorizationTest.php`
 | Employee | View own profile `200`; list/other/mutate `403` |
 | Envelope | Unauthorized uses `success: false`, HTTP `403` |
 
+---
+
+## Project Domain Foundation (Phase 4.1)
+
+Path: `tests/Feature/Project/ProjectDomainFoundationTest.php`
+
+| Area | Expectations |
+|------|----------------|
+| Schema | `projects` / `project_members` columns present; pivot has no `deleted_at` |
+| Owner | `owner` / `createdBy` / `ownedProjects` |
+| Members | `members` / `projects` pivot with `joined_at`; owner not auto-added |
+| Unique | Duplicate (`project_id`, `user_id`) → `QueryException` |
+| Enum | `ProjectStatus` cast + default `planning` |
+| Soft deletes | Soft-deleted projects excluded; member rows retained |
+| FK RESTRICT | forceDelete owner/member/project-with-members → `QueryException` |
+| Factory | Generates owner + default Planning status |
+| Morph map | `project` alias registered |
+
+## Project Management (Milestone 4 — remaining)
+
+Spec: [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md)
+
+Planned Feature suites (create during later phases):
+
+| Phase | Suggested path | Coverage |
+|-------|----------------|----------|
+| 4.2 | `tests/Feature/Project/ProjectManagementApiTest.php` | CRUD, status patch, validation, resource shape, guest `401` |
+| 4.3 | `tests/Feature/Project/ProjectMembersApiTest.php` | list/add/remove members, duplicate rejection, `joined_at` |
+| 4.4 | `tests/Feature/Project/ProjectListQueryTest.php` | search, filters, sort, pagination, clamp, validation |
+| 4.5 | `tests/Feature/Project/ProjectAuthorizationTest.php` | Admin / PM / Employee matrix (owned-or-member for Employee) |
+
+---
+
 ## Remaining coverage (not yet)
 
 - Explicit `429` rate-limit assertion
 - CSRF rejection cases
 - Frontend Pinia auth tests
-- Phase 4 Project Management tests (when implemented)
+- Phase 4.2–4.5 Project Management API / policy tests

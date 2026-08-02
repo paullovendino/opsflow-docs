@@ -2,7 +2,8 @@
 
 Physical schema companion to [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md).
 
-**Milestone 3 status:** Phases 3.1–3.6 implemented (Milestone 3 complete).
+**Milestone 3 status:** Phases 3.1–3.6 implemented (Milestone 3 complete).  
+**Milestone 4 status:** Phase 4.1 implemented · Phases 4.2–4.5 pending — see [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md).
 
 ---
 
@@ -148,17 +149,62 @@ Represented in code with `App\Enums\RoleName`.
 
 ### Projects
 
-> Phase 4 — Pending (schema to be confirmed at implementation; do not invent beyond ADR updates)
+> Milestone 4 — Phase 4.1 implemented (Phases 4.2–4.5 pending)  
+> ADR: [decisions/Project-Management.md](decisions/Project-Management.md)
 
-- id
-- name
-- description
-- status
-- start_date
-- due_date
-- created_by
-- created_at
-- updated_at
+| Column | Notes |
+|--------|-------|
+| id | PK |
+| name | required string |
+| description | nullable text |
+| status | enum-backed string (`ProjectStatus`) |
+| start_date | nullable date |
+| due_date | nullable date |
+| created_by | required FK → `users.id` (**RESTRICT**) — project owner |
+| created_at | timestamp |
+| updated_at | timestamp |
+| deleted_at | soft deletes |
+
+**Status values** (`ProjectStatus`):
+
+| value | Display |
+|-------|---------|
+| `planning` | Planning |
+| `active` | Active |
+| `on_hold` | On Hold |
+| `completed` | Completed |
+| `archived` | Archived |
+
+**Notes:**
+
+- Default `status` on create when omitted: `planning`
+- `created_by` set from authenticated user on create; not transferable in Phase 4
+- Soft deletes supported; soft-deleted projects excluded from default lists
+- Indexes: FKs + `status`; consider index on `name` for search later if needed
+
+---
+
+### Project Members
+
+> Milestone 4 — Phase 4.1 implemented (member APIs in 4.3)
+
+Table: `project_members`
+
+| Column | Notes |
+|--------|-------|
+| id | PK |
+| project_id | FK → `projects.id` (**RESTRICT** on hard delete) |
+| user_id | FK → `users.id` (**RESTRICT** on hard delete) |
+| joined_at | timestamp — set when the member is added |
+| created_at | timestamp |
+| updated_at | timestamp |
+
+**Rules:**
+
+- Unique (`project_id`, `user_id`)
+- No soft deletes on the pivot (remove = delete pivot row)
+- No member role / permission / invitation columns
+- Owner (`projects.created_by`) is **not** auto-inserted into this table
 
 ---
 
@@ -213,8 +259,9 @@ User * ──► 1 Role          (required)
 User * ──► 0..1 Department (nullable)
 User * ──► 0..1 JobTitle   (nullable)
 
-User 1 ──► * Projects      (planned)
-Project 1 ──► * Tasks      (planned)
+User 1 ──► * Projects      (owner via created_by — Milestone 4)
+User * ──◄──► * Projects   (members via project_members — Milestone 4)
+Project 1 ──► * Tasks      (planned — Phase 5)
 User 1 ──► * Tasks         (planned; assignment)
 User 1 ──► * Activity Logs (planned)
 ```
@@ -228,6 +275,13 @@ Eloquent expectations (Milestone 3):
 | `Role` | `hasMany(User::class)` |
 | `User` | `belongsTo(Role)`, `belongsTo(Department)`, `belongsTo(JobTitle)` |
 
+Eloquent expectations (Milestone 4 — Phase 4.1 implemented):
+
+| Model | Relations |
+|-------|-----------|
+| `Project` | `belongsTo(User::class, 'created_by')` as `owner` / `createdBy`; `belongsToMany(User::class, 'project_members')` as `members` |
+| `User` | `hasMany(Project::class, 'created_by')` as `ownedProjects`; `belongsToMany(Project::class, 'project_members')` as `projects` |
+
 ---
 
 ## Morph Map
@@ -238,12 +292,12 @@ Use Laravel `Relation::enforceMorphMap`.
 
 - `user` → `App\Models\User`
 - `role` → `App\Models\Role`
-- `department` → `App\Models\Department` (Phase 3.1)
-- `job_title` → `App\Models\JobTitle` (Phase 3.1)
+- `department` → `App\Models\Department`
+- `job_title` → `App\Models\JobTitle`
+- `project` → `App\Models\Project` (Phase 4.1)
 
 ### Future aliases (later phases)
 
-- `project` → `App\Models\Project`
 - `task` → `App\Models\Task`
 - `remark` → `App\Models\Remark`
 - `activity_log` → `App\Models\ActivityLog`
@@ -257,6 +311,9 @@ Use Laravel `Relation::enforceMorphMap`.
 | `users.role_id` → `roles.id` | **RESTRICT** while users reference the role |
 | `users.department_id` → `departments.id` | **RESTRICT** while users reference the department |
 | `users.job_title_id` → `job_titles.id` | **RESTRICT** while users reference the job title |
+| `projects.created_by` → `users.id` | **RESTRICT** while projects reference the user as owner |
+| `project_members.project_id` → `projects.id` | **RESTRICT** on hard delete while memberships exist |
+| `project_members.user_id` → `users.id` | **RESTRICT** on hard delete while memberships exist |
 
 Do **not** use `SET NULL` on these foreign keys.
 
@@ -264,8 +321,9 @@ Notes:
 
 - Nullable `department_id` / `job_title_id` still allows users without a department or job title
 - Hard-deleting a referenced Department, Job Title, or Role must fail while users exist
-- Soft deletes on Departments / Job Titles do not remove the row; RESTRICT applies to hard deletes
+- Soft deletes on Departments / Job Titles / Projects / Users do not remove the row; RESTRICT applies to hard deletes
 - Lookup list endpoints (`/api/v1/lookups/*`) exclude soft-deleted reference rows unless explicitly requested later
+- Soft-deleting a Project does not cascade-delete `project_members` rows; default project queries exclude soft-deleted projects
 
 ---
 
@@ -273,4 +331,6 @@ Notes:
 
 - [decisions/Database.md](decisions/Database.md)
 - [decisions/Organization-User-Management.md](decisions/Organization-User-Management.md)
+- [decisions/Project-Management.md](decisions/Project-Management.md)
 - [docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md](docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md)
+- [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md)

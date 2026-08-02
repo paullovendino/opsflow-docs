@@ -5,7 +5,7 @@
 **Last updated:** 2026-08-02  
 **Product version:** v1.0.0 (Development)
 
-> **Start here.** Then read [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md), [ROADMAP.md](ROADMAP.md), and the relevant ADR under `decisions/`.  
+> **Start here.** Then read [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md), [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md), [ROADMAP.md](ROADMAP.md), and the relevant ADR under `decisions/`.  
 > **Do not invent architecture.** If unclear, ask. Prefer ADRs in `decisions/`.  
 > **Do not implement the next phase until the user explicitly approves scope.**
 
@@ -40,7 +40,7 @@ Organization
 | `opsflow-docs` | Documentation + ADRs (this repo)                              |
 | `opsflow-web`  | Vue 3 SPA (exists as folder; frontend auth/app not built yet) |
 
-**Current status:** ✅ **Milestone 3 — Complete** (Phases 3.1–3.6). Next implementation milestone is **Phase 4 — Project Management** — wait for explicit approval.
+**Current status:** ✅ **Phase 4.1 — Project Domain Foundation complete**. Next: **Phase 4.2 — Project CRUD** — wait for explicit approval.
 
 ---
 
@@ -82,27 +82,28 @@ Details: [ARCHITECTURE.md](ARCHITECTURE.md), [CODING_STANDARDS.md](CODING_STANDA
 ```text
 app/
 ├── Actions/
-├── Enums/                  # RoleName, UserStatus, DepartmentCode, JobTitleCode
+├── Enums/                  # RoleName, UserStatus, DepartmentCode, JobTitleCode, ProjectStatus
 ├── Exceptions/             # ApiExceptionRenderer, InvalidCredentialsException, AccountInactiveException
 ├── Helpers/
 ├── Http/
 │   ├── Controllers/
 │   │   └── Api/
 │   │       ├── BaseApiController.php
-│   │       └── V1/         # AuthController, HealthController, UserController, LookupController
+│   │       └── V1/         # AuthController, HealthController, UserController, LookupController (+ ProjectController in Phase 4)
 │   ├── Middleware/
-│   ├── Requests/Api/V1/…   # Auth/, Users/ (incl. IndexUsersRequest)
-│   └── Resources/Api/V1/…  # User, Role, Department, JobTitle
-├── Models/                 # User, Role, Department, JobTitle
-├── Policies/               # UserPolicy (coarse User Management RBAC)
+│   ├── Requests/Api/V1/…   # Auth/, Users/ (incl. IndexUsersRequest); Projects/ in Phase 4
+│   └── Resources/Api/V1/…  # User, Role, Department, JobTitle (+ Project in Phase 4)
+├── Models/                 # User, Role, Department, JobTitle, Project
+├── Policies/               # UserPolicy; ProjectPolicy in Phase 4.5
 ├── Providers/              # AppServiceProvider (morph map, RateLimiter)
 ├── Queries/
-│   └── Users/UserQuery.php # List search / filters / sorting / pagination
+│   └── Users/UserQuery.php # List search / filters / sorting / pagination (+ Projects/ProjectQuery in Phase 4.4)
 ├── Repositories/
 ├── Services/
 │   ├── Auth/AuthenticationService.php
 │   ├── Lookups/LookupService.php
-│   └── Users/UserService.php
+│   ├── Users/UserService.php
+│   └── Projects/           # Phase 4.2 — ProjectService
 └── Traits/                 # ApiResponse (incl. paginatedResponse)
 ```
 
@@ -146,6 +147,12 @@ ADR: [decisions/Tech-Stack.md](decisions/Tech-Stack.md)
 | 3.4 | Lookup APIs | ✅ **Implemented** |
 | 3.5 | Search, Filtering & Pagination | ✅ **Implemented** |
 | 3.6 | Authorization (RBAC) | ✅ **Implemented** |
+| **4** | **Project Management** | In progress |
+| 4.1 | Project Domain Foundation | ✅ **Implemented** |
+| 4.2 | Project CRUD | Pending |
+| 4.3 | Project Members | Pending |
+| 4.4 | Project Queries | Pending |
+| 4.5 | Project Authorization | Pending |
 
 **Phase 1:** PostgreSQL, Sanctum, `/api/v1`, CORS, envelope, exception renderer, morph map, roles seed, health check, folder structure.
 
@@ -171,16 +178,18 @@ See [CHANGELOG.md](CHANGELOG.md), [ROADMAP.md](ROADMAP.md).
 
 ### Immediate next (backend)
 
-**Phase 4 — Project Management Module** (see §12)
+**Phase 4.2 — Project CRUD** (see §12) — wait for explicit implementation approval
 
-Approved high-level scope:
+Completed: Phase 4.1 Project Domain Foundation.
 
-- Project CRUD
-- Project Members
-- Project Status
-- Project Queries
-- Project Policies
-- Project Tests
+Remaining Milestone 4:
+
+- Phase 4.2 — Project CRUD
+- Phase 4.3 — Project Members
+- Phase 4.4 — Project Queries
+- Phase 4.5 — Project Authorization
+
+Specification: [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md) · [decisions/Project-Management.md](decisions/Project-Management.md)
 
 ### Still pending from earlier phases
 
@@ -195,9 +204,9 @@ Tasks → Dashboard → Reports → broader Testing → Deployment
 
 Notifications, remarks, kanban, time tracking, mobile, multi-org, etc. ([ROADMAP.md](ROADMAP.md))
 
-### Explicitly out of scope until Phase 4 is approved
+### Explicitly out of scope until Phase 4 implementation is approved
 
-- Implementing Projects / Tasks / Remarks early
+- Implementing Projects / Tasks / Remarks early (beyond approved Milestone 4 design)
 - Advanced permission matrices beyond coarse role policies
 - Frontend User Management / Project UI
 
@@ -329,6 +338,13 @@ Docs: [AUTHENTICATION.md](AUTHENTICATION.md), [decisions/Authentication.md](deci
   - `status` (`UserStatus`: `active` / `inactive`)
   - `last_login_at` (nullable)
   - timestamps + soft deletes
+- **`projects`** (Phase 4.1):
+  - `name`, `description` (nullable), `status` (`ProjectStatus`), `start_date` / `due_date` (nullable)
+  - `created_by` → `users.id` (**RESTRICT**)
+  - timestamps + soft deletes
+- **`project_members`** (Phase 4.1):
+  - `project_id`, `user_id` (**RESTRICT**), `joined_at`, timestamps
+  - unique (`project_id`, `user_id`); no soft deletes; no member roles
 - Sanctum **`personal_access_tokens`**, sessions / cache / jobs as Laravel defaults require
 
 ### Morph map (`Relation::enforceMorphMap`)
@@ -337,11 +353,13 @@ Docs: [AUTHENTICATION.md](AUTHENTICATION.md), [decisions/Authentication.md](deci
 - `role` → `App\Models\Role`
 - `department` → `App\Models\Department`
 - `job_title` → `App\Models\JobTitle`
+- `project` → `App\Models\Project`
 
 ### Not yet
 
 - `organizations` table / multi-tenant org settings
-- Projects, Tasks, Remarks, Activity Logs tables
+- Project HTTP APIs (Phases 4.2–4.5)
+- Tasks, Remarks, Activity Logs tables
 
 ADRs: [DATABASE_DESIGN.md](DATABASE_DESIGN.md), [decisions/Database.md](decisions/Database.md), [decisions/Organization-User-Management.md](decisions/Organization-User-Management.md)
 
@@ -382,13 +400,14 @@ ADRs: [DATABASE_DESIGN.md](DATABASE_DESIGN.md), [decisions/Database.md](decision
 10. **Credential allowlist** into `Auth::attempt()`
 11. **Morph aliases only for existing models**
 12. **Do not expand schema beyond the approved ERD** without updating `decisions/Database.md`
-13. **Do not implement later modules early** (Projects/Tasks/Remarks) unless the milestone is approved
+13. **Do not implement later modules early** (Projects only after Phase 4 approval; Tasks/Remarks later) unless the milestone is approved
 14. **Authorize via Policies** — do not scatter manual role checks outside policies
 15. **CORS / Sanctum domains stay environment-driven**
 16. **Update docs/ADRs when behavior changes**
 17. **One feature = one commit** when asked to commit
 18. **Roles ≠ Departments ≠ Job Titles** — keep concepts independent
-19. **Read domain model** (`docs/DOMAIN_MODEL.md`) before inventing entities
+19. **Read domain model** (`docs/DOMAIN_MODEL.md`) and milestone specs before inventing entities
+20. **Project owner ≠ automatic member** — `created_by` and `project_members` are independent
 
 ### Coding standards snapshot
 
@@ -417,26 +436,26 @@ Details: [CODING_STANDARDS.md](CODING_STANDARDS.md), [CURSOR_RULES.md](CURSOR_RU
 
 ## 12. Immediate next milestone
 
-### Phase 4 — Project Management Module
+### Phase 4.2 — Project CRUD
 
-**Status:** Pending — wait for explicit user approval before implementing.
+**Status:** Pending — wait for explicit user approval before coding.
 
-**Approved scope (high-level):**
+**Completed:** Phase 4.1 — Project Domain Foundation (`projects`, `project_members`, `Project`, `ProjectStatus`, relations, factory, morph alias, Feature tests).
+
+**Specification:** [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md) §6 · [decisions/Project-Management.md](decisions/Project-Management.md)
+
+**Phase 4.2 scope:**
 
 | Area | Notes |
 |------|-------|
-| Project CRUD | Create / read / update / delete projects |
-| Project Members | Associate users with projects |
-| Project Status | Project status handling |
-| Project Queries | Search / filter / sort / pagination patterns (follow UserQuery conventions) |
-| Project Policies | Coarse authorization via Laravel Policies |
-| Project Tests | PHPUnit Feature coverage |
+| Project CRUD | `GET/POST /api/v1/projects`, `GET/PUT/DELETE /api/v1/projects/{project}` |
+| Status patch | `PATCH /api/v1/projects/{project}/status` |
+| Layering | `ProjectController` / `ProjectService` / Form Requests / `ProjectResource` |
+| Behaviors | Soft delete; `created_by` server-set; default status `planning` |
 
-**Do not invent** schema, endpoints, or detailed rules until Phase 4 is approved and specified.
+**Out of scope for 4.2:** Members APIs (4.3), list query polish (4.4), `ProjectPolicy` (4.5), Tasks, Vue UI.
 
-**Out of scope for Phase 4 (unless explicitly expanded):** Tasks module, Remarks, Dashboard, Reports, frontend Vue UI, advanced RBAC matrices.
-
-**Specification:** [ROADMAP.md](ROADMAP.md) · [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md) (Project planned section) · update ADRs when Phase 4 is designed
+**Pattern to match:** `UserController` / `UserService` / status patch
 
 ---
 
@@ -483,7 +502,7 @@ Specs: [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md) · [docs/MILESTONE_3_ORGANIZ
 - `RefreshDatabase`; session driver `cookie` in tests
 - Stateful SPA simulated with `Origin: http://localhost:5173`
 - After logout/guest follow-ups, tests may call `auth()->forgetGuards()` (Laravel 13 test-client quirk)
-- **Last known full suite:** 63 tests passed (Phases 1–3.6 coverage)
+- **Last known full suite:** 78 tests passed (Phases 1–4.1 coverage)
 
 | Suite | Path | Coverage |
 |-------|------|----------|
@@ -494,12 +513,13 @@ Specs: [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md) · [docs/MILESTONE_3_ORGANIZ
 | User list query | `tests/Feature/User/UserListQueryTest.php` | search, filters, sort, pagination, clamp, validation |
 | User authz | `tests/Feature/User/UserAuthorizationTest.php` | Admin / PM / Employee policy matrix |
 | Lookups | `tests/Feature/Lookup/LookupApiTest.php` | `/lookups/*` auth, soft-delete exclusion, sort by name |
+| Project domain | `tests/Feature/Project/ProjectDomainFoundationTest.php` | projects/members schema, relations, soft delete, enum, FK RESTRICT, factory |
 
 ```bash
-php artisan test --filter="AuthenticationTest|OrganizationFoundationTest|UserDomainFoundationTest|UserManagementApiTest|UserListQueryTest|LookupApiTest|UserAuthorizationTest"
+php artisan test --filter="AuthenticationTest|OrganizationFoundationTest|UserDomainFoundationTest|UserManagementApiTest|UserListQueryTest|LookupApiTest|UserAuthorizationTest|ProjectDomainFoundationTest"
 ```
 
-Deferred: dedicated `429` test, CSRF failure cases, frontend tests.
+Deferred: dedicated `429` test, CSRF failure cases, frontend tests, Phase 4 project suites (designed in TESTING.md).
 
 Details: [TESTING.md](TESTING.md)
 
@@ -523,7 +543,7 @@ _(Re-check with `git status` before committing.)_
 ### `opsflow-docs`
 
 - Branch: `main` (tracks `origin/main`)
-- Working tree typically has **uncommitted** Milestone 3 / Phase 4 handoff documentation sync — commit when asked
+- Working tree typically has **uncommitted** Milestone 4 design package documentation — commit when asked
 
 ### Monorepo folder `OpsFlow/`
 
@@ -542,6 +562,7 @@ _(Re-check with `git status` before committing.)_
 | `HANDOFF.md`             | **This handoff**                      |
 | `docs/DOMAIN_MODEL.md`   | **Primary business domain reference** |
 | `docs/MILESTONE_3_…`     | Milestone 3 implementation spec       |
+| `docs/MILESTONE_4_…`     | Milestone 4 implementation spec       |
 | `PROJECT_OVERVIEW.md`    | Product overview                      |
 | `REQUIREMENTS.md`        | Functional requirements               |
 | `ARCHITECTURE.md`        | System architecture                   |
@@ -556,19 +577,19 @@ _(Re-check with `git status` before committing.)_
 | `DEVELOPMENT_ROADMAP.md` | Pointer to `ROADMAP.md`               |
 | `CHANGELOG.md`           | Milestone changelog                   |
 | `UI_PAGES.md`            | UI inventory                          |
-| `decisions/`             | ADRs                                  |
+| `decisions/`             | ADRs (incl. `Project-Management.md`)  |
 | `diagrams/`              | Draw.io placeholders (empty — future) |
 
 ---
 
 ## Quick start for the next session
 
-1. Read this handoff + `docs/DOMAIN_MODEL.md` + `ROADMAP.md` + `decisions/Organization-User-Management.md`
+1. Read this handoff + `docs/DOMAIN_MODEL.md` + `docs/MILESTONE_4_PROJECT_MANAGEMENT.md` §6 + `decisions/Project-Management.md`
 2. Confirm git branch/status in `opsflow-api` / `opsflow-docs`
-3. ✅ Milestone 3 is complete — next is **Phase 4 — Project Management** — **wait for explicit user approval/scope**
-4. Do **not** invent Project schema/endpoints until Phase 4 is approved and specified
+3. ✅ Phase 4.1 is complete — next is **Phase 4.2 — Project CRUD** — **wait for explicit implementation approval**
+4. Follow the Milestone 4 spec / ADR — do **not** invent beyond approved decisions
 5. Do **not** modify code when the user asks for docs-only tasks
-6. Prefer matching patterns in `UserService` / `UserQuery` / `UserPolicy` / `UserController` / `LookupService` / `LookupController` / `AuthenticationService` / `ApiResponse`
+6. Prefer matching patterns in `UserService` / `UserQuery` / `UserPolicy` / `UserController` / `LookupService` / `LookupController` / `AuthenticationService` / `ApiResponse` / `Project` model
 
 ### Essential commands
 
@@ -580,7 +601,7 @@ cp .env.example .env   # if needed
 php artisan migrate
 php artisan db:seed
 php artisan serve
-php artisan test --filter="AuthenticationTest|OrganizationFoundationTest|UserDomainFoundationTest|UserManagementApiTest|UserListQueryTest|LookupApiTest|UserAuthorizationTest"
+php artisan test --filter="AuthenticationTest|OrganizationFoundationTest|UserDomainFoundationTest|UserManagementApiTest|UserListQueryTest|LookupApiTest|UserAuthorizationTest|ProjectDomainFoundationTest"
 
 # Docs
 cd opsflow-docs
@@ -596,7 +617,7 @@ cd opsflow-docs
 | Location   | `opsflow-docs/HANDOFF.md`                      |
 | Supersedes | Ad-hoc chat memory                             |
 | Maintain   | Update when milestones complete or ADRs change |
-| Ready for  | Next session → Phase 4 (after approval)        |
+| Ready for  | Next session → Phase 4.2 (after implementation approval) |
 
 ## Project Principles
 

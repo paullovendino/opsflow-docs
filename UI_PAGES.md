@@ -38,6 +38,7 @@
 - Create Project
 - Edit Project
 - Project Details
+- Project Members (Milestone 4 API; Vue UI later)
 
 ---
 

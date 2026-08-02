@@ -24,7 +24,12 @@ Central documentation for the OpsFlow SaaS platform.
 | Phase 3.4 — Lookup APIs | ✅ Implemented |
 | Phase 3.5 — Search, Filtering & Pagination (incl. Sorting) | ✅ Implemented |
 | Phase 3.6 — Authorization (RBAC) | ✅ Implemented |
-| Phase 4 — Project Management | Pending (next) |
+| Phase 4 — Project Management | In progress (4.1 done) |
+| Phase 4.1 — Project Domain Foundation | ✅ Implemented |
+| Phase 4.2 — Project CRUD | Pending (next) |
+| Phase 4.3 — Project Members | Pending |
+| Phase 4.4 — Project Queries | Pending |
+| Phase 4.5 — Project Authorization | Pending |
 
 ## Documentation Index
 
@@ -34,6 +39,7 @@ Central documentation for the OpsFlow SaaS platform.
 | [HANDOFF.md](HANDOFF.md) | **Project handoff for new AI/dev sessions** |
 | [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md) | **Business domain model (primary)** |
 | [docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md](docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md) | Milestone 3 implementation specification |
+| [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md) | Milestone 4 implementation specification |
 | [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md) | Product overview and tech stack |
 | [REQUIREMENTS.md](REQUIREMENTS.md) | Functional and non-functional requirements |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | System and backend architecture |
@@ -60,4 +66,4 @@ Central documentation for the OpsFlow SaaS platform.
 - Lookups (Phase 3.4): `/api/v1/lookups/roles`, `/api/v1/lookups/departments`, `/api/v1/lookups/job-titles`
 - Users list (Phase 3.5): search / filters / sorting / pagination on `GET /api/v1/users`
 - Authorization (Phase 3.6): coarse User Management policies (`UserPolicy`)
-- Next: Phase 4 — Project Management — see [HANDOFF.md](HANDOFF.md)
+- Next: Phase 4.2 — Project CRUD — see [HANDOFF.md](HANDOFF.md) · [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md)

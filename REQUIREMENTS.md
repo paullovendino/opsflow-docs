@@ -56,18 +56,20 @@ Department CRUD, Job Title CRUD, teams, branches, and organization settings are 
 
 ---
 
-## Project Management
+## Project Management (Milestone 4 — designed)
 
-> Phase 4 — Pending (next implementation milestone)
+> Phase 4.1 — Implemented (domain foundation) · Phases 4.2–4.5 pending  
+> Spec: [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md)
 
-High-level scope (see [ROADMAP.md](ROADMAP.md) / [HANDOFF.md](HANDOFF.md)):
-
-- [ ] Project CRUD
-- [ ] Project Members
-- [ ] Project Status
-- [ ] Project Queries
-- [ ] Project Policies
-- [ ] Project Tests
+- [x] Project domain foundation (`projects`, `project_members`, `ProjectStatus`)
+- [ ] Project CRUD (`GET/POST /api/v1/projects`, `GET/PUT/DELETE /api/v1/projects/{project}`)
+- [ ] Project status patch (`PATCH /api/v1/projects/{project}/status`)
+- [ ] Project members (`GET/POST /api/v1/projects/{project}/members`, `DELETE .../members/{user}`)
+- [ ] Project list search / filters / sorting / pagination
+- [ ] Coarse authorization (`ProjectPolicy`):
+  - Administrator — full project management (all projects)
+  - Project Manager — full project management (all projects)
+  - Employee — list/view owned or member projects only
 
 ---
 

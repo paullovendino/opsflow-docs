@@ -58,7 +58,7 @@ Follows `CODING_STANDARDS.md`:
 | Queries | List search / filter / sort / pagination |
 | Models | Persistence / relationships |
 | Enums | Domain constants |
-| Policies | Coarse User Management authorization (`UserPolicy`) |
+| Policies | Coarse authorization (`UserPolicy`, `ProjectPolicy`) |
 | Exceptions + `ApiExceptionRenderer` | Consistent API errors |
 
 Authentication example:
@@ -76,6 +76,10 @@ User list example (Phase 3.5 — implemented):
 Lookups example (Phase 3.4):
 
 `LookupController` → `LookupService` → `Role` / `Department` / `JobTitle` → `RoleResource` / `DepartmentResource` / `JobTitleResource`
+
+Project Management example (Milestone 4 — designed):
+
+`ProjectController` → Form Requests → `ProjectService` / `ProjectQuery` → `Project` + members → `ProjectResource`; authorize via `ProjectPolicy`
 
 ---
 
@@ -103,7 +107,7 @@ Details: [AUTHENTICATION.md](AUTHENTICATION.md)
 
 ## Authorization Architecture
 
-**Phase 3.6 — Implemented.** Coarse role checks only — not advanced RBAC:
+**Phase 3.6 — Implemented.** Coarse role checks for User Management — not advanced RBAC:
 
 | Role | User Management |
 |------|-----------------|
@@ -114,6 +118,16 @@ Details: [AUTHENTICATION.md](AUTHENTICATION.md)
 Enforced via `App\Policies\UserPolicy` and `$this->authorize()` in `UserController`. Unauthorized → HTTP `403` API envelope.
 
 Lookup endpoints (Phase 3.4): `GET /api/v1/lookups/{roles,departments,job-titles}` — all authenticated users; collections only.
+
+**Phase 4.5 — Designed.** Coarse role checks for Project Management:
+
+| Role | Project Management |
+|------|--------------------|
+| Administrator | Full access to all projects |
+| Project Manager | Full access to all projects |
+| Employee | List/view owned or member projects only |
+
+Enforced via `App\Policies\ProjectPolicy` (when implemented). See [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md).
 
 ---
 
@@ -135,8 +149,8 @@ API routes (`api/*`) render through `App\Exceptions\ApiExceptionRenderer` using 
 
 | Status | Aliases |
 |--------|---------|
-| Registered | `user`, `role`, `department`, `job_title` |
-| Later | `project`, `task`, `remark`, `activity_log` |
+| Registered | `user`, `role`, `department`, `job_title`, `project` |
+| Later | `task`, `remark`, `activity_log` |
 
 ### Reference Data
 
@@ -159,7 +173,12 @@ API routes (`api/*`) render through `App\Exceptions\ApiExceptionRenderer` using 
 | Search / filters / sorting / pagination (3.5) | ✅ Implemented |
 | Coarse authorization (3.6) | ✅ Implemented |
 | **Milestone 3** | ✅ **Complete** |
-| Phase 4 — Project Management | Pending (next) |
+| Phase 4.1 — Project Domain Foundation | ✅ Implemented |
+| Phase 4.2 — Project CRUD | Designed / Pending |
+| Phase 4.3 — Project Members | Designed / Pending |
+| Phase 4.4 — Project Queries | Designed / Pending |
+| Phase 4.5 — Project Authorization | Designed / Pending |
+| **Milestone 4** | In progress (4.1 done) |
 | Tasks / Remarks / Activity Logs | Planned |
 | Vue Pinia auth | Planned |
 | Deployment | Planned |

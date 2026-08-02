@@ -5,7 +5,7 @@
 **Last updated:** 2026-08-02
 
 > Implementation specification for Milestone 3 — **complete**.  
-> Next product milestone: Phase 4 — Project Management ([ROADMAP.md](../ROADMAP.md)).  
+> Next product milestone: Phase 4 — Project Management ([docs/MILESTONE_4_PROJECT_MANAGEMENT.md](MILESTONE_4_PROJECT_MANAGEMENT.md) · [ROADMAP.md](../ROADMAP.md)).  
 > Domain reference: [DOMAIN_MODEL.md](DOMAIN_MODEL.md)
 
 ---

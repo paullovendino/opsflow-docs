@@ -4,7 +4,7 @@
 **Audience:** Architects, developers, and AI agents designing or implementing features.  
 **Scope:** Business concepts and rules — not physical schema details.  
 **Schema companion:** [DATABASE_DESIGN.md](../DATABASE_DESIGN.md)  
-**Milestone companion:** [MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md](MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md)
+**Milestone companions:** [MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md](MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md) · [MILESTONE_4_PROJECT_MANAGEMENT.md](MILESTONE_4_PROJECT_MANAGEMENT.md)
 
 > Prefer this document when deciding *what* OpsFlow manages.  
 > Prefer `DATABASE_DESIGN.md` when deciding *how* it is stored.
@@ -51,7 +51,8 @@ Organization (logical)
     │
     └── User
             │
-            ├── creates / owns ──► Project (planned)
+            ├── creates / owns ──► Project (Milestone 4)
+            ├── member of ─────► Project (via project_members)
             ├── assigned to ───► Task (planned)
             ├── authors ───────► Remark (planned)
             └── produces ──────► Activity Log (planned)
@@ -61,8 +62,8 @@ Typical flow:
 
 1. An **Organization** defines departments, job titles, and roles.
 2. A **User** is onboarded with a role and optional department/job title.
-3. Users create and manage **Projects** and **Tasks** (later milestones).
-4. Users leave **Remarks** on work items and generate **Activity Logs** (later milestones).
+3. Users create and manage **Projects** and project membership (Milestone 4).
+4. Users receive **Tasks**, leave **Remarks**, and generate **Activity Logs** (later milestones).
 
 ---
 
@@ -210,6 +211,16 @@ Defines permission posture for a user. Roles answer: *what is this user allowed 
 
 Enforced via `UserPolicy` on User Management endpoints.
 
+### Milestone 4 Authorization (coarse — Phase 4.5 — designed)
+
+| Role | Project Management |
+|------|--------------------|
+| `administrator` | Full access to all projects |
+| `project_manager` | Full access to all projects |
+| `employee` | List/view owned or member projects only |
+
+Enforced via `ProjectPolicy` when Phase 4.5 is implemented.
+
 ### Future Expansion
 
 - Permission management UI
@@ -229,7 +240,7 @@ A person who authenticates into OpsFlow and participates in organizational work.
 
 - Authenticate (session via Sanctum SPA cookies)
 - Carry organizational placement (role, optional department, optional job title)
-- Own or participate in projects, tasks, remarks, and activity (later milestones)
+- Own or participate in projects (Milestone 4); tasks, remarks, and activity later
 - Expose a stable profile for directories and self-service
 
 ### Relationships
@@ -237,7 +248,8 @@ A person who authenticates into OpsFlow and participates in organizational work.
 - Belongs to one Role (required)
 - Belongs to one Department (optional)
 - Belongs to one Job Title (optional)
-- Will create/own Projects (planned)
+- Owns Projects via `created_by` (Milestone 4)
+- May belong to many Projects as a member via `project_members` (Milestone 4)
 - Will be assigned Tasks (planned)
 - Will author Remarks (planned)
 - Will produce Activity Logs (planned)
@@ -276,34 +288,44 @@ A person who authenticates into OpsFlow and participates in organizational work.
 
 ---
 
-## Project (planned)
+## Project (Milestone 4)
 
 ### Purpose
 
-A body of work with a defined scope, timeline, and ownership used to organize tasks.
+A body of work with a defined scope, timeline, and ownership used to organize tasks (tasks themselves are Phase 5).
 
 ### Responsibilities
 
-- Group related tasks
+- Group related work under a named project
 - Track project-level status and dates
+- Identify a single owner
+- Associate participating users as members
 - Provide a unit of planning and reporting
 
 ### Relationships
 
 - Belongs to Organization (logical)
-- Created by a User
-- Has many Tasks
-- May attract Remarks and Activity Logs
+- Owned by exactly one User (`created_by`)
+- Has many member Users via `project_members`
+- Will have many Tasks (Phase 5)
+- May attract Remarks and Activity Logs (later)
 
 ### Important Business Rules
 
-- Not implemented in Milestone 3
-- Schema and API remain planned until the Project Management phase
+- Soft deletes are supported
+- Status is one of: `planning`, `active`, `on_hold`, `completed`, `archived` (`ProjectStatus`)
+- Default status on create: `planning`
+- Owner (`created_by`) is required; FK **RESTRICT**; set from the authenticated user on create; no ownership transfer in Phase 4
+- Membership is explicit via `project_members` — owner is **not** auto-added as a member
+- No member roles, invitation workflow, or permissions on the membership pivot
+- Employee project visibility: projects they **own** or are a **member** of
+- Schema / API defined in [MILESTONE_4_PROJECT_MANAGEMENT.md](MILESTONE_4_PROJECT_MANAGEMENT.md) and [decisions/Project-Management.md](../decisions/Project-Management.md)
 
 ### Future Expansion
 
-- Project membership / teams
-- Archiving, templates, dashboards
+- Ownership transfer
+- Member roles / invitations
+- Templates, dashboards, richer archiving workflows beyond `archived` status
 
 ---
 
@@ -399,9 +421,9 @@ An auditable record of significant actions taken in the system.
 
 1. **Structure first:** Organization defines Departments, Job Titles, and Roles.
 2. **People next:** Users are created with a Role and optional Department/Job Title.
-3. **Authorization:** Role decides what the User may do (starting with User Management).
-4. **Work later:** Users create Projects, receive Tasks, leave Remarks, and generate Activity Logs.
-5. **Independence preserved:** Changing a user’s Job Title must not silently change permissions; changing Role must not silently change department membership.
+3. **Authorization:** Role decides what the User may do (User Management in Milestone 3; Projects in Milestone 4).
+4. **Work:** Users create Projects, add members, and later receive Tasks, leave Remarks, and generate Activity Logs.
+5. **Independence preserved:** Changing a user’s Job Title must not silently change permissions; changing Role must not silently change department membership; project membership does not grant system Role permissions.
 
 ---
 
@@ -413,5 +435,7 @@ An auditable record of significant actions taken in the system.
 | [API_SPECIFICATION.md](../API_SPECIFICATION.md) | HTTP contracts |
 | [ARCHITECTURE.md](../ARCHITECTURE.md) | System layering |
 | [decisions/Organization-User-Management.md](../decisions/Organization-User-Management.md) | Milestone 3 ADR |
+| [decisions/Project-Management.md](../decisions/Project-Management.md) | Milestone 4 ADR |
 | [decisions/Database.md](../decisions/Database.md) | Database ADR |
-| [MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md](MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md) | Implementation specification |
+| [MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md](MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md) | Milestone 3 implementation specification |
+| [MILESTONE_4_PROJECT_MANAGEMENT.md](MILESTONE_4_PROJECT_MANAGEMENT.md) | Milestone 4 implementation specification |
