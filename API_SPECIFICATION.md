@@ -681,17 +681,216 @@ Remove a member from a project (hard-delete pivot row).
 
 ## Tasks
 
-> Planned — Phase 5
+> **Milestone 5 — ✅ Design approved** (Phases 5.1–5.6 pending implementation)  
+> Spec: [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md)  
+> ADR: [decisions/Task-Management.md](decisions/Task-Management.md)
 
-GET /api/v1/tasks
+### Authorization (coarse — Phase 5.6)
 
-GET /api/v1/tasks/{id}
+| Role | Capability |
+|------|------------|
+| Administrator | Full Task Management (all tasks) |
+| Project Manager | Full Task Management (all tasks) |
+| Employee | List/view tasks in owned or member projects; update status only when assigned to self |
 
-POST /api/v1/tasks
+Task routes require `auth:sanctum`. `TaskPolicy` checks arrive in Phase 5.6.
 
-PUT /api/v1/tasks/{id}
+### Task resource shape
 
-DELETE /api/v1/tasks/{id}
+```json
+{
+  "id": 1,
+  "title": "Draft API contract",
+  "description": "Document task endpoints",
+  "status": "todo",
+  "priority": "medium",
+  "due_date": "2026-08-15",
+  "project": {
+    "id": 1,
+    "name": "OpsFlow Launch"
+  },
+  "assignee": {
+    "id": 3,
+    "first_name": "Sam",
+    "middle_name": null,
+    "last_name": "Lee",
+    "full_name": "Sam Lee",
+    "email": "sam@example.com"
+  },
+  "creator": {
+    "id": 1,
+    "first_name": "Jane",
+    "middle_name": null,
+    "last_name": "Doe",
+    "full_name": "Jane Doe",
+    "email": "jane@example.com"
+  },
+  "created_at": "2026-08-03T00:00:00.000000Z",
+  "updated_at": "2026-08-03T00:00:00.000000Z"
+}
+```
+
+`status` values (`TaskStatus`): `todo`, `in_progress`, `in_review`, `blocked`, `completed`, `cancelled`.  
+`priority` values (`TaskPriority`): `low`, `medium`, `high`, `urgent`.  
+`assignee` may be `null`. Nested `project` / `assignee` / `creator` appear when relations are loaded (`whenLoaded()`).
+
+---
+
+### GET /api/v1/tasks
+
+**Status:** Approved Phase 5.5 contract (implementation pending; authz in 5.6)
+
+List tasks with search, filtering, sorting, and pagination.
+
+**Authentication:** `auth:sanctum`  
+**Authorization:** Administrator, Project Manager (all tasks); Employee (tasks in accessible projects)
+
+**Query parameters:**
+
+| Param | Rules / notes |
+|-------|----------------|
+| `search` | Optional string; matches `title`, `description` (case-insensitive) |
+| `status` | Optional; one of `todo`, `in_progress`, `in_review`, `blocked`, `completed`, `cancelled` |
+| `priority` | Optional; one of `low`, `medium`, `high`, `urgent` |
+| `project_id` | Optional integer; must exist in `projects` |
+| `assigned_to` | Optional integer; must exist in `users` |
+| `created_by` | Optional integer; must exist in `users` |
+| `sort` | Optional; one of `title`, `status`, `priority`, `due_date`, `created_at` (default `created_at`) |
+| `direction` | Optional; `asc` \| `desc` (default `desc`) |
+| `page` | Optional integer ≥ 1 (default `1`) |
+| `per_page` | Optional integer 1–100 (default `15`); values above 100 are clamped to 100 |
+
+Filters are composable (e.g. `status` + `project_id` + `search` together).
+
+**Success:** `200` with paginated `TaskResource` collection in `data` and pagination in `meta` (`current_page`, `last_page`, `per_page`, `total`, `from`, `to`). Invalid query params → `422` (standard API envelope). Unauthorized → `403`.
+
+---
+
+### GET /api/v1/tasks/{id}
+
+**Status:** Approved Phase 5.2 contract (implementation pending; authz in 5.6)
+
+Show a single task.
+
+**Authentication:** `auth:sanctum`
+
+**Success:** `200` with task object in `data`. Unauthorized → `403`.
+
+---
+
+### POST /api/v1/tasks
+
+**Status:** Approved Phase 5.2 contract (implementation pending; authz in 5.6)
+
+Create a task.
+
+**Authentication:** `auth:sanctum`
+
+**Request body:**
+
+```json
+{
+  "project_id": 1,
+  "title": "Draft API contract",
+  "description": "Document task endpoints",
+  "priority": "medium",
+  "due_date": "2026-08-15",
+  "assigned_to": 3
+}
+```
+
+**Notes:**
+
+- `project_id`, `title` required
+- `description`, `priority`, `due_date`, `assigned_to` optional
+- Default `priority` when omitted: `medium`
+- `status` is **not** accepted on create — always `todo`
+- `created_by` set server-side from the authenticated user (client-supplied values ignored)
+- When `assigned_to` is present: must be active, not soft-deleted, and project owner or member (`422` otherwise)
+
+**Success:** `201` with created task in `data`.
+
+---
+
+### PUT /api/v1/tasks/{id}
+
+**Status:** Approved Phase 5.2 contract (implementation pending; authz in 5.6)
+
+Update a task.
+
+**Authentication:** `auth:sanctum`
+
+**Request body:** `title`, `description`, `priority`, `due_date` only. `status`, `assigned_to`, `project_id`, and `created_by` are not updatable here.
+
+**Success:** `200` with updated task in `data`.
+
+---
+
+### DELETE /api/v1/tasks/{id}
+
+**Status:** Approved Phase 5.2 contract (implementation pending; authz in 5.6)
+
+Soft-delete a task.
+
+**Authentication:** `auth:sanctum`
+
+**Success:** `200` with standard envelope.
+
+---
+
+### PATCH /api/v1/tasks/{id}/status
+
+**Status:** Approved Phase 5.3 contract (implementation pending; authz in 5.6)
+
+Update task status only.
+
+**Authentication:** `auth:sanctum`
+
+**Request body:**
+
+```json
+{
+  "status": "in_progress"
+}
+```
+
+Accepted `status` values (`TaskStatus`): `todo`, `in_progress`, `in_review`, `blocked`, `completed`, `cancelled`.  
+No restricted transition graph in Milestone 5.
+
+**Success:** `200` with updated task in `data`.
+
+---
+
+### PATCH /api/v1/tasks/{id}/assignment
+
+**Status:** Approved Phase 5.4 contract (implementation pending; authz in 5.6)
+
+Set or clear the single task assignee.
+
+**Authentication:** `auth:sanctum`
+
+**Request body:**
+
+```json
+{
+  "assigned_to": 3
+}
+```
+
+Clear assignee:
+
+```json
+{
+  "assigned_to": null
+}
+```
+
+**Notes:**
+
+- When non-null: user must exist, be `active`, not soft-deleted, and be the project owner or a project member (`422` otherwise)
+- Does not change `created_by`, `status`, or `project_id`
+
+**Success:** `200` with updated task in `data`.
 
 ---
 

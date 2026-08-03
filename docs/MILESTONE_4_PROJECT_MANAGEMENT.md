@@ -261,7 +261,7 @@ Feature tests: `tests/Feature/Project/ProjectAuthorizationTest.php`
 
 ## 10. Out of Scope (Future Work)
 
-- Tasks module (Phase 5)
+- Tasks module — **designed as Milestone 5** (see [MILESTONE_5_TASK_MANAGEMENT.md](MILESTONE_5_TASK_MANAGEMENT.md))
 - Remarks / Activity Logs
 - Dashboard / Reports
 - Project templates, archiving workflows beyond `archived` status, ownership transfer

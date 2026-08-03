@@ -8,6 +8,26 @@ Format follows a lightweight Keep a Changelog style.
 
 ## [Unreleased] — v1.0.0 (Development)
 
+### Task Domain Foundation (Phase 5.1) — ✅ Implemented
+
+- `tasks` table with soft deletes; FKs `project_id`, `assigned_to` (nullable), `created_by` (**RESTRICT**)
+- `App\Enums\TaskStatus` / `TaskPriority`; `App\Models\Task`; `TaskFactory`
+- Relations on `Task`, `Project::tasks`, `User::createdTasks` / `assignedTasks`
+- Morph map alias `task`
+- PHPUnit Feature suite: `tests/Feature/Task/TaskDomainFoundationTest.php`
+- Docs synchronized; next is Phase 5.2 — Task CRUD (pending approval)
+
+### Milestone 5 design package — ✅ Approved (docs)
+
+- Added [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md) and [decisions/Task-Management.md](decisions/Task-Management.md)
+- Phases 5.1–5.6: Domain Foundation · CRUD · Status · Assignment · Queries · Authorization
+- Approved ERD: `tasks` (soft deletes; FKs RESTRICT); `TaskStatus` / `TaskPriority` enums
+- Assignment: single nullable `assigned_to` (active + project owner/member)
+- APIs: `/api/v1/tasks` CRUD + `PATCH .../status` + `PATCH .../assignment` + list query contract
+- Authz matrix: Admin/PM full; Employee project-scoped list/view; status when assigned to self
+- Companion docs synchronized (DOMAIN_MODEL, DATABASE_DESIGN, API_SPEC, HANDOFF, ROADMAP, etc.)
+- Next: Phase 5.1 — Task Domain Foundation (pending implementation approval)
+
 ### Project Authorization (Phase 4.5) — ✅ Implemented · Milestone 4 complete
 
 - `ProjectPolicy` registered via `Gate::policy` in `AppServiceProvider`
@@ -16,7 +36,7 @@ Format follows a lightweight Keep a Changelog style.
 - Employee: list/view owned **or** member projects only; mutations denied
 - Employee list scoping in `ProjectQuery::applyVisibility`
 - PHPUnit Feature suite: `tests/Feature/Project/ProjectAuthorizationTest.php`
-- Docs synchronized; next is Phase 5 — Task Management (pending approval)
+- Docs synchronized; Milestone 5 design completed next
 
 ### Project Queries (Phase 4.4) — ✅ Implemented
 

@@ -30,6 +30,13 @@ Central documentation for the OpsFlow SaaS platform.
 | Phase 4.3 — Project Members | ✅ Implemented |
 | Phase 4.4 — Project Queries | ✅ Implemented |
 | Phase 4.5 — Project Authorization | ✅ Implemented |
+| **Milestone 5 — Task Management** | ✅ Design approved · pending implementation |
+| Phase 5.1 — Task Domain Foundation | ✅ Implemented |
+| Phase 5.2 — Task CRUD | ⏳ Pending (next) |
+| Phase 5.3 — Task Status Workflow | ⏳ Pending |
+| Phase 5.4 — Task Assignment | ⏳ Pending |
+| Phase 5.5 — Task Queries | ⏳ Pending |
+| Phase 5.6 — Task Authorization | ⏳ Pending |
 
 ## Documentation Index
 
@@ -40,6 +47,7 @@ Central documentation for the OpsFlow SaaS platform.
 | [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md) | **Business domain model (primary)** |
 | [docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md](docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md) | Milestone 3 implementation specification |
 | [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md) | Milestone 4 implementation specification |
+| [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md) | Milestone 5 implementation specification |
 | [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md) | Product overview and tech stack |
 | [REQUIREMENTS.md](REQUIREMENTS.md) | Functional and non-functional requirements |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | System and backend architecture |
@@ -67,4 +75,5 @@ Central documentation for the OpsFlow SaaS platform.
 - Users list (Phase 3.5): search / filters / sorting / pagination on `GET /api/v1/users`
 - Authorization (Phase 3.6): coarse User Management policies (`UserPolicy`)
 - Projects (Milestone 4): `/api/v1/projects`, members, queries, `ProjectPolicy`
-- Next: Phase 5 — Task Management — see [HANDOFF.md](HANDOFF.md) · [ROADMAP.md](ROADMAP.md)
+- Tasks (Milestone 5 design): `/api/v1/tasks`, status, assignment — see [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md)
+- Next: Phase 5.2 — Task CRUD — see [HANDOFF.md](HANDOFF.md) · [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md)

@@ -188,16 +188,29 @@ Path: `tests/Feature/Project/ProjectMembersApiTest.php`
 | Unknown member | `404` |
 | Guest | Member endpoints `401` |
 
-## Project Management (Milestone 4 — remaining)
+## Project Management (Milestone 4 — complete)
 
 Spec: [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md)
 
-Planned Feature suites (create during later phases):
+| Phase | Path | Coverage |
+|-------|------|----------|
+| 4.4 | `tests/Feature/Project/ProjectListQueryTest.php` | ✅ search, filters, sort, pagination, clamp, validation |
+| 4.5 | `tests/Feature/Project/ProjectAuthorizationTest.php` | ✅ Admin / PM / Employee matrix (owned-or-member for Employee) |
+
+## Task Management (Milestone 5 — designed)
+
+Spec: [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md)
+
+Planned Feature suites (create during implementation phases):
 
 | Phase | Suggested path | Coverage |
 |-------|----------------|----------|
-| 4.4 | `tests/Feature/Project/ProjectListQueryTest.php` | ✅ search, filters, sort, pagination, clamp, validation |
-| 4.5 | `tests/Feature/Project/ProjectAuthorizationTest.php` | ✅ Admin / PM / Employee matrix (owned-or-member for Employee) |
+| 5.1 | `tests/Feature/Task/TaskDomainFoundationTest.php` | ✅ schema, relations, enums, soft delete, FK RESTRICT, factory |
+| 5.2 | `tests/Feature/Task/TaskManagementApiTest.php` | CRUD, validation, defaults, `created_by`, guest `401`, resource shape |
+| 5.3 | (management / authz suites) | status patch; create/update reject status |
+| 5.4 | `tests/Feature/Task/TaskAssignmentApiTest.php` | assign/clear; active+owner/member only; `422` cases |
+| 5.5 | `tests/Feature/Task/TaskListQueryTest.php` | search, filters, sort, pagination, clamp, validation |
+| 5.6 | `tests/Feature/Task/TaskAuthorizationTest.php` | Admin / PM / Employee matrix (status when assigned) |
 
 ---
 
@@ -206,3 +219,4 @@ Planned Feature suites (create during later phases):
 - Explicit `429` rate-limit assertion
 - CSRF rejection cases
 - Frontend Pinia auth tests
+- Milestone 5 Task Management suites (designed above)

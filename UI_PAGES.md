@@ -44,10 +44,13 @@
 
 ## Task Management
 
+> Milestone 5 API design approved; Vue UI later
+
 - Task List
 - Create Task
 - Edit Task
 - Task Details
+- Task Assignment / Status (API: Milestone 5)
 
 ---
 

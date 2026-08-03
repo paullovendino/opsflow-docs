@@ -4,7 +4,7 @@
 **Audience:** Architects, developers, and AI agents designing or implementing features.  
 **Scope:** Business concepts and rules — not physical schema details.  
 **Schema companion:** [DATABASE_DESIGN.md](../DATABASE_DESIGN.md)  
-**Milestone companions:** [MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md](MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md) · [MILESTONE_4_PROJECT_MANAGEMENT.md](MILESTONE_4_PROJECT_MANAGEMENT.md)
+**Milestone companions:** [MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md](MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md) · [MILESTONE_4_PROJECT_MANAGEMENT.md](MILESTONE_4_PROJECT_MANAGEMENT.md) · [MILESTONE_5_TASK_MANAGEMENT.md](MILESTONE_5_TASK_MANAGEMENT.md)
 
 > Prefer this document when deciding *what* OpsFlow manages.  
 > Prefer `DATABASE_DESIGN.md` when deciding *how* it is stored.
@@ -53,7 +53,7 @@ Organization (logical)
             │
             ├── creates / owns ──► Project (Milestone 4)
             ├── member of ─────► Project (via project_members)
-            ├── assigned to ───► Task (planned)
+            ├── assigned to ───► Task (Milestone 5)
             ├── authors ───────► Remark (planned)
             └── produces ──────► Activity Log (planned)
 ```
@@ -63,7 +63,7 @@ Typical flow:
 1. An **Organization** defines departments, job titles, and roles.
 2. A **User** is onboarded with a role and optional department/job title.
 3. Users create and manage **Projects** and project membership (Milestone 4).
-4. Users receive **Tasks**, leave **Remarks**, and generate **Activity Logs** (later milestones).
+4. Users receive **Tasks** (Milestone 5), leave **Remarks**, and generate **Activity Logs** (later milestones).
 
 ---
 
@@ -221,6 +221,16 @@ Enforced via `UserPolicy` on User Management endpoints.
 
 Enforced via `ProjectPolicy` and Employee list scoping in `ProjectQuery`.
 
+### Milestone 5 Authorization (coarse — Phase 5.6 — designed)
+
+| Role | Task Management |
+|------|-----------------|
+| `administrator` | Full access to all tasks |
+| `project_manager` | Full access to all tasks |
+| `employee` | List/view tasks in accessible projects; update status only when assigned to self |
+
+Enforced via `TaskPolicy` and Employee list scoping in `TaskQuery` when Phase 5.6 is implemented. See [MILESTONE_5_TASK_MANAGEMENT.md](MILESTONE_5_TASK_MANAGEMENT.md).
+
 ### Future Expansion
 
 - Permission management UI
@@ -240,7 +250,7 @@ A person who authenticates into OpsFlow and participates in organizational work.
 
 - Authenticate (session via Sanctum SPA cookies)
 - Carry organizational placement (role, optional department, optional job title)
-- Own or participate in projects (Milestone 4); tasks, remarks, and activity later
+- Own or participate in projects (Milestone 4); create/receive Tasks (Milestone 5); remarks and activity later
 - Expose a stable profile for directories and self-service
 
 ### Relationships
@@ -250,7 +260,8 @@ A person who authenticates into OpsFlow and participates in organizational work.
 - Belongs to one Job Title (optional)
 - Owns Projects via `created_by` (Milestone 4)
 - May belong to many Projects as a member via `project_members` (Milestone 4)
-- Will be assigned Tasks (planned)
+- Creates Tasks via `created_by` (Milestone 5)
+- May be assigned Tasks via `assigned_to` (Milestone 5; single assignee)
 - Will author Remarks (planned)
 - Will produce Activity Logs (planned)
 
@@ -292,7 +303,7 @@ A person who authenticates into OpsFlow and participates in organizational work.
 
 ### Purpose
 
-A body of work with a defined scope, timeline, and ownership used to organize tasks (tasks themselves are Phase 5).
+A body of work with a defined scope, timeline, and ownership used to organize tasks (Milestone 5).
 
 ### Responsibilities
 
@@ -307,7 +318,7 @@ A body of work with a defined scope, timeline, and ownership used to organize ta
 - Belongs to Organization (logical)
 - Owned by exactly one User (`created_by`)
 - Has many member Users via `project_members`
-- Will have many Tasks (Phase 5)
+- Has many Tasks (Milestone 5)
 - May attract Remarks and Activity Logs (later)
 
 ### Important Business Rules
@@ -342,7 +353,7 @@ A body of work with a defined scope, timeline, and ownership used to organize ta
 
 ---
 
-## Task (planned)
+## Task (Milestone 5)
 
 ### Purpose
 
@@ -351,24 +362,45 @@ A unit of assignable work within a project.
 ### Responsibilities
 
 - Capture title, description, priority, status, and due date
-- Assign responsibility to a user
-- Drive day-to-day execution visibility
+- Assign responsibility to at most one user
+- Drive day-to-day execution visibility within a project
 
 ### Relationships
 
-- Belongs to a Project
-- Assigned to a User (optional/nullable depending on later rules)
-- Created by a User
-- May attract Remarks and Activity Logs
+- Belongs to exactly one Project (`project_id`)
+- Optionally assigned to one User (`assigned_to`, nullable)
+- Created by one User (`created_by`)
+- May attract Remarks and Activity Logs (later)
 
 ### Important Business Rules
 
-- Not implemented in Milestone 3
-- Assignment targets Users, not Departments or Job Titles directly
+- Soft deletes are supported
+- Status is one of: `todo`, `in_progress`, `in_review`, `blocked`, `completed`, `cancelled` (`TaskStatus`)
+- Default status on create: `todo` (status not accepted on create/update; use status patch)
+- Priority is one of: `low`, `medium`, `high`, `urgent` (`TaskPriority`); default on create when omitted: `medium`
+- `created_by` is required; FK **RESTRICT**; set from the authenticated user on create; not transferable in Milestone 5
+- `project_id` is required on create; not changeable after create in Milestone 5; FK **RESTRICT**
+- Single assignee only; `assigned_to` nullable; when set, assignee must be active, not soft-deleted, and project owner **or** member
+- Assignment targets Users, not Departments or Job Titles
+- Milestone 5 does not enforce a restricted status transition graph
+- Employee task visibility (Phase 5.6): tasks in projects they **own** or are a **member** of; may update status only when assigned to self
+- Schema / API defined in [MILESTONE_5_TASK_MANAGEMENT.md](MILESTONE_5_TASK_MANAGEMENT.md) and [decisions/Task-Management.md](../decisions/Task-Management.md)
+
+### Implementation status (Milestone 5)
+
+| Phase | Status |
+|-------|--------|
+| 5.1 Task Domain Foundation | ✅ Implemented |
+| 5.2 Task CRUD | Pending |
+| 5.3 Task Status Workflow | Pending |
+| 5.4 Task Assignment | Pending |
+| 5.5 Task Queries | Pending |
+| 5.6 Task Authorization | Pending |
 
 ### Future Expansion
 
 - Subtasks, dependencies, kanban views, time tracking
+- Multiple assignees, labels, checklists, attachments, recurring tasks
 
 ---
 
@@ -434,9 +466,9 @@ An auditable record of significant actions taken in the system.
 
 1. **Structure first:** Organization defines Departments, Job Titles, and Roles.
 2. **People next:** Users are created with a Role and optional Department/Job Title.
-3. **Authorization:** Role decides what the User may do (User Management in Milestone 3; Projects in Milestone 4).
-4. **Work:** Users create Projects, add members, and later receive Tasks, leave Remarks, and generate Activity Logs.
-5. **Independence preserved:** Changing a user’s Job Title must not silently change permissions; changing Role must not silently change department membership; project membership does not grant system Role permissions.
+3. **Authorization:** Role decides what the User may do (User Management in Milestone 3; Projects in Milestone 4; Tasks in Milestone 5).
+4. **Work:** Users create Projects, add members, create/assign Tasks, and later leave Remarks and generate Activity Logs.
+5. **Independence preserved:** Changing a user’s Job Title must not silently change permissions; changing Role must not silently change department membership; project membership does not grant system Role permissions; task assignment does not grant Project Management mutate rights beyond the Task matrix.
 
 ---
 
@@ -449,6 +481,8 @@ An auditable record of significant actions taken in the system.
 | [ARCHITECTURE.md](../ARCHITECTURE.md) | System layering |
 | [decisions/Organization-User-Management.md](../decisions/Organization-User-Management.md) | Milestone 3 ADR |
 | [decisions/Project-Management.md](../decisions/Project-Management.md) | Milestone 4 ADR |
+| [decisions/Task-Management.md](../decisions/Task-Management.md) | Milestone 5 ADR |
 | [decisions/Database.md](../decisions/Database.md) | Database ADR |
 | [MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md](MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md) | Milestone 3 implementation specification |
 | [MILESTONE_4_PROJECT_MANAGEMENT.md](MILESTONE_4_PROJECT_MANAGEMENT.md) | Milestone 4 implementation specification |
+| [MILESTONE_5_TASK_MANAGEMENT.md](MILESTONE_5_TASK_MANAGEMENT.md) | Milestone 5 implementation specification |

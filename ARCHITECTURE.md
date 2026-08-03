@@ -58,7 +58,7 @@ Follows `CODING_STANDARDS.md`:
 | Queries | List search / filter / sort / pagination |
 | Models | Persistence / relationships |
 | Enums | Domain constants |
-| Policies | Coarse authorization (`UserPolicy`, `ProjectPolicy`) |
+| Policies | Coarse authorization (`UserPolicy`, `ProjectPolicy`; `TaskPolicy` in Milestone 5) |
 | Exceptions + `ApiExceptionRenderer` | Consistent API errors |
 
 Authentication example:
@@ -84,6 +84,12 @@ Project Management example (Phases 4.2–4.4 — implemented):
 Project list example (Phase 4.4 — implemented):
 
 `ProjectController::index` → `IndexProjectsRequest` → `ProjectService::list` → `ProjectQuery` → paginated `ProjectResource` collection + `meta`
+
+Task Management example (Milestone 5 — designed):
+
+`TaskController` → Form Requests → `TaskService` → `Task` → `TaskResource`  
+`index` → `IndexTasksRequest` → `TaskService` → `TaskQuery` → paginated `TaskResource` + `meta` (Phase 5.5)  
+Authorize via `TaskPolicy` (Phase 5.6)
 
 ---
 
@@ -133,6 +139,16 @@ Lookup endpoints (Phase 3.4): `GET /api/v1/lookups/{roles,departments,job-titles
 
 Enforced via `App\Policies\ProjectPolicy` and `$this->authorize()` in `ProjectController`. Employee list scoping in `ProjectQuery`. Unauthorized → HTTP `403` API envelope.
 
+**Phase 5.6 — Designed.** Coarse role checks for Task Management:
+
+| Role | Task Management |
+|------|-----------------|
+| Administrator | Full access to all tasks |
+| Project Manager | Full access to all tasks |
+| Employee | List/view tasks in accessible projects; update status only when assigned to self |
+
+Enforced via `App\Policies\TaskPolicy` (when implemented). See [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md).
+
 ---
 
 ## Cross-Cutting Concerns
@@ -153,8 +169,8 @@ API routes (`api/*`) render through `App\Exceptions\ApiExceptionRenderer` using 
 
 | Status | Aliases |
 |--------|---------|
-| Registered | `user`, `role`, `department`, `job_title`, `project` |
-| Later | `task`, `remark`, `activity_log` |
+| Registered | `user`, `role`, `department`, `job_title`, `project`, `task` |
+| Later | `remark`, `activity_log` |
 
 ### Reference Data
 
@@ -183,6 +199,9 @@ API routes (`api/*`) render through `App\Exceptions\ApiExceptionRenderer` using 
 | Phase 4.4 — Project Queries | ✅ Implemented |
 | Phase 4.5 — Project Authorization | ✅ Implemented |
 | **Milestone 4** | ✅ **Complete** (4.1–4.5) |
-| Tasks / Remarks / Activity Logs | Planned |
+| Phase 5.1 — Task Domain Foundation | ✅ Implemented |
+| Phase 5.2–5.6 — Task Management | ⏳ Pending |
+| **Milestone 5** | In progress (5.1 done) |
+| Remarks / Activity Logs | Planned |
 | Vue Pinia auth | Planned |
 | Deployment | Planned |

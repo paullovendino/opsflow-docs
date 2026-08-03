@@ -72,7 +72,7 @@ Enforced via `ProjectPolicy` + controller `$this->authorize()` + Employee list s
 
 ### Explicitly out of scope for Phase 4
 
-Tasks, Remarks, Activity Logs, Dashboard, Reports, Vue UI, ownership transfer, member roles/invitations, advanced RBAC.
+Tasks (see Milestone 5 ADR), Remarks, Activity Logs, Dashboard, Reports, Vue UI, ownership transfer, member roles/invitations, advanced RBAC.
 
 ## Consequences
 

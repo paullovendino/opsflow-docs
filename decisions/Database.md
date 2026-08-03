@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted — Milestone 3 complete (Phases 3.1–3.6); Milestone 4 complete (Phases 4.1–4.5: `projects` / `project_members` + APIs + queries + `ProjectPolicy`)
+Accepted — Milestone 3 complete; Milestone 4 complete; Milestone 5 Phase 5.1 (`tasks` migrated); Phases 5.2–5.6 pending
 
 ## Context
 
@@ -71,9 +71,10 @@ Legacy single `name` column is replaced during ERD alignment. Keep `email_verifi
 | Phase 2 | Auth only — no ERD expansion |
 | Phase 3 | Users ERD + `departments` + `job_titles` (**complete**) |
 | Phase 4 | `projects` + `project_members` (**Milestone 4 complete** — schema, CRUD, members, queries, authorization) |
-| Phase 5+ | Tasks, Remarks, Activity Logs |
+| Phase 5 | `tasks` (**Phase 5.1 migrated**; APIs pending 5.2–5.6) |
+| Later | Remarks, Activity Logs |
 
-### Projects ERD (Milestone 4 — Phase 4.1 migrated; member APIs Phase 4.3)
+### Projects ERD (Milestone 4 — complete)
 
 `projects`: `name`, `description` (nullable), `status` (`ProjectStatus`), `start_date` / `due_date` (nullable), `created_by` → `users.id` (**RESTRICT**), timestamps, soft deletes.
 
@@ -81,23 +82,33 @@ Legacy single `name` column is replaced during ERD alignment. Keep `email_verifi
 
 Status values: `planning`, `active`, `on_hold`, `completed`, `archived`.
 
+### Tasks ERD (Milestone 5 — Phase 5.1 migrated)
+
+`tasks`: `project_id` → `projects.id` (**RESTRICT**), `title`, `description` (nullable), `status` (`TaskStatus`), `priority` (`TaskPriority`), `due_date` (nullable), `assigned_to` → `users.id` (nullable, **RESTRICT**), `created_by` → `users.id` (**RESTRICT**), timestamps, soft deletes.
+
+Status values: `todo`, `in_progress`, `in_review`, `blocked`, `completed`, `cancelled` (default create: `todo`).
+
+Priority values: `low`, `medium`, `high`, `urgent` (default create when omitted: `medium`).
+
+Single assignee only; when `assigned_to` is set, user must be active, not soft-deleted, and project owner or member. `project_id` not changeable after create in Milestone 5.
+
 Do not invent schema beyond the approved ERD without updating this decision and `DATABASE_DESIGN.md`.
 
 ### Morph Map
 
 - Use `Relation::enforceMorphMap`
 - Register aliases only for models that already exist
-- Current aliases: `user`, `role`, `department`, `job_title`, `project`
-- Future: `task`, `remark`, `activity_log`
+- Current aliases: `user`, `role`, `department`, `job_title`, `project`, `task`
+- Future: `remark`, `activity_log`
 
 ## Consequences
 
 - Local and production environments must provide PostgreSQL and `pdo_pgsql`
 - SQLite is not the application database target
-- Enum-backed role, user-status, and project-status values keep seeders and domain logic consistent
+- Enum-backed role, user-status, project-status, task-status, and task-priority values keep seeders and domain logic consistent
 - Nullable department/job title supports onboarding without forcing incomplete org data
-- RESTRICT prevents hard-deleting referenced departments, job titles, roles, project owners, or members while references exist
-- Soft deletes on departments/job titles/projects/users do not remove rows; RESTRICT applies to hard deletes
+- RESTRICT prevents hard-deleting referenced departments, job titles, roles, project owners/members, or task projects/assignees/creators while references exist
+- Soft deletes on departments/job titles/projects/users/tasks do not remove rows; RESTRICT applies to hard deletes
 
 ## References
 
@@ -105,3 +116,4 @@ Do not invent schema beyond the approved ERD without updating this decision and 
 - [docs/DOMAIN_MODEL.md](../docs/DOMAIN_MODEL.md)
 - [decisions/Organization-User-Management.md](Organization-User-Management.md)
 - [decisions/Project-Management.md](Project-Management.md)
+- [decisions/Task-Management.md](Task-Management.md)

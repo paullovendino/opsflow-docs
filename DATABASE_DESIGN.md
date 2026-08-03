@@ -3,7 +3,8 @@
 Physical schema companion to [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md).
 
 **Milestone 3 status:** Phases 3.1–3.6 implemented (Milestone 3 complete).  
-**Milestone 4 status:** ✅ Phases 4.1–4.5 implemented · Milestone 4 complete — see [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md).
+**Milestone 4 status:** ✅ Phases 4.1–4.5 implemented · Milestone 4 complete — see [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md).  
+**Milestone 5 status:** Phase 5.1 implemented · Phases 5.2–5.6 pending — see [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md).
 
 ---
 
@@ -211,19 +212,55 @@ Table: `project_members`
 
 ### Tasks
 
-> Planned — later phase
+> Milestone 5 — Phase 5.1 schema implemented (APIs pending 5.2–5.6)  
+> Spec: [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md) · ADR: [decisions/Task-Management.md](decisions/Task-Management.md)
 
-- id
-- project_id
-- assigned_to
-- title
-- description
-- priority
-- status
-- due_date
-- created_by
-- created_at
-- updated_at
+Table: `tasks`
+
+| Column | Notes |
+|--------|-------|
+| id | PK |
+| project_id | required FK → `projects.id` (**RESTRICT** on hard delete) |
+| title | required string |
+| description | nullable text |
+| status | enum-backed string (`TaskStatus`) |
+| priority | enum-backed string (`TaskPriority`) |
+| due_date | nullable date |
+| assigned_to | nullable FK → `users.id` (**RESTRICT** on hard delete) — single assignee |
+| created_by | required FK → `users.id` (**RESTRICT** on hard delete) — task creator |
+| created_at | timestamp |
+| updated_at | timestamp |
+| deleted_at | soft deletes |
+
+**Status values** (`TaskStatus`):
+
+| value | Display |
+|-------|---------|
+| `todo` | To Do |
+| `in_progress` | In Progress |
+| `in_review` | In Review |
+| `blocked` | Blocked |
+| `completed` | Completed |
+| `cancelled` | Cancelled |
+
+**Priority values** (`TaskPriority`):
+
+| value | Display |
+|-------|---------|
+| `low` | Low |
+| `medium` | Medium |
+| `high` | High |
+| `urgent` | Urgent |
+
+**Notes:**
+
+- Default `status` on create: `todo` (not accepted on create/update bodies; status patch only)
+- Default `priority` on create when omitted: `medium`
+- `created_by` set from authenticated user on create; not transferable in Milestone 5
+- `project_id` not changeable after create in Milestone 5
+- Soft deletes supported; soft-deleted tasks excluded from default lists
+- When `assigned_to` is set: user must be active, not soft-deleted, and project owner **or** member
+- Indexes: FKs + `status` + `priority`; consider index on `title` for search later if needed
 
 ---
 
@@ -262,8 +299,9 @@ User * ──► 0..1 JobTitle   (nullable)
 
 User 1 ──► * Projects      (owner via created_by — Milestone 4)
 User * ──◄──► * Projects   (members via project_members — Milestone 4)
-Project 1 ──► * Tasks      (planned — Phase 5)
-User 1 ──► * Tasks         (planned; assignment)
+Project 1 ──► * Tasks      (Milestone 5)
+User 1 ──► * Tasks         (creator via created_by — Milestone 5)
+User 0..1 ──► * Tasks      (assignee via assigned_to — Milestone 5; nullable)
 User 1 ──► * Activity Logs (planned)
 ```
 
@@ -280,8 +318,16 @@ Eloquent expectations (Milestone 4 — Phases 4.1–4.5):
 
 | Model | Relations |
 |-------|-----------|
-| `Project` | `belongsTo(User::class, 'created_by')` as `owner` / `createdBy`; `belongsToMany(User::class, 'project_members')` as `members` |
+| `Project` | `belongsTo(User::class, 'created_by')` as `owner` / `createdBy`; `belongsToMany(User::class, 'project_members')` as `members`; `hasMany(Task::class)` as `tasks` (when Task exists) |
 | `User` | `hasMany(Project::class, 'created_by')` as `ownedProjects`; `belongsToMany(Project::class, 'project_members')` as `projects` |
+
+Eloquent expectations (Milestone 5 — Phase 5.1):
+
+| Model | Relations |
+|-------|-----------|
+| `Task` | `belongsTo(Project::class)`; `belongsTo(User::class, 'assigned_to')` as `assignee`; `belongsTo(User::class, 'created_by')` as `creator` / `createdBy` |
+| `Project` | `hasMany(Task::class)` as `tasks` |
+| `User` | `hasMany(Task::class, 'created_by')` as `createdTasks`; `hasMany(Task::class, 'assigned_to')` as `assignedTasks` |
 
 ---
 
@@ -296,10 +342,10 @@ Use Laravel `Relation::enforceMorphMap`.
 - `department` → `App\Models\Department`
 - `job_title` → `App\Models\JobTitle`
 - `project` → `App\Models\Project` (Phase 4.1)
+- `task` → `App\Models\Task` (Phase 5.1)
 
 ### Future aliases (later phases)
 
-- `task` → `App\Models\Task`
 - `remark` → `App\Models\Remark`
 - `activity_log` → `App\Models\ActivityLog`
 
@@ -315,16 +361,21 @@ Use Laravel `Relation::enforceMorphMap`.
 | `projects.created_by` → `users.id` | **RESTRICT** while projects reference the user as owner |
 | `project_members.project_id` → `projects.id` | **RESTRICT** on hard delete while memberships exist |
 | `project_members.user_id` → `users.id` | **RESTRICT** on hard delete while memberships exist |
+| `tasks.project_id` → `projects.id` | **RESTRICT** on hard delete while tasks reference the project |
+| `tasks.assigned_to` → `users.id` | **RESTRICT** on hard delete while tasks reference the user as assignee |
+| `tasks.created_by` → `users.id` | **RESTRICT** on hard delete while tasks reference the user as creator |
 
 Do **not** use `SET NULL` on these foreign keys.
 
 Notes:
 
 - Nullable `department_id` / `job_title_id` still allows users without a department or job title
+- Nullable `tasks.assigned_to` allows unassigned tasks
 - Hard-deleting a referenced Department, Job Title, or Role must fail while users exist
-- Soft deletes on Departments / Job Titles / Projects / Users do not remove the row; RESTRICT applies to hard deletes
+- Soft deletes on Departments / Job Titles / Projects / Users / Tasks do not remove the row; RESTRICT applies to hard deletes
 - Lookup list endpoints (`/api/v1/lookups/*`) exclude soft-deleted reference rows unless explicitly requested later
-- Soft-deleting a Project does not cascade-delete `project_members` rows; default project queries exclude soft-deleted projects
+- Soft-deleting a Project does not cascade-delete `project_members` or `tasks` rows; default project/task queries exclude soft-deleted rows
+- Soft-deleting a Task does not change project membership or ownership
 
 ---
 
