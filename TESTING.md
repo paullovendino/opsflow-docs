@@ -197,20 +197,18 @@ Spec: [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEME
 | 4.4 | `tests/Feature/Project/ProjectListQueryTest.php` | ✅ search, filters, sort, pagination, clamp, validation |
 | 4.5 | `tests/Feature/Project/ProjectAuthorizationTest.php` | ✅ Admin / PM / Employee matrix (owned-or-member for Employee) |
 
-## Task Management (Milestone 5 — designed)
+## Task Management (Milestone 5 — in progress)
 
 Spec: [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md)
 
-Planned Feature suites (create during implementation phases):
-
-| Phase | Suggested path | Coverage |
-|-------|----------------|----------|
+| Phase | Path | Coverage |
+|-------|------|----------|
 | 5.1 | `tests/Feature/Task/TaskDomainFoundationTest.php` | ✅ schema, relations, enums, soft delete, FK RESTRICT, factory |
-| 5.2 | `tests/Feature/Task/TaskManagementApiTest.php` | CRUD, validation, defaults, `created_by`, guest `401`, resource shape |
-| 5.3 | (management / authz suites) | status patch; create/update reject status |
-| 5.4 | `tests/Feature/Task/TaskAssignmentApiTest.php` | assign/clear; active+owner/member only; `422` cases |
-| 5.5 | `tests/Feature/Task/TaskListQueryTest.php` | search, filters, sort, pagination, clamp, validation |
-| 5.6 | `tests/Feature/Task/TaskAuthorizationTest.php` | Admin / PM / Employee matrix (status when assigned) |
+| 5.2 | `tests/Feature/Task/TaskManagementApiTest.php` | ✅ CRUD, validation, defaults, `created_by`, assignment on create, guest `401`, resource shape |
+| 5.3 | `tests/Feature/Task/TaskAssignmentApiTest.php` | ✅ assign/clear; active+owner/member only; `422` cases |
+| 5.4 | `tests/Feature/Task/TaskListQueryTest.php` | ✅ search, filters, sort, pagination, clamp, validation |
+| 5.5 | `tests/Feature/Task/TaskAuthorizationTest.php` | ✅ Admin / PM / Employee matrix (status ability when assigned) |
+| 5.6 | `tests/Feature/Task/TaskStatusApiTest.php` | ✅ status patch; create/update status-free; all enum values; Employee assigned-to-self authz |
 
 ---
 
@@ -219,4 +217,4 @@ Planned Feature suites (create during implementation phases):
 - Explicit `429` rate-limit assertion
 - CSRF rejection cases
 - Frontend Pinia auth tests
-- Milestone 5 Task Management suites (designed above)
+- Milestone 6+ suites

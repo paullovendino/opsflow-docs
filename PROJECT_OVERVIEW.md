@@ -91,7 +91,7 @@ v1.0.0 (Development)
 - Phase 2 Authentication (Vue/Pinia): pending
 - ✅ **Milestone 3 — Organization & User Management: complete** (Phases 3.1–3.6)
 - Milestone 4 — Project Management: ✅ complete (Phases 4.1–4.5)
-- Milestone 5 — Task Management: Phase 5.1 complete; 5.2–5.6 pending
+- Milestone 5 — Task Management: ✅ Complete (5.1–5.6)
 
 ---
 

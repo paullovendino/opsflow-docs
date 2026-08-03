@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted — Milestone 3 complete; Milestone 4 complete; Milestone 5 Phase 5.1 (`tasks` migrated); Phases 5.2–5.6 pending
+Accepted — Milestone 3 complete; Milestone 4 complete; Milestone 5 complete (`tasks` + full Task Management APIs)
 
 ## Context
 
@@ -71,7 +71,7 @@ Legacy single `name` column is replaced during ERD alignment. Keep `email_verifi
 | Phase 2 | Auth only — no ERD expansion |
 | Phase 3 | Users ERD + `departments` + `job_titles` (**complete**) |
 | Phase 4 | `projects` + `project_members` (**Milestone 4 complete** — schema, CRUD, members, queries, authorization) |
-| Phase 5 | `tasks` (**Phase 5.1 migrated**; APIs pending 5.2–5.6) |
+| Phase 5 | `tasks` (**Milestone 5 complete** — schema + CRUD + assignment + queries + authz + status) |
 | Later | Remarks, Activity Logs |
 
 ### Projects ERD (Milestone 4 — complete)

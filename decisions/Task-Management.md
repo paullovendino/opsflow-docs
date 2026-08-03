@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted — Phase 5.1 implemented; Phases 5.2–5.6 pending
+Accepted — Milestone 5 complete (Phases 5.1–5.6)
 
 ## Context
 
@@ -65,11 +65,11 @@ Default on create when omitted: `medium`. Priority may be set on create and upda
 | Phase | Scope | Status |
 |-------|--------|--------|
 | 5.1 | Domain foundation (schema, model, enums, morph alias, relations, factory, tests) | ✅ Implemented |
-| 5.2 | Task CRUD | ⏳ Pending |
-| 5.3 | Status workflow (`PATCH .../status`) | ⏳ Pending |
-| 5.4 | Assignment (`PATCH .../assignment`) | ⏳ Pending |
-| 5.5 | Search / filter / sort / pagination | ⏳ Pending |
-| 5.6 | Coarse `TaskPolicy` authorization | ⏳ Pending |
+| 5.2 | Task CRUD | ✅ Implemented |
+| 5.3 | Assignment (`PATCH .../assignment`) | ✅ Implemented |
+| 5.4 | Search / filter / sort / pagination | ✅ Implemented |
+| 5.5 | Coarse `TaskPolicy` authorization | ✅ Implemented |
+| 5.6 | Status workflow (`PATCH .../status`) | ✅ Implemented |
 
 ### API paths (approved design)
 
@@ -79,7 +79,7 @@ Default on create when omitted: `medium`. Priority may be set on create and upda
 
 Primary collection is top-level `/api/v1/tasks` (filterable by `project_id`). Nested `/projects/{project}/tasks` is not required for Milestone 5.
 
-### List query (Phase 5.5)
+### List query (Phase 5.4)
 
 - Search: `title`, `description` (case-insensitive)
 - Filters: `status`, `priority`, `project_id`, `assigned_to`, `created_by`
@@ -87,7 +87,7 @@ Primary collection is top-level `/api/v1/tasks` (filterable by `project_id`). Ne
 - Pagination: `page` / `per_page` (default 15, max 100 clamped)
 - Pattern: `TaskQuery` / `IndexTasksRequest` mirroring `ProjectQuery` / `IndexProjectsRequest`
 
-### Coarse authorization (Phase 5.6)
+### Coarse authorization (Phase 5.5)
 
 | Role | Task Management |
 |------|-----------------|
@@ -97,7 +97,7 @@ Primary collection is top-level `/api/v1/tasks` (filterable by `project_id`). Ne
 
 Enforced via `TaskPolicy` + controller `$this->authorize()` + Employee list scoping in `TaskQuery`. Unauthorized → `403` API envelope.
 
-Until Phase 5.6, task routes (when implemented) require `auth:sanctum` only — same interim approach as Projects before 4.5.
+Task routes require `auth:sanctum` and `TaskPolicy` checks (Phase 5.5).
 
 ### Layering
 

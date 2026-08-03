@@ -155,16 +155,17 @@ Details: [AUTHENTICATION.md](AUTHENTICATION.md)
 
 ---
 
-## Task Management (Milestone 5 — design approved · Phases 5.1–5.6 pending)
+## Task Management (Milestone 5 — ✅ Complete)
 
 > Follow [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md) and [decisions/Task-Management.md](decisions/Task-Management.md). Do not invent beyond the approved ADR.
 
 - Thin `TaskController`; business logic in `App\Services\Tasks\TaskService`
-- List search/filter/sort/pagination via `TaskQuery` / `IndexTasksRequest` (Phase 5.5)
-- Validate with `StoreTaskRequest` / `UpdateTaskRequest` / `UpdateTaskStatusRequest` / `UpdateTaskAssignmentRequest` / `IndexTasksRequest`
-- Authorize with `App\Policies\TaskPolicy` via `$this->authorize()` (Phase 5.6)
+- Validate with `StoreTaskRequest` / `UpdateTaskRequest` / `UpdateTaskAssignmentRequest` / `UpdateTaskStatusRequest` / `IndexTasksRequest`
+- List search/filter/sort/pagination via `TaskQuery` / `IndexTasksRequest`
+- Authorize with `App\Policies\TaskPolicy` via `$this->authorize()`
+- Status-only updates via `PATCH /api/v1/tasks/{task}/status`
 - Respond with `TaskResource` (nested project / assignee / creator when loaded)
-- Soft-delete tasks only; status patch updates `status` only (`TaskStatus`); assignment patch updates `assigned_to` only
+- Soft-delete tasks only; assignment patch updates `assigned_to` only; status patch updates `status` only (`TaskStatus`)
 - Create always sets status `todo`; default priority `medium`; `created_by` set server-side; single optional assignee
 
 ---

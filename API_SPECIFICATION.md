@@ -681,11 +681,11 @@ Remove a member from a project (hard-delete pivot row).
 
 ## Tasks
 
-> **Milestone 5 — ✅ Design approved** (Phases 5.1–5.6 pending implementation)  
+> **Milestone 5 — ✅ Complete** (Phases 5.1–5.6)  
 > Spec: [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md)  
 > ADR: [decisions/Task-Management.md](decisions/Task-Management.md)
 
-### Authorization (coarse — Phase 5.6)
+### Authorization (coarse — Phase 5.5)
 
 | Role | Capability |
 |------|------------|
@@ -693,7 +693,7 @@ Remove a member from a project (hard-delete pivot row).
 | Project Manager | Full Task Management (all tasks) |
 | Employee | List/view tasks in owned or member projects; update status only when assigned to self |
 
-Task routes require `auth:sanctum`. `TaskPolicy` checks arrive in Phase 5.6.
+Task routes require `auth:sanctum`. `TaskPolicy` checks are enforced.
 
 ### Task resource shape
 
@@ -738,7 +738,7 @@ Task routes require `auth:sanctum`. `TaskPolicy` checks arrive in Phase 5.6.
 
 ### GET /api/v1/tasks
 
-**Status:** Approved Phase 5.5 contract (implementation pending; authz in 5.6)
+**Status:** ✅ Phase 5.4 implemented · authz Phase 5.5
 
 List tasks with search, filtering, sorting, and pagination.
 
@@ -762,13 +762,13 @@ List tasks with search, filtering, sorting, and pagination.
 
 Filters are composable (e.g. `status` + `project_id` + `search` together).
 
-**Success:** `200` with paginated `TaskResource` collection in `data` and pagination in `meta` (`current_page`, `last_page`, `per_page`, `total`, `from`, `to`). Invalid query params → `422` (standard API envelope). Unauthorized → `403`.
+**Success:** `200` with paginated `TaskResource` collection in `data` and pagination in `meta` (`current_page`, `last_page`, `per_page`, `total`, `from`, `to`). Invalid query params → `422`. Unauthorized → `403`.
 
 ---
 
 ### GET /api/v1/tasks/{id}
 
-**Status:** Approved Phase 5.2 contract (implementation pending; authz in 5.6)
+**Status:** ✅ Phase 5.2 implemented · authz Phase 5.5
 
 Show a single task.
 
@@ -780,7 +780,7 @@ Show a single task.
 
 ### POST /api/v1/tasks
 
-**Status:** Approved Phase 5.2 contract (implementation pending; authz in 5.6)
+**Status:** ✅ Phase 5.2 implemented · authz Phase 5.5
 
 Create a task.
 
@@ -814,7 +814,7 @@ Create a task.
 
 ### PUT /api/v1/tasks/{id}
 
-**Status:** Approved Phase 5.2 contract (implementation pending; authz in 5.6)
+**Status:** ✅ Phase 5.2 implemented · authz Phase 5.5
 
 Update a task.
 
@@ -828,7 +828,7 @@ Update a task.
 
 ### DELETE /api/v1/tasks/{id}
 
-**Status:** Approved Phase 5.2 contract (implementation pending; authz in 5.6)
+**Status:** ✅ Phase 5.2 implemented · authz Phase 5.5
 
 Soft-delete a task.
 
@@ -838,32 +838,9 @@ Soft-delete a task.
 
 ---
 
-### PATCH /api/v1/tasks/{id}/status
-
-**Status:** Approved Phase 5.3 contract (implementation pending; authz in 5.6)
-
-Update task status only.
-
-**Authentication:** `auth:sanctum`
-
-**Request body:**
-
-```json
-{
-  "status": "in_progress"
-}
-```
-
-Accepted `status` values (`TaskStatus`): `todo`, `in_progress`, `in_review`, `blocked`, `completed`, `cancelled`.  
-No restricted transition graph in Milestone 5.
-
-**Success:** `200` with updated task in `data`.
-
----
-
 ### PATCH /api/v1/tasks/{id}/assignment
 
-**Status:** Approved Phase 5.4 contract (implementation pending; authz in 5.6)
+**Status:** ✅ Phase 5.3 implemented · authz Phase 5.5
 
 Set or clear the single task assignee.
 
@@ -887,10 +864,36 @@ Clear assignee:
 
 **Notes:**
 
-- When non-null: user must exist, be `active`, not soft-deleted, and be the project owner or a project member (`422` otherwise)
-- Does not change `created_by`, `status`, or `project_id`
+- `assigned_to` key is required (`present`); value may be `null` to unassign
+- When non-null: must be active, not soft-deleted, and project owner or member (`422` otherwise)
+- Does not change `status`, `created_by`, or `project_id`
 
 **Success:** `200` with updated task in `data`.
+
+---
+
+### PATCH /api/v1/tasks/{id}/status
+
+**Status:** ✅ Phase 5.6 implemented
+
+Update task status only.
+
+**Authentication:** `auth:sanctum`  
+**Authorization:** Administrator, Project Manager (all tasks); Employee only when assigned to self (and project accessible)
+
+**Request body:**
+
+```json
+{
+  "status": "in_progress"
+}
+```
+
+Accepted `status` values (`TaskStatus`): `todo`, `in_progress`, `in_review`, `blocked`, `completed`, `cancelled`.  
+No restricted transition graph in Milestone 5.  
+Does not change title, priority, assignee, dates, or project.
+
+**Success:** `200` with updated task in `data`. Invalid status → `422`. Unauthorized → `403`.
 
 ---
 

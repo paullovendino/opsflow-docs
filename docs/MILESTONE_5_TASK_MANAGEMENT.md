@@ -1,8 +1,8 @@
 # Milestone 5 — Task Management
 
-**Status:** Phase 5.1 implemented · Phases 5.2–5.6 pending  
+**Status:** ✅ Milestone 5 complete (Phases 5.1–5.6)  
 **Product version:** v1.0.0 (Development)  
-**Last updated:** 2026-08-03
+**Last updated:** 2026-08-04
 
 > Implementation specification for Milestone 5.  
 > Domain reference: [DOMAIN_MODEL.md](DOMAIN_MODEL.md)  
@@ -47,11 +47,11 @@ User (creator via created_by)
 | Phase | Scope | Status |
 |-------|--------|--------|
 | **5.1 Task Domain Foundation** | `tasks` table; `Task` model; `TaskStatus` / `TaskPriority` enums; relations; morph alias `task`; factory; foundation tests | ✅ Implemented |
-| **5.2 Task CRUD** | `TaskController` / `TaskService` / Form Requests / `TaskResource` / CRUD | ⏳ Pending |
-| **5.3 Task Status Workflow** | `PATCH /api/v1/tasks/{task}/status`; status not on create/update bodies | ⏳ Pending |
-| **5.4 Task Assignment** | `PATCH /api/v1/tasks/{task}/assignment`; assignment rules + validation | ⏳ Pending |
-| **5.5 Task Queries** | Task list search, filters, sorting, pagination `meta` | ⏳ Pending |
-| **5.6 Task Authorization** | Coarse role matrix via `TaskPolicy` + Employee visibility scoping | ⏳ Pending |
+| **5.2 Task CRUD** | `TaskController` / `TaskService` / Form Requests / `TaskResource` / CRUD | ✅ Implemented |
+| **5.3 Task Assignment** | `PATCH /api/v1/tasks/{task}/assignment`; assignment rules + validation | ✅ Implemented |
+| **5.4 Task Queries** | Task list search, filters, sorting, pagination `meta` | ✅ Implemented |
+| **5.5 Task Authorization** | Coarse role matrix via `TaskPolicy` + Employee visibility scoping | ✅ Implemented |
+| **5.6 Task Status Workflow** | `PATCH /api/v1/tasks/{task}/status`; status not on create/update bodies | ✅ Implemented |
 
 ---
 
@@ -160,19 +160,19 @@ Deliverables:
 
 ## 6. Phase 5.2 — Task CRUD
 
-**Status:** ⏳ Pending
+**Status:** ✅ Implemented
 
 ### Routes (`auth:sanctum`)
 
 | Method | Path | Behavior |
 |--------|------|----------|
-| GET | `/api/v1/tasks` | List tasks (simple collection until 5.5; then search/filters/sort/pagination) |
+| GET | `/api/v1/tasks` | List tasks (search/filters/sort/pagination — Phase 5.4) |
 | GET | `/api/v1/tasks/{task}` | Show task |
 | POST | `/api/v1/tasks` | Create task |
 | PUT | `/api/v1/tasks/{task}` | Update task |
 | DELETE | `/api/v1/tasks/{task}` | Soft delete |
 
-Status and assignment mutations are **not** part of PUT — see Phases 5.3 and 5.4.
+Status and assignment mutations are **not** part of PUT — see Phases 5.6 and 5.3.
 
 ### Layering
 
@@ -180,13 +180,13 @@ Status and assignment mutations are **not** part of PUT — see Phases 5.3 and 5
 |---------|-------|
 | Controller | `App\Http\Controllers\Api\V1\TaskController` (thin) |
 | Service | `App\Services\Tasks\TaskService` |
-| List query | `App\Queries\Tasks\TaskQuery` (wired in 5.5) |
-| Authorization | `App\Policies\TaskPolicy` (wired in 5.6) |
+| List query | `App\Queries\Tasks\TaskQuery` (✅ Phase 5.4) |
+| Authorization | `App\Policies\TaskPolicy` (✅ Phase 5.5) |
 | Store validation | `StoreTaskRequest` |
 | Update validation | `UpdateTaskRequest` |
-| Status validation | `UpdateTaskStatusRequest` (wired in 5.3) |
-| Assignment validation | `UpdateTaskAssignmentRequest` (wired in 5.4) |
-| Index validation | `IndexTasksRequest` (wired in 5.5) |
+| Assignment validation | `UpdateTaskAssignmentRequest` (✅ Phase 5.3) |
+| Index validation | `IndexTasksRequest` (✅ Phase 5.4) |
+| Status validation | `UpdateTaskStatusRequest` (✅ Phase 5.6) |
 | Resources | `TaskResource` (+ nested `project` summary, `assignee`, `creator` via `whenLoaded()`) |
 | Enums | `TaskStatus`, `TaskPriority` |
 
@@ -233,7 +233,16 @@ Reject unknown fields that would change `status`, `assigned_to`, `project_id`, o
 - Eager-load `project`, `assignee`, `creator` for show/create/update responses as needed; nest via `TaskResource` + `whenLoaded()`
 - Standard response envelope; never return raw models
 - Match Project / User Management patterns (`ProjectController` / `ProjectService` / status-style patches)
-- Feature tests: `tests/Feature/Task/TaskManagementApiTest.php`
+- Feature tests: `tests/Feature/Task/TaskManagementApiTest.php` ✅
+
+### Deliverables
+
+- [x] `TaskController` (thin)
+- [x] `TaskService`
+- [x] `StoreTaskRequest` / `UpdateTaskRequest`
+- [x] `TaskResource`
+- [x] CRUD routes under `auth:sanctum`
+- [x] Feature tests green
 
 ### Task resource shape (approved)
 
@@ -274,49 +283,9 @@ Reject unknown fields that would change `status`, `assigned_to`, `project_id`, o
 
 ---
 
-## 7. Phase 5.3 — Task Status Workflow
+## 7. Phase 5.3 — Task Assignment
 
-**Status:** ⏳ Pending
-
-### Route (`auth:sanctum`)
-
-| Method | Path | Behavior |
-|--------|------|----------|
-| PATCH | `/api/v1/tasks/{task}/status` | Update `status` only |
-
-### Request body
-
-```json
-{
-  "status": "in_progress"
-}
-```
-
-### Validation (`UpdateTaskStatusRequest`)
-
-| Field | Rules |
-|-------|--------|
-| `status` | required, `Rule::enum(TaskStatus::class)` |
-
-### Workflow rules (Milestone 5)
-
-| Rule | Decision |
-|------|----------|
-| Default on create | `todo` |
-| Create/update bodies | must **not** accept `status` |
-| Allowed target values | any `TaskStatus` value |
-| Transition graph | **not enforced** in Milestone 5 (same pattern as Project status) |
-| Side effects | status patch does not modify title, priority, assignee, dates, or project |
-
-**Classes:** `TaskController::updateStatus`, `TaskService::changeStatus`, `UpdateTaskStatusRequest`
-
-Feature coverage: include in `TaskManagementApiTest` and/or dedicated assertions in `TaskAuthorizationTest` for status ability.
-
----
-
-## 8. Phase 5.4 — Task Assignment
-
-**Status:** ⏳ Pending
+**Status:** ✅ Implemented
 
 ### Route (`auth:sanctum`)
 
@@ -354,15 +323,21 @@ Clear assignee:
 - Soft-deleted / inactive user → `422`
 - Non-member and non-owner of the task’s project → `422`
 
-**Classes:** `TaskController::updateAssignment`, `TaskService::assign` (or `changeAssignment`), `UpdateTaskAssignmentRequest`
+**Classes:** `TaskController::updateAssignment`, `TaskService::changeAssignment`, `UpdateTaskAssignmentRequest`
 
-Feature tests: `tests/Feature/Task/TaskAssignmentApiTest.php`
+### Deliverables
+
+- [x] `PATCH /api/v1/tasks/{task}/assignment`
+- [x] `UpdateTaskAssignmentRequest`
+- [x] `TaskController::updateAssignment`
+- [x] `TaskService::changeAssignment`
+- [x] Feature tests: `tests/Feature/Task/TaskAssignmentApiTest.php`
 
 ---
 
-## 9. Phase 5.5 — Task Queries
+## 8. Phase 5.4 — Task Queries
 
-**Status:** ⏳ Pending
+**Status:** ✅ Implemented
 
 Target: `GET /api/v1/tasks`
 
@@ -394,15 +369,20 @@ Invalid query params → HTTP `422` (standard API envelope).
 
 Follow `UserQuery` / `ProjectQuery` / `IndexUsersRequest` / `IndexProjectsRequest` conventions (including stable `orderBy('id')` tie-break).
 
-Feature tests: `tests/Feature/Task/TaskListQueryTest.php`
+### Deliverables
 
-**Note:** Authorization scoping for Employees is enforced in Phase 5.6 via policy/`viewAny` + `TaskQuery` visibility constraints — do not scatter ad-hoc role checks.
+- [x] `TaskQuery`
+- [x] `IndexTasksRequest`
+- [x] Wire `TaskService::list()` / `TaskController::index()`
+- [x] Feature tests: `tests/Feature/Task/TaskListQueryTest.php`
+
+**Note:** Authorization scoping for Employees is enforced in Phase 5.5 via policy/`viewAny` + `TaskQuery` visibility constraints — do not scatter ad-hoc role checks.
 
 ---
 
-## 10. Phase 5.6 — Task Authorization
+## 9. Phase 5.5 — Task Authorization
 
-**Status:** ⏳ Pending
+**Status:** ✅ Implemented
 
 Coarse role matrix for Task Management only:
 
@@ -414,15 +394,67 @@ Coarse role matrix for Task Management only:
 
 **Accessible projects (Employee):** projects the user **owns** (`created_by`) **or** is a **member** of (`project_members`) — same definition as `ProjectPolicy` visibility.
 
-**Employee status ability:** `updateStatus` allowed only when `tasks.assigned_to` equals the actor’s id (and the task’s project remains accessible). Unassigned tasks: Employee may view (if project-accessible) but **cannot** change status.
+**Employee status ability:** `updateStatus` allowed only when `tasks.assigned_to` equals the actor’s id (and the task’s project remains accessible). Unassigned tasks: Employee may view (if project-accessible) but **cannot** change status. Enforced on `PATCH .../status` (Phase 5.6).
 
 **Classes:** `App\Policies\TaskPolicy`; register via `Gate::policy` in `AppServiceProvider`; enforce with `$this->authorize()` in `TaskController`; Employee list scoping in `TaskQuery` (tasks whose `project_id` is in accessible projects).
 
 Unauthorized → HTTP `403` with standard API envelope.
 
-Feature tests: `tests/Feature/Task/TaskAuthorizationTest.php`
+### Deliverables
+
+- [x] `TaskPolicy`
+- [x] Register via `Gate::policy`
+- [x] `$this->authorize()` in `TaskController`
+- [x] Employee visibility in `TaskQuery`
+- [x] Feature tests: `tests/Feature/Task/TaskAuthorizationTest.php`
 
 **Out of scope:** Permission tables, task-level custom roles, per-field ACLs beyond this matrix, remark/task comment policies, frontend.
+
+---
+
+## 10. Phase 5.6 — Task Status Workflow
+
+**Status:** ✅ Implemented
+
+### Route (`auth:sanctum`)
+
+| Method | Path | Behavior |
+|--------|------|----------|
+| PATCH | `/api/v1/tasks/{task}/status` | Update `status` only |
+
+### Request body
+
+```json
+{
+  "status": "in_progress"
+}
+```
+
+### Validation (`UpdateTaskStatusRequest`)
+
+| Field | Rules |
+|-------|--------|
+| `status` | required, `Rule::enum(TaskStatus::class)` |
+
+### Workflow rules (Milestone 5)
+
+| Rule | Decision |
+|------|----------|
+| Default on create | `todo` |
+| Create/update bodies | must **not** accept `status` |
+| Allowed target values | any `TaskStatus` value |
+| Transition graph | **not enforced** in Milestone 5 (same pattern as Project status) |
+| Side effects | status patch does not modify title, priority, assignee, dates, or project |
+
+**Classes:** `TaskController::updateStatus`, `TaskService::changeStatus`, `UpdateTaskStatusRequest`
+
+### Deliverables
+
+- [x] `PATCH /api/v1/tasks/{task}/status`
+- [x] `UpdateTaskStatusRequest`
+- [x] `TaskController::updateStatus` (authorize via `TaskPolicy::updateStatus`)
+- [x] `TaskService::changeStatus`
+- [x] Feature tests: `tests/Feature/Task/TaskStatusApiTest.php`
 
 ---
 
@@ -451,19 +483,28 @@ Explicitly deferred (do **not** implement in Milestone 5):
 
 ## 12. Acceptance Criteria
 
-### Pending (5.1–5.6)
+### Acceptance (5.1–5.6)
 
 - [x] `tasks` schema matches this approved ERD (soft deletes; FKs **RESTRICT**)
 - [x] Morph map includes `task`
 - [x] `TaskStatus` and `TaskPriority` enum values match approved lists
-- [ ] Task CRUD endpoints with standard envelope
-- [ ] Status patch endpoint; status not accepted on create/update
-- [ ] Assignment patch endpoint; assignment rules enforced (`422` on invalid assignee)
-- [ ] Task list search + filters + sorting + pagination (5.5)
-- [ ] Coarse authorization enforced (5.6)
+- [x] Task CRUD endpoints with standard envelope
+- [x] Assignment patch endpoint; assignment rules enforced (`422` on invalid assignee)
+- [x] Task list search + filters + sorting + pagination (5.4)
+- [x] Coarse authorization enforced (5.5)
+- [x] Status patch endpoint; status not accepted on create/update (5.6)
 - [x] Feature tests green for 5.1
-- [ ] Feature tests green for 5.2–5.6
+- [x] Feature tests green for 5.2
+- [x] Feature tests green for 5.3
+- [x] Feature tests green for 5.4
+- [x] Feature tests green for 5.5
+- [x] Feature tests green for 5.6
 - [x] Companion docs synchronized for Phase 5.1
+- [x] Companion docs synchronized for Phase 5.2
+- [x] Companion docs synchronized for Phase 5.3
+- [x] Companion docs synchronized for Phase 5.4
+- [x] Companion docs synchronized for Phase 5.5
+- [x] Companion docs synchronized for Phase 5.6
 
 ---
 
@@ -473,10 +514,10 @@ Explicitly deferred (do **not** implement in Milestone 5):
 |-------|----------------|----------|
 | 5.1 | `tests/Feature/Task/TaskDomainFoundationTest.php` | schema, relations, enums, soft delete, FK RESTRICT, factory |
 | 5.2 | `tests/Feature/Task/TaskManagementApiTest.php` | CRUD, validation, defaults (`todo` / `medium`), `created_by`, guest `401`, resource shape |
-| 5.3 | (within management and/or authz suites) | status patch only; create/update reject status; all enum values accepted |
-| 5.4 | `tests/Feature/Task/TaskAssignmentApiTest.php` | assign / clear; active+member/owner only; inactive/soft-deleted/`422`; non-member/`422` |
-| 5.5 | `tests/Feature/Task/TaskListQueryTest.php` | search, filters, sort, pagination, clamp, validation, defaults, guest `401` |
-| 5.6 | `tests/Feature/Task/TaskAuthorizationTest.php` | Admin/PM full; Employee project-scoped list/view; Employee status only when assigned; denied create/update/delete/assignment |
+| 5.3 | `tests/Feature/Task/TaskAssignmentApiTest.php` | assign / clear; active+member/owner only; inactive/soft-deleted/`422`; non-member/`422` |
+| 5.4 | `tests/Feature/Task/TaskListQueryTest.php` | search, filters, sort, pagination, clamp, validation, defaults, guest `401` |
+| 5.5 | `tests/Feature/Task/TaskAuthorizationTest.php` | Admin/PM full; Employee project-scoped list/view; Employee status only when assigned; denied create/update/delete/assignment |
+| 5.6 | `tests/Feature/Task/TaskStatusApiTest.php` | status patch only; create/update reject status; all enum values; Employee assigned-to-self authz |
 
 Existing Milestone 3–4 suites must continue passing.
 

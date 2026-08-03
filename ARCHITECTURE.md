@@ -58,7 +58,7 @@ Follows `CODING_STANDARDS.md`:
 | Queries | List search / filter / sort / pagination |
 | Models | Persistence / relationships |
 | Enums | Domain constants |
-| Policies | Coarse authorization (`UserPolicy`, `ProjectPolicy`; `TaskPolicy` in Milestone 5) |
+| Policies | Coarse authorization (`UserPolicy`, `ProjectPolicy`, `TaskPolicy`) |
 | Exceptions + `ApiExceptionRenderer` | Consistent API errors |
 
 Authentication example:
@@ -85,11 +85,11 @@ Project list example (Phase 4.4 — implemented):
 
 `ProjectController::index` → `IndexProjectsRequest` → `ProjectService::list` → `ProjectQuery` → paginated `ProjectResource` collection + `meta`
 
-Task Management example (Milestone 5 — designed):
+Task Management example (Milestone 5 — implemented):
 
-`TaskController` → Form Requests → `TaskService` → `Task` → `TaskResource`  
-`index` → `IndexTasksRequest` → `TaskService` → `TaskQuery` → paginated `TaskResource` + `meta` (Phase 5.5)  
-Authorize via `TaskPolicy` (Phase 5.6)
+`TaskController` → authorize(`TaskPolicy`) → Form Requests → `TaskService` → `Task` → `TaskResource`  
+`index` → `IndexTasksRequest` → `TaskService::list` → `TaskQuery` (+ Employee visibility) → paginated `TaskResource` + `meta`  
+Status via `PATCH .../status` (`UpdateTaskStatusRequest` / `TaskService::changeStatus`)
 
 ---
 
@@ -139,7 +139,7 @@ Lookup endpoints (Phase 3.4): `GET /api/v1/lookups/{roles,departments,job-titles
 
 Enforced via `App\Policies\ProjectPolicy` and `$this->authorize()` in `ProjectController`. Employee list scoping in `ProjectQuery`. Unauthorized → HTTP `403` API envelope.
 
-**Phase 5.6 — Designed.** Coarse role checks for Task Management:
+**Phase 5.5 — Implemented.** Coarse role checks for Task Management:
 
 | Role | Task Management |
 |------|-----------------|
@@ -147,7 +147,7 @@ Enforced via `App\Policies\ProjectPolicy` and `$this->authorize()` in `ProjectCo
 | Project Manager | Full access to all tasks |
 | Employee | List/view tasks in accessible projects; update status only when assigned to self |
 
-Enforced via `App\Policies\TaskPolicy` (when implemented). See [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md).
+Enforced via `App\Policies\TaskPolicy`. See [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md).
 
 ---
 
@@ -200,8 +200,13 @@ API routes (`api/*`) render through `App\Exceptions\ApiExceptionRenderer` using 
 | Phase 4.5 — Project Authorization | ✅ Implemented |
 | **Milestone 4** | ✅ **Complete** (4.1–4.5) |
 | Phase 5.1 — Task Domain Foundation | ✅ Implemented |
-| Phase 5.2–5.6 — Task Management | ⏳ Pending |
-| **Milestone 5** | In progress (5.1 done) |
+| Phase 5.2 — Task CRUD | ✅ Implemented |
+| Phase 5.3 — Task Assignment | ✅ Implemented |
+| Phase 5.4 — Task Queries | ✅ Implemented |
+| Phase 5.5 — Task Authorization | ✅ Implemented |
+| Phase 5.6 — Task Status Workflow | ✅ Implemented |
+| **Milestone 5** | ✅ **Complete** (5.1–5.6) |
+| Phase 6 — Dashboard | ⏳ Pending |
 | Remarks / Activity Logs | Planned |
 | Vue Pinia auth | Planned |
 | Deployment | Planned |

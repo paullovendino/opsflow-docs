@@ -25,13 +25,13 @@ OpsFlow development roadmap by phase.
 | Phase 4.3 | Project Members | ✅ Implemented |
 | Phase 4.4 | Project Queries | ✅ Implemented |
 | Phase 4.5 | Project Authorization | ✅ Implemented |
-| **Milestone 5** | **Task Management** | In progress (5.1 done) |
+| **Milestone 5** | **Task Management** | ✅ **Complete** (5.1–5.6) |
 | Phase 5.1 | Task Domain Foundation | ✅ Implemented |
-| Phase 5.2 | Task CRUD | ⏳ Pending |
-| Phase 5.3 | Task Status Workflow | ⏳ Pending |
-| Phase 5.4 | Task Assignment | ⏳ Pending |
-| Phase 5.5 | Task Queries | ⏳ Pending |
-| Phase 5.6 | Task Authorization | ⏳ Pending |
+| Phase 5.2 | Task CRUD | ✅ Implemented |
+| Phase 5.3 | Task Assignment | ✅ Implemented |
+| Phase 5.4 | Task Queries | ✅ Implemented |
+| Phase 5.5 | Task Authorization | ✅ Implemented |
+| Phase 5.6 | Task Status Workflow | ✅ Implemented |
 
 ---
 
@@ -225,7 +225,7 @@ Tasks, Remarks, Activity Logs, Dashboard, Reports, ownership transfer, member ro
 
 ## Phase 5 — Task Management (Milestone 5)
 
-**Status: Phase 5.1 implemented** · Phases 5.2–5.6 pending (wait for explicit approval per phase)
+**Status: ✅ Milestone 5 complete** (Phases 5.1–5.6)
 
 Specification:
 
@@ -244,46 +244,46 @@ Specification:
 
 ### Phase 5.2 — Task CRUD
 
-**Status: Pending**
+**Status: ✅ Implemented**
 
-- [ ] Task CRUD (`TaskController` / `TaskService` / Form Requests / `TaskResource`)
-- [ ] Create: status always `todo`; optional `assigned_to`; `created_by` server-side
-- [ ] Update: title/description/priority/due_date only
-- [ ] PHPUnit Feature tests (`TaskManagementApiTest`)
+- [x] Task CRUD (`TaskController` / `TaskService` / Form Requests / `TaskResource`)
+- [x] Create: status always `todo`; optional `assigned_to`; `created_by` server-side
+- [x] Update: title/description/priority/due_date only
+- [x] PHPUnit Feature tests (`TaskManagementApiTest`)
 
-### Phase 5.3 — Task Status Workflow
+### Phase 5.3 — Task Assignment
 
-**Status: Pending**
+**Status: ✅ Implemented**
 
-- [ ] `PATCH /api/v1/tasks/{task}/status`
-- [ ] Status not accepted on create/update; any `TaskStatus` value allowed (no transition graph)
-- [ ] Coverage in management / authorization tests
+- [x] `PATCH /api/v1/tasks/{task}/assignment`
+- [x] Single nullable assignee; active + project owner/member only
+- [x] PHPUnit Feature tests (`TaskAssignmentApiTest`)
 
-### Phase 5.4 — Task Assignment
+### Phase 5.4 — Task Queries
 
-**Status: Pending**
+**Status: ✅ Implemented**
 
-- [ ] `PATCH /api/v1/tasks/{task}/assignment`
-- [ ] Single nullable assignee; active + project owner/member only
-- [ ] PHPUnit Feature tests (`TaskAssignmentApiTest`)
+- [x] Task list `search` (`title`, `description`)
+- [x] Filters: `status`, `priority`, `project_id`, `assigned_to`, `created_by`
+- [x] Sorting + pagination (follow ProjectQuery conventions)
+- [x] `TaskQuery` + `IndexTasksRequest`; PHPUnit list query tests (`TaskListQueryTest`)
 
-### Phase 5.5 — Task Queries
+### Phase 5.5 — Task Authorization
 
-**Status: Pending**
+**Status: ✅ Implemented**
 
-- [ ] Task list `search` (`title`, `description`)
-- [ ] Filters: `status`, `priority`, `project_id`, `assigned_to`, `created_by`
-- [ ] Sorting + pagination (follow ProjectQuery conventions)
-- [ ] `TaskQuery` + `IndexTasksRequest`; PHPUnit list query tests (`TaskListQueryTest`)
+- [x] Coarse authorization (Administrator / Project Manager / Employee)
+- [x] `TaskPolicy` + registration; controller `$this->authorize()`
+- [x] Employee: project-scoped list/view; status ability only when assigned to self
+- [x] PHPUnit authorization tests (`TaskAuthorizationTest`)
 
-### Phase 5.6 — Task Authorization
+### Phase 5.6 — Task Status Workflow
 
-**Status: Pending**
+**Status: ✅ Implemented**
 
-- [ ] Coarse authorization (Administrator / Project Manager / Employee)
-- [ ] `TaskPolicy` + registration; controller `$this->authorize()`
-- [ ] Employee: project-scoped list/view; status only when assigned to self
-- [ ] PHPUnit authorization tests (`TaskAuthorizationTest`)
+- [x] `PATCH /api/v1/tasks/{task}/status`
+- [x] Status not accepted on create/update; any `TaskStatus` value allowed (no transition graph)
+- [x] PHPUnit Feature tests (`TaskStatusApiTest`)
 
 ### Explicitly out of scope (Milestone 5)
 

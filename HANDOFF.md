@@ -2,10 +2,10 @@
 
 **Audience:** New Cursor / AI development session  
 **Purpose:** Continue OpsFlow development without losing architectural consistency  
-**Last updated:** 2026-08-03  
+**Last updated:** 2026-08-04  
 **Product version:** v1.0.0 (Development)
 
-> **Start here.** Then read [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md), [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md), [ROADMAP.md](ROADMAP.md), and the relevant ADR under `decisions/`.  
+> **Start here.** Then read [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md), [ROADMAP.md](ROADMAP.md), and the relevant ADR under `decisions/`.  
 > **Do not invent architecture.** If unclear, ask. Prefer ADRs in `decisions/`.  
 > **Do not implement the next phase until the user explicitly approves scope.**
 
@@ -40,14 +40,14 @@ Organization
 | `opsflow-docs` | Documentation + ADRs (this repo)                              |
 | `opsflow-web`  | Vue 3 SPA (exists as folder; frontend auth/app not built yet) |
 
-**Current status:** ✅ **Phase 5.1 — Task Domain Foundation complete**. Next: **Phase 5.2 — Task CRUD** — wait for explicit implementation approval.
+**Current status:** ✅ **Milestone 5 — Task Management complete**. Next: **Phase 6 — Dashboard** — wait for explicit implementation approval.
 
 | Field | Value |
 |-------|--------|
-| Current milestone | Milestone 5 — Task Management |
-| Current phase | Phase 5.1 complete · next is **5.2** |
-| Completed (M5) | ✅ 5.1 Domain Foundation |
-| Remaining (M5) | ⏳ 5.2 CRUD · ⏳ 5.3 Status · ⏳ 5.4 Assignment · ⏳ 5.5 Queries · ⏳ 5.6 Authorization |
+| Current milestone | Milestone 5 complete · next is **Milestone / Phase 6 — Dashboard** |
+| Current phase | Phase 5.6 complete · Milestone 5 done |
+| Completed (M5) | ✅ 5.1 Domain Foundation · ✅ 5.2 CRUD · ✅ 5.3 Assignment · ✅ 5.4 Queries · ✅ 5.5 Authorization · ✅ 5.6 Status |
+| Remaining (M5) | — |
 
 ---
 
@@ -69,8 +69,8 @@ opsflow-web (Vue)  --cookie + CSRF-->  opsflow-api (Laravel)  -->  PostgreSQL
 | Services               | Business logic                      |
 | Models                 | Persistence / relationships         |
 | Enums                  | Domain constants (no magic strings) |
-| Policies               | Coarse authorization (`UserPolicy`; `ProjectPolicy`; `TaskPolicy` in 5.6) |
-| Queries                | List search / filter / sort / paginate (`UserQuery`; `ProjectQuery`; `TaskQuery` in 5.5) |
+| Policies               | Coarse authorization (`UserPolicy`; `ProjectPolicy`; `TaskPolicy`) |
+| Queries                | List search / filter / sort / paginate (`UserQuery`; `ProjectQuery`; `TaskQuery`) |
 | `ApiExceptionRenderer` | Consistent API errors (incl. project member `409`) |
 
 ### Request paths (implemented)
@@ -82,6 +82,10 @@ Users:    UserController → authorize(UserPolicy) → Form Request → UserServ
 Projects: ProjectController → authorize(ProjectPolicy) → Form Request → ProjectService → ProjectResource
           index → IndexProjectsRequest → ProjectService → ProjectQuery → ProjectResource + pagination meta
           members → StoreProjectMemberRequest → ProjectService → ProjectMemberResource
+Tasks:    TaskController → authorize(TaskPolicy) → Form Request → TaskService → TaskResource
+          index → IndexTasksRequest → TaskService → TaskQuery (+ Employee visibility) → TaskResource + pagination meta
+          assignment → UpdateTaskAssignmentRequest → TaskService::changeAssignment
+          status → UpdateTaskStatusRequest → TaskService::changeStatus
 Lookups:  LookupController → LookupService → RoleResource / DepartmentResource / JobTitleResource
 ```
 
@@ -99,22 +103,24 @@ app/
 │   ├── Controllers/
 │   │   └── Api/
 │   │       ├── BaseApiController.php
-│   │       └── V1/         # AuthController, HealthController, UserController, LookupController, ProjectController
+│   │       └── V1/         # AuthController, HealthController, UserController, LookupController, ProjectController, TaskController
 │   ├── Middleware/
-│   ├── Requests/Api/V1/…   # Auth/, Users/, Projects/ (incl. IndexProjectsRequest, StoreProjectMemberRequest)
-│   └── Resources/Api/V1/…  # User, Role, Department, JobTitle, Project, ProjectMember
+│   ├── Requests/Api/V1/…   # Auth/, Users/, Projects/, Tasks/ (IndexTasksRequest, Store/Update/Assignment/Status Requests)
+│   └── Resources/Api/V1/…  # User, Role, Department, JobTitle, Project, ProjectMember, Task
 ├── Models/                 # User, Role, Department, JobTitle, Project, Task
-├── Policies/               # UserPolicy, ProjectPolicy
+├── Policies/               # UserPolicy, ProjectPolicy, TaskPolicy
 ├── Providers/              # AppServiceProvider (morph map incl. task, RateLimiter, Gate::policy)
 ├── Queries/
 │   ├── Users/UserQuery.php
-│   └── Projects/ProjectQuery.php
+│   ├── Projects/ProjectQuery.php
+│   └── Tasks/TaskQuery.php
 ├── Repositories/
 ├── Services/
 │   ├── Auth/AuthenticationService.php
 │   ├── Lookups/LookupService.php
 │   ├── Users/UserService.php
-│   └── Projects/ProjectService.php
+│   ├── Projects/ProjectService.php
+│   └── Tasks/TaskService.php
 └── Traits/                 # ApiResponse (incl. paginatedResponse)
 ```
 
@@ -164,13 +170,13 @@ ADR: [decisions/Tech-Stack.md](decisions/Tech-Stack.md)
 | 4.3 | Project Members | ✅ **Implemented** |
 | 4.4 | Project Queries | ✅ **Implemented** |
 | 4.5 | Project Authorization | ✅ **Implemented** |
-| **5** | **Task Management** | Design approved |
+| **5** | **Task Management** | ✅ **Complete** |
 | 5.1 | Task Domain Foundation | ✅ **Implemented** |
-| 5.2 | Task CRUD | ⏳ Pending |
-| 5.3 | Task Status Workflow | ⏳ Pending |
-| 5.4 | Task Assignment | ⏳ Pending |
-| 5.5 | Task Queries | ⏳ Pending |
-| 5.6 | Task Authorization | ⏳ Pending |
+| 5.2 | Task CRUD | ✅ **Implemented** |
+| 5.3 | Task Assignment | ✅ **Implemented** |
+| 5.4 | Task Queries | ✅ **Implemented** |
+| 5.5 | Task Authorization | ✅ **Implemented** |
+| 5.6 | Task Status Workflow | ✅ **Implemented** |
 
 **Phase 1:** PostgreSQL, Sanctum, `/api/v1`, CORS, envelope, exception renderer, morph map, roles seed, health check, folder structure.
 
@@ -198,6 +204,16 @@ ADR: [decisions/Tech-Stack.md](decisions/Tech-Stack.md)
 
 **Phase 5.1:** `tasks` table; `Task` model; `TaskStatus` / `TaskPriority`; relations; morph `task`; `TaskFactory`; Feature tests.
 
+**Phase 5.2:** Task CRUD (`TaskController` / `TaskService` / Form Requests / `TaskResource`); create defaults (`todo` / `medium`); optional create-time `assigned_to`; soft delete.
+
+**Phase 5.3:** Task Assignment (`PATCH .../assignment`); active + owner/member validation; nullable unassign.
+
+**Phase 5.4:** Task list search / filters / sorting / pagination (`TaskQuery` / `IndexTasksRequest`).
+
+**Phase 5.5:** Coarse `TaskPolicy` authorization; Employee owned-or-member list/view scoping.
+
+**Phase 5.6:** Task status patch (`PATCH .../status`); any `TaskStatus`; no transition graph.
+
 See [CHANGELOG.md](CHANGELOG.md), [ROADMAP.md](ROADMAP.md).
 
 ---
@@ -206,19 +222,15 @@ See [CHANGELOG.md](CHANGELOG.md), [ROADMAP.md](ROADMAP.md).
 
 ### Immediate next (backend)
 
-**Phase 5.2 — Task CRUD** (see §12) — wait for explicit implementation approval
+**Phase 6 — Dashboard** (see §12) — wait for explicit implementation approval
 
-Completed: Milestone 4 · Phase 5.1 Task Domain Foundation.
+Completed: Milestones 1–5 (through Task Management).
 
-Remaining Milestone 5:
+Also pending from earlier phases:
 
-- ⏳ Phase 5.2 — Task CRUD
-- ⏳ Phase 5.3 — Task Status Workflow
-- ⏳ Phase 5.4 — Task Assignment
-- ⏳ Phase 5.5 — Task Queries
-- ⏳ Phase 5.6 — Task Authorization
+- Vue 3 / Pinia authentication (`opsflow-web`)
 
-Specification: [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md) · [decisions/Task-Management.md](decisions/Task-Management.md)
+Specification: [ROADMAP.md](ROADMAP.md)
 
 ### Still pending from earlier phases
 
@@ -227,7 +239,7 @@ Specification: [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAG
 
 ### Later phases (do not invent early)
 
-Dashboard → Reports → broader Testing → Deployment
+Reports → broader Testing → Deployment
 
 ### Future versions
 
@@ -235,10 +247,10 @@ Notifications, remarks, kanban, time tracking, mobile, multi-org, etc. ([ROADMAP
 
 ### Explicitly out of scope for Milestone 5 / later
 
-- Milestone 5 phases until explicitly approved
 - Multiple assignees, attachments, checklists, labels, time tracking, dependencies, activity logs, remarks, notifications, recurring tasks
 - Advanced permission matrices beyond coarse role policies
 - Frontend Task / Project UI
+- Restricted status transition state machines
 
 ---
 
@@ -435,6 +447,98 @@ Docs: [AUTHENTICATION.md](AUTHENTICATION.md), [decisions/Authentication.md](deci
 
 ---
 
+## 8i. Task CRUD summary (Phase 5.2)
+
+| Method | Path | Notes |
+|--------|------|-------|
+| GET | `/api/v1/tasks` | List with search/filters/sorting/pagination (Phase 5.4) |
+| POST | `/api/v1/tasks` | Create; `created_by` = auth user; status always `todo`; optional `assigned_to` |
+| GET | `/api/v1/tasks/{task}` | Show with nested `project`, `assignee`, `creator` |
+| PUT | `/api/v1/tasks/{task}` | Update title/description/priority/due_date only |
+| DELETE | `/api/v1/tasks/{task}` | Soft delete |
+
+**Auth:** `auth:sanctum`  
+**Authorization:** `TaskPolicy` (Phase 5.5) — Administrator & Project Manager full; Employee owned/member list+view only
+
+**Approved business rules:**
+
+- Create status always `todo` (client-supplied `status` ignored)
+- Default priority `medium` when omitted
+- `created_by` always the authenticated user (client-supplied ignored)
+- Optional `assigned_to` on create only — must be active + project owner or member (`422` otherwise)
+- Update does **not** accept `status`, `assigned_to`, `project_id`, or `created_by`
+- Soft delete only; soft-deleted tasks excluded from default list
+
+**Classes:** `TaskController`, `TaskService`, `StoreTaskRequest`, `UpdateTaskRequest`, `TaskResource`
+
+---
+
+## 8j. Task Assignment summary (Phase 5.3)
+
+| Method | Path | Notes |
+|--------|------|-------|
+| PATCH | `/api/v1/tasks/{task}/assignment` | Set or clear `assigned_to` |
+
+**Auth:** `auth:sanctum`  
+**Authorization:** `TaskPolicy` — manage assignment: Admin/PM
+
+**Approved business rules:**
+
+- `assigned_to` key required (`present`); value may be `null` to unassign
+- When non-null: active, not soft-deleted, and project owner **or** member (`422` otherwise)
+- Replaces previous assignee (single assignee only)
+- Does not change `status`, `created_by`, or `project_id`
+
+**Classes:** `TaskController::updateAssignment`, `TaskService::changeAssignment`, `UpdateTaskAssignmentRequest`
+
+---
+
+## 8k. Task Queries summary (Phase 5.4)
+
+| Concern | Behavior |
+|---------|----------|
+| Search | `search` on `title`, `description` (case-insensitive) |
+| Filtering | `status`, `priority`, `project_id`, `assigned_to`, `created_by` (composable) |
+| Sorting | `sort` + `direction`; allowed `title`, `status`, `priority`, `due_date`, `created_at`; default `created_at` / `desc` + `id` tie-break |
+| Pagination | `page` / `per_page` (default 15, max 100 clamped); standard `meta` |
+
+**Classes:** `IndexTasksRequest`, `TaskQuery`, `TaskService::list()`, `paginatedResponse` + `TaskResource::collection`
+
+---
+
+## 8l. Task Authorization summary (Phase 5.5)
+
+| Role | List | View | Create | Update | Delete | Status | Assignment |
+|------|------|------|--------|--------|--------|--------|------------|
+| Administrator | all | all | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Project Manager | all | all | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Employee | owned **or** member projects | owned **or** member projects | ❌ | ❌ | ❌ | assigned to self only | ❌ |
+
+**Classes:** `TaskPolicy`; `Gate::policy` in `AppServiceProvider`; `$this->authorize()` in `TaskController`; Employee list scoped in `TaskQuery::applyVisibility`
+
+**Note:** `updateStatus` ability is defined in `TaskPolicy` and enforced on `PATCH .../status` (Phase 5.6).
+
+---
+
+## 8m. Task Status Workflow summary (Phase 5.6)
+
+| Method | Path | Notes |
+|--------|------|-------|
+| PATCH | `/api/v1/tasks/{task}/status` | Status only; any `TaskStatus` value |
+
+**Auth:** `auth:sanctum`  
+**Authorization:** `TaskPolicy::updateStatus` — Admin/PM full; Employee assigned to self + accessible project
+
+**Approved business rules:**
+
+- Create/update bodies remain status-free (always `todo` on create)
+- No transition graph
+- Does not change title, priority, assignee, dates, or project
+
+**Classes:** `TaskController::updateStatus`, `TaskService::changeStatus`, `UpdateTaskStatusRequest`
+
+---
+
 ## 9. Current database status
 
 ### Implemented tables
@@ -476,7 +580,7 @@ Docs: [AUTHENTICATION.md](AUTHENTICATION.md), [decisions/Authentication.md](deci
 ### Not yet
 
 - `organizations` table / multi-tenant org settings
-- Task HTTP APIs / queries / policies (Phases 5.2–5.6)
+- Dashboard / Reports aggregates
 - Remarks, Activity Logs tables
 
 ADRs: [DATABASE_DESIGN.md](DATABASE_DESIGN.md), [decisions/Database.md](decisions/Database.md), [decisions/Organization-User-Management.md](decisions/Organization-User-Management.md), [decisions/Project-Management.md](decisions/Project-Management.md), [decisions/Task-Management.md](decisions/Task-Management.md)
@@ -514,24 +618,25 @@ ADRs: [DATABASE_DESIGN.md](DATABASE_DESIGN.md), [decisions/Database.md](decision
 6. **Form Requests + API Resources** (Form Requests not required for parameter-less lookup GETs)
 7. **PHP Enums** instead of magic strings
 8. **Sanctum SPA cookies** for first-party auth — do not replace with ad-hoc JWT without an ADR
-9. **Guest + `throttle:login`** on login; **`auth:sanctum`** on logout/me/users/lookups/projects
+9. **Guest + `throttle:login`** on login; **`auth:sanctum`** on logout/me/users/lookups/projects/tasks
 10. **Credential allowlist** into `Auth::attempt()`
 11. **Morph aliases only for existing models**
 12. **Do not expand schema beyond the approved ERD** without updating `decisions/Database.md`
-13. **Do not implement later modules early** (Milestone 5 Tasks / Remarks) unless the milestone phase is approved
-14. **Authorize via Policies** — do not scatter manual role checks outside policies (`UserPolicy`, `ProjectPolicy`; `TaskPolicy` in 5.6)
+13. **Do not implement later modules early** (Milestone 5 remaining phases / Remarks) unless the milestone phase is approved
+14. **Authorize via Policies** — do not scatter manual role checks outside policies (`UserPolicy`, `ProjectPolicy`, `TaskPolicy`)
 15. **CORS / Sanctum domains stay environment-driven**
 16. **Update docs/ADRs when behavior changes**
 17. **One feature = one commit** when asked to commit
 18. **Roles ≠ Departments ≠ Job Titles** — keep concepts independent
 19. **Read domain model** (`docs/DOMAIN_MODEL.md`) and milestone specs before inventing entities
 20. **Project owner ≠ automatic member** — `created_by` and `project_members` are independent; duplicate members → `409`
+21. **Task status / assignment patches are separate endpoints** — create/update bodies do not change assignment after create or status
 
 ### Coding standards snapshot
 
 - Laravel 13 + PSR-12 + `declare(strict_types=1)`
 - DI; no magic strings; no duplicated logic
-- Match patterns: `UserController` / `UserService` / `UserQuery` / `UserPolicy`; `LookupController` / `LookupService`; `ProjectController` / `ProjectService`
+- Match patterns: `UserController` / `UserService` / `UserQuery` / `UserPolicy`; `LookupController` / `LookupService`; `ProjectController` / `ProjectService` / `ProjectQuery` / `ProjectPolicy`; `TaskController` / `TaskService` / `TaskQuery` / `TaskPolicy`
 
 Details: [CODING_STANDARDS.md](CODING_STANDARDS.md), [CURSOR_RULES.md](CURSOR_RULES.md)
 
@@ -554,25 +659,23 @@ Details: [CODING_STANDARDS.md](CODING_STANDARDS.md), [CURSOR_RULES.md](CURSOR_RU
 
 ## 12. Immediate next milestone
 
-### Phase 5.2 — Task CRUD
+### Phase 6 — Dashboard
 
 **Status:** Pending — wait for explicit user approval before coding.
 
-**Completed:** Milestone 4 · Phase 5.1 Task Domain Foundation.
+**Completed:** Milestones 1–5 (Backend Foundation through Task Management).
 
-**Specification:** [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md) §6 · [decisions/Task-Management.md](decisions/Task-Management.md)
+**Specification:** [ROADMAP.md](ROADMAP.md) · product requirements TBD before implementation
 
-**Phase 5.2 scope:**
+**Phase 6 scope (high level):**
 
 | Area | Notes |
 |------|-------|
-| Routes | `GET/POST /api/v1/tasks`, `GET/PUT/DELETE /api/v1/tasks/{task}` |
-| Classes | `TaskController`, `TaskService`, Form Requests, `TaskResource` |
-| Behaviors | Create status `todo`; optional `assigned_to`; `created_by` server-side; soft delete |
+| Planned | Charts, statistics, recent activities (design before coding) |
 
-**Out of scope for 5.2:** Status patch (5.3), assignment patch (5.4), queries (5.5), policies (5.6).
+**Also pending:** Vue 3 / Pinia authentication (`opsflow-web`)
 
-**Pattern to match:** `ProjectController` / `ProjectService` / `ProjectResource` / Form Requests
+**Do not invent** Dashboard APIs or schema until a design package / ADR is approved.
 
 ---
 
@@ -603,6 +706,13 @@ Details: [CODING_STANDARDS.md](CODING_STANDARDS.md), [CURSOR_RULES.md](CURSOR_RU
 | GET | `/api/v1/projects/{project}/members` | `auth:sanctum` | Same as project `view` |
 | POST | `/api/v1/projects/{project}/members` | `auth:sanctum` | Administrator, Project Manager |
 | DELETE | `/api/v1/projects/{project}/members/{user}` | `auth:sanctum` | Administrator, Project Manager |
+| GET | `/api/v1/tasks` | `auth:sanctum` | Admin, PM (all); Employee accessible projects |
+| POST | `/api/v1/tasks` | `auth:sanctum` | Administrator, Project Manager |
+| GET | `/api/v1/tasks/{task}` | `auth:sanctum` | Admin, PM (all); Employee accessible projects |
+| PUT | `/api/v1/tasks/{task}` | `auth:sanctum` | Administrator, Project Manager |
+| DELETE | `/api/v1/tasks/{task}` | `auth:sanctum` | Administrator, Project Manager |
+| PATCH | `/api/v1/tasks/{task}/assignment` | `auth:sanctum` | Administrator, Project Manager |
+| PATCH | `/api/v1/tasks/{task}/status` | `auth:sanctum` | Admin, PM; Employee assigned to self only |
 
 ---
 
@@ -628,7 +738,7 @@ Specs: [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md) · [docs/MILESTONE_3_ORGANIZ
 - `RefreshDatabase`; session driver `cookie` in tests
 - Stateful SPA simulated with `Origin: http://localhost:5173`
 - After logout/guest follow-ups, tests may call `auth()->forgetGuards()` (Laravel 13 test-client quirk)
-- **Last known full suite:** 131 tests passed (Phases 1–5.1 coverage)
+- **Last known full suite:** 185 tests passed (Phases 1–5.6 / Milestone 5 complete)
 
 | Suite | Path | Coverage |
 |-------|------|----------|
@@ -645,12 +755,17 @@ Specs: [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md) · [docs/MILESTONE_3_ORGANIZ
 | Project list query | `tests/Feature/Project/ProjectListQueryTest.php` | search, filters, sort, pagination, clamp, validation |
 | Project authz | `tests/Feature/Project/ProjectAuthorizationTest.php` | Admin / PM / Employee owned-or-member matrix |
 | Task domain | `tests/Feature/Task/TaskDomainFoundationTest.php` | tasks schema, relations, enums, soft delete, FK RESTRICT, factory, morph |
+| Task APIs | `tests/Feature/Task/TaskManagementApiTest.php` | CRUD, validation, defaults, `created_by`, create-time assignment, guest `401`, resource shape |
+| Task assignment | `tests/Feature/Task/TaskAssignmentApiTest.php` | assign/clear; owner/member; inactive/soft-deleted/non-member `422`; guest `401` |
+| Task list query | `tests/Feature/Task/TaskListQueryTest.php` | search, filters, sort, pagination, clamp, validation |
+| Task authz | `tests/Feature/Task/TaskAuthorizationTest.php` | Admin / PM / Employee owned-or-member matrix; status ability |
+| Task status | `tests/Feature/Task/TaskStatusApiTest.php` | status patch; all enums; create/update status-free; Employee assigned-to-self; guest `401` |
 
 ```bash
-php artisan test --filter="AuthenticationTest|OrganizationFoundationTest|UserDomainFoundationTest|UserManagementApiTest|UserListQueryTest|LookupApiTest|UserAuthorizationTest|ProjectDomainFoundationTest|ProjectManagementApiTest|ProjectMembersApiTest|ProjectListQueryTest|ProjectAuthorizationTest|TaskDomainFoundationTest"
+php artisan test
 ```
 
-Deferred: dedicated `429` test, CSRF failure cases, frontend tests, Milestone 5.2–5.6 suites.
+Deferred: dedicated `429` test, CSRF failure cases, frontend tests, Milestone 6+ suites.
 
 Details: [TESTING.md](TESTING.md)
 
@@ -716,12 +831,12 @@ _(Re-check with `git status` before committing.)_
 
 ## Quick start for the next session
 
-1. Read this handoff + `docs/DOMAIN_MODEL.md` + `docs/MILESTONE_5_TASK_MANAGEMENT.md` §6 + `decisions/Task-Management.md`
+1. Read this handoff + [ROADMAP.md](ROADMAP.md) Phase 6 · confirm no Dashboard design ADR yet
 2. Confirm git branch/status in `opsflow-api` / `opsflow-docs`
-3. ✅ Phase 5.1 is complete — next is **Phase 5.2 — Task CRUD** — **wait for explicit implementation approval**
-4. Follow the Milestone 5 spec / ADR — do **not** invent beyond approved decisions
+3. ✅ Milestone 5 is complete — next is **Phase 6 — Dashboard** — **wait for explicit implementation approval** (and design package before coding)
+4. Do **not** invent Dashboard APIs/schema without an approved design
 5. Do **not** modify code when the user asks for docs-only tasks
-6. Prefer matching patterns in `ProjectController` / `ProjectService` / `ProjectResource` / Form Requests / `ApiResponse`
+6. Vue Pinia auth (`opsflow-web`) remains pending from earlier phases
 
 ### Essential commands
 
@@ -733,7 +848,7 @@ cp .env.example .env   # if needed
 php artisan migrate
 php artisan db:seed
 php artisan serve
-php artisan test --filter="AuthenticationTest|OrganizationFoundationTest|UserDomainFoundationTest|UserManagementApiTest|UserListQueryTest|LookupApiTest|UserAuthorizationTest|ProjectDomainFoundationTest|ProjectManagementApiTest|ProjectMembersApiTest|ProjectListQueryTest|ProjectAuthorizationTest|TaskDomainFoundationTest"
+php artisan test
 
 # Docs
 cd opsflow-docs
@@ -749,7 +864,7 @@ cd opsflow-docs
 | Location   | `opsflow-docs/HANDOFF.md`                      |
 | Supersedes | Ad-hoc chat memory                             |
 | Maintain   | Update when milestones complete or ADRs change |
-| Ready for  | Next session → Phase 5.2 (after implementation approval) |
+| Ready for  | Next session → Phase 6 Dashboard (after design + implementation approval) |
 
 ## Project Principles
 

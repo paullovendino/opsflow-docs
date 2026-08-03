@@ -4,7 +4,7 @@ Physical schema companion to [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md).
 
 **Milestone 3 status:** Phases 3.1–3.6 implemented (Milestone 3 complete).  
 **Milestone 4 status:** ✅ Phases 4.1–4.5 implemented · Milestone 4 complete — see [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md).  
-**Milestone 5 status:** Phase 5.1 implemented · Phases 5.2–5.6 pending — see [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md).
+**Milestone 5 status:** ✅ Complete (Phases 5.1–5.6) — see [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md).
 
 ---
 
@@ -212,7 +212,7 @@ Table: `project_members`
 
 ### Tasks
 
-> Milestone 5 — Phase 5.1 schema implemented (APIs pending 5.2–5.6)  
+> Milestone 5 — ✅ Complete (schema + CRUD + assignment + queries + authz + status)  
 > Spec: [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md) · ADR: [decisions/Task-Management.md](decisions/Task-Management.md)
 
 Table: `tasks`

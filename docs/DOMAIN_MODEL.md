@@ -221,7 +221,7 @@ Enforced via `UserPolicy` on User Management endpoints.
 
 Enforced via `ProjectPolicy` and Employee list scoping in `ProjectQuery`.
 
-### Milestone 5 Authorization (coarse — Phase 5.6 — designed)
+### Milestone 5 Authorization (coarse — Phase 5.5 — implemented)
 
 | Role | Task Management |
 |------|-----------------|
@@ -229,7 +229,7 @@ Enforced via `ProjectPolicy` and Employee list scoping in `ProjectQuery`.
 | `project_manager` | Full access to all tasks |
 | `employee` | List/view tasks in accessible projects; update status only when assigned to self |
 
-Enforced via `TaskPolicy` and Employee list scoping in `TaskQuery` when Phase 5.6 is implemented. See [MILESTONE_5_TASK_MANAGEMENT.md](MILESTONE_5_TASK_MANAGEMENT.md).
+Enforced via `TaskPolicy` and Employee list scoping in `TaskQuery` (Phase 5.5). See [MILESTONE_5_TASK_MANAGEMENT.md](MILESTONE_5_TASK_MANAGEMENT.md).
 
 ### Future Expansion
 
@@ -383,7 +383,7 @@ A unit of assignable work within a project.
 - Single assignee only; `assigned_to` nullable; when set, assignee must be active, not soft-deleted, and project owner **or** member
 - Assignment targets Users, not Departments or Job Titles
 - Milestone 5 does not enforce a restricted status transition graph
-- Employee task visibility (Phase 5.6): tasks in projects they **own** or are a **member** of; may update status only when assigned to self
+- Employee task visibility (Phase 5.5): tasks in projects they **own** or are a **member** of; may update status only when assigned to self
 - Schema / API defined in [MILESTONE_5_TASK_MANAGEMENT.md](MILESTONE_5_TASK_MANAGEMENT.md) and [decisions/Task-Management.md](../decisions/Task-Management.md)
 
 ### Implementation status (Milestone 5)
@@ -391,11 +391,11 @@ A unit of assignable work within a project.
 | Phase | Status |
 |-------|--------|
 | 5.1 Task Domain Foundation | ✅ Implemented |
-| 5.2 Task CRUD | Pending |
-| 5.3 Task Status Workflow | Pending |
-| 5.4 Task Assignment | Pending |
-| 5.5 Task Queries | Pending |
-| 5.6 Task Authorization | Pending |
+| 5.2 Task CRUD | ✅ Implemented |
+| 5.3 Task Assignment | ✅ Implemented |
+| 5.4 Task Queries | ✅ Implemented |
+| 5.5 Task Authorization | ✅ Implemented |
+| 5.6 Task Status Workflow | ✅ Implemented |
 
 ### Future Expansion
 

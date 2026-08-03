@@ -19,22 +19,22 @@ The canonical roadmap lives in [ROADMAP.md](ROADMAP.md).
   - ✅ Phase 4.3 — Project Members
   - ✅ Phase 4.4 — Project Queries
   - ✅ Phase 4.5 — Project Authorization
-- ✅ Phase 5.1 — Task Domain Foundation
+- ✅ **Milestone 5 — Task Management (Complete)**
+  - ✅ Phase 5.1 — Task Domain Foundation
+  - ✅ Phase 5.2 — Task CRUD
+  - ✅ Phase 5.3 — Task Assignment
+  - ✅ Phase 5.4 — Task Queries
+  - ✅ Phase 5.5 — Task Authorization
+  - ✅ Phase 5.6 — Task Status Workflow
 
 ## Next
 
-**Phase 5.2 — Task CRUD** (pending approval)
-
-Specification: [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md) · ADR: [decisions/Task-Management.md](decisions/Task-Management.md)
-
-- ⏳ Phase 5.2 — Task CRUD (**next**)
-- ⏳ Phase 5.3 — Task Status Workflow
-- ⏳ Phase 5.4 — Task Assignment
-- ⏳ Phase 5.5 — Task Queries
-- ⏳ Phase 5.6 — Task Authorization
+**Phase 6 — Dashboard** (pending approval)
 
 Also pending from earlier phases: Vue 3 / Pinia authentication (`opsflow-web`).
 
+Specification pointer: [ROADMAP.md](ROADMAP.md)
+
 ## Later
 
-Phases 6–9 and future versions: see [ROADMAP.md](ROADMAP.md).
+Phases 7–9 and future versions: see [ROADMAP.md](ROADMAP.md).

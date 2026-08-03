@@ -8,6 +8,55 @@ Format follows a lightweight Keep a Changelog style.
 
 ## [Unreleased] — v1.0.0 (Development)
 
+### Task Status Workflow (Phase 5.6) — ✅ Implemented · Milestone 5 complete
+
+- `PATCH /api/v1/tasks/{task}/status` under `auth:sanctum`
+- `UpdateTaskStatusRequest` / `TaskController::updateStatus` / `TaskService::changeStatus`
+- Any `TaskStatus` value accepted; no transition graph; create/update remain status-free
+- Authorize via existing `TaskPolicy::updateStatus` (Employee: assigned to self + accessible project)
+- PHPUnit Feature suite: `tests/Feature/Task/TaskStatusApiTest.php`
+- Milestone 5 (Task Management) complete; docs synchronized; next is Phase 6 — Dashboard (pending approval)
+
+### Task Authorization (Phase 5.5) — ✅ Implemented
+
+- `TaskPolicy` registered via `Gate::policy` in `AppServiceProvider`
+- `$this->authorize()` on all task controller actions
+- Administrator & Project Manager: full task management
+- Employee: list/view tasks in owned **or** member projects only; mutations denied
+- Employee `updateStatus` ability only when assigned to self (HTTP status endpoint in 5.6)
+- Employee list scoping in `TaskQuery::applyVisibility`
+- PHPUnit Feature suite: `tests/Feature/Task/TaskAuthorizationTest.php`
+- Docs synchronized; Phase 5.6 — Task Status Workflow completed next
+
+### Task Queries (Phase 5.4) — ✅ Implemented
+
+- `TaskQuery` / `IndexTasksRequest` wired through `TaskService::list()` / `TaskController::index`
+- Search (`title`, `description`), filters (`status`, `priority`, `project_id`, `assigned_to`, `created_by`), sorting, pagination `meta`
+- Defaults: `created_at` desc with stable `id` tie-break; `per_page` 15; max 100 clamped
+- Invalid query params → `422`; guest → `401`
+- PHPUnit Feature suite: `tests/Feature/Task/TaskListQueryTest.php`
+- Docs synchronized; Phase 5.5 — Task Authorization completed next
+
+### Task Assignment API (Phase 5.3) — ✅ Implemented
+
+- `PATCH /api/v1/tasks/{task}/assignment` under `auth:sanctum`
+- `UpdateTaskAssignmentRequest` / `TaskController::updateAssignment` / `TaskService::changeAssignment`
+- Assignee rules: active, not soft-deleted, project owner or member; `null` clears assignment
+- Does not change `status`, `created_by`, or `project_id`
+- PHPUnit Feature suite: `tests/Feature/Task/TaskAssignmentApiTest.php`
+- Milestone 5 phase order corrected: 5.3 Assignment · 5.4 Queries · 5.5 Authorization · 5.6 Status
+- Docs synchronized; Phase 5.4 — Task Queries completed next
+
+### Task CRUD APIs (Phase 5.2) — ✅ Implemented
+
+- `TaskController` / `TaskService` / `StoreTaskRequest` / `UpdateTaskRequest` / `TaskResource`
+- Routes: `GET/POST /api/v1/tasks`, `GET/PUT/DELETE /api/v1/tasks/{task}` under `auth:sanctum`
+- Create: `created_by` = auth user; status always `todo`; optional `assigned_to` (active + project owner/member); default priority `medium`
+- Update: title/description/priority/due_date only (not status, assignment, project, or creator)
+- Soft delete; list pagination/filters delivered in Phase 5.4; policies delivered in Phase 5.5
+- PHPUnit Feature suite: `tests/Feature/Task/TaskManagementApiTest.php`
+- Docs synchronized; Phase 5.3 — Task Assignment completed next
+
 ### Task Domain Foundation (Phase 5.1) — ✅ Implemented
 
 - `tasks` table with soft deletes; FKs `project_id`, `assigned_to` (nullable), `created_by` (**RESTRICT**)
@@ -15,15 +64,15 @@ Format follows a lightweight Keep a Changelog style.
 - Relations on `Task`, `Project::tasks`, `User::createdTasks` / `assignedTasks`
 - Morph map alias `task`
 - PHPUnit Feature suite: `tests/Feature/Task/TaskDomainFoundationTest.php`
-- Docs synchronized; next is Phase 5.2 — Task CRUD (pending approval)
+- Docs synchronized; Phase 5.2 — Task CRUD completed next
 
 ### Milestone 5 design package — ✅ Approved (docs)
 
 - Added [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md) and [decisions/Task-Management.md](decisions/Task-Management.md)
-- Phases 5.1–5.6: Domain Foundation · CRUD · Status · Assignment · Queries · Authorization
+- Phases 5.1–5.6: Domain Foundation · CRUD · Assignment · Queries · Authorization · Status
 - Approved ERD: `tasks` (soft deletes; FKs RESTRICT); `TaskStatus` / `TaskPriority` enums
 - Assignment: single nullable `assigned_to` (active + project owner/member)
-- APIs: `/api/v1/tasks` CRUD + `PATCH .../status` + `PATCH .../assignment` + list query contract
+- APIs: `/api/v1/tasks` CRUD + `PATCH .../assignment` + `PATCH .../status` + list query contract
 - Authz matrix: Admin/PM full; Employee project-scoped list/view; status when assigned to self
 - Companion docs synchronized (DOMAIN_MODEL, DATABASE_DESIGN, API_SPEC, HANDOFF, ROADMAP, etc.)
 - Next: Phase 5.1 — Task Domain Foundation (pending implementation approval)

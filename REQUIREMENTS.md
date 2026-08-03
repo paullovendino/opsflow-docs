@@ -76,19 +76,19 @@ Department CRUD, Job Title CRUD, teams, branches, and organization settings are 
 
 ## Task Management
 
-> Milestone 5 — ✅ Design approved · Phases 5.1–5.6 pending  
+> Milestone 5 — ✅ Complete (Phases 5.1–5.6)  
 > Spec: [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md) · ADR: [decisions/Task-Management.md](decisions/Task-Management.md)
 
 - [x] Task domain foundation (`tasks`, `TaskStatus`, `TaskPriority`)
-- [ ] Task CRUD (`GET/POST /api/v1/tasks`, `GET/PUT/DELETE /api/v1/tasks/{task}`)
-- [ ] Task status patch (`PATCH /api/v1/tasks/{task}/status`)
-- [ ] Task assignment (`PATCH /api/v1/tasks/{task}/assignment`)
+- [x] Task CRUD (`GET/POST /api/v1/tasks`, `GET/PUT/DELETE /api/v1/tasks/{task}`)
+- [x] Task assignment (`PATCH /api/v1/tasks/{task}/assignment`)
   - Single nullable assignee; must be active + project owner or member
-- [ ] Task list search / filters / sorting / pagination
-- [ ] Coarse authorization (`TaskPolicy`):
+- [x] Task list search / filters / sorting / pagination
+- [x] Coarse authorization (`TaskPolicy`):
   - Administrator — full task management (all tasks)
   - Project Manager — full task management (all tasks)
   - Employee — list/view tasks in accessible projects; status only when assigned to self
+- [x] Task status patch (`PATCH /api/v1/tasks/{task}/status`)
 
 ---
 
