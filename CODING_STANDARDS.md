@@ -184,6 +184,20 @@ Details: [AUTHENTICATION.md](AUTHENTICATION.md)
 
 ---
 
+## Reports (Milestone 7 — ✅ Complete)
+
+> Follow [docs/MILESTONE_7_REPORTS.md](docs/MILESTONE_7_REPORTS.md) and [decisions/Reports.md](decisions/Reports.md). Do not invent beyond the approved ADR.
+
+- Thin `ReportController`; business logic in `App\Services\Reports\ReportService`
+- Validate with Form Requests under `Http/Requests/Api/V1/Reports/`
+- Authorize with `ReportPolicy` Gate abilities via `$this->authorize()`
+- Respond with `ProjectReportResource` / `EmployeeReportResource`
+- Read-only aggregates over existing `projects` / `tasks` / `users` — **no new tables**
+- Optional `from_date` / `to_date` filters tasks by `created_at` date
+- Visibility: Project reports like Projects; Employee list Admin/PM; Employee detail self-only for Employees
+
+---
+
 ## Frontend
 
 - Vue 3 Composition API only.

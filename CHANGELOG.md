@@ -8,6 +8,23 @@ Format follows a lightweight Keep a Changelog style.
 
 ## [Unreleased] — v1.0.0 (Development)
 
+### Reports (Milestone 7) — ✅ Implemented · Milestone 7 complete
+
+- `GET /api/v1/reports/projects`, `GET /api/v1/reports/projects/{project}`
+- `GET /api/v1/reports/employees`, `GET /api/v1/reports/employees/{user}` under `auth:sanctum`
+- `ReportController` / `ReportService` / Form Requests / `ProjectReportResource` / `EmployeeReportResource`
+- `ReportPolicy` via Gate abilities; Admin/PM org-wide; Employee project scoped + self-only employee detail
+- Optional `from_date` / `to_date` on task `created_at`; overdue / unassigned / by_project (detail)
+- No new tables
+- PHPUnit Feature suites: `ProjectReportApiTest`, `EmployeeReportApiTest`, `ReportAuthorizationTest`
+- Docs synchronized; next is Phase 8 — Testing (pending approval)
+
+### Reports design package (Milestone 7) — 📋 Documentation only
+
+- Created [docs/MILESTONE_7_REPORTS.md](docs/MILESTONE_7_REPORTS.md) and [decisions/Reports.md](decisions/Reports.md)
+- Project + Employee report endpoints; optional date range; no new tables; visibility mirrors Projects/Tasks/Users
+- Companion docs synchronized; **implementation completed in Milestone 7**
+
 ### Dashboard (Milestone 6) — ✅ Implemented · Milestone 6 complete
 
 - `GET /api/v1/dashboard` under `auth:sanctum`
@@ -17,7 +34,7 @@ Format follows a lightweight Keep a Changelog style.
 - Recent work items merged by `updated_at`; `recent_limit` default 10, max 25 (clamp)
 - No new tables; soft-deleted rows excluded
 - PHPUnit Feature suites: `DashboardApiTest`, `DashboardAuthorizationTest`
-- Docs synchronized; next is Phase 7 — Reports (pending approval)
+- Docs synchronized; next is Milestone 7 — Reports (design package)
 
 ### Dashboard design package (Milestone 6) — 📋 Documentation only
 

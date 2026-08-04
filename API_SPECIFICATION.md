@@ -982,8 +982,148 @@ Authorization: Sanctum session (auth:sanctum)
 
 ---
 
+## Reports
+
+> Milestone 7 — ✅ Implemented  
+> Spec: [docs/MILESTONE_7_REPORTS.md](docs/MILESTONE_7_REPORTS.md) · ADR: [decisions/Reports.md](decisions/Reports.md)
+
+### List project reports
+
+```http
+GET /api/v1/reports/projects
+Authorization: Sanctum session (auth:sanctum)
+```
+
+**Query parameters:** `search`, `status` (`ProjectStatus`), `from_date`, `to_date`, `sort` (`name`|`status`|`created_at`), `direction`, `page`, `per_page` (default 15, max 100 clamp).
+
+**Authorization:** Admin/PM all projects; Employee owned-or-member only.
+
+**Success:** paginated `data` items shaped as Project Report (see below); pagination `meta`.
+
+### Show project report
+
+```http
+GET /api/v1/reports/projects/{project}
+Authorization: Sanctum session (auth:sanctum)
+```
+
+**Query parameters:** `from_date`, `to_date` (optional inclusive `Y-m-d`; filters tasks by `created_at` date).
+
+**Authorization:** Admin/PM any project; Employee accessible projects only (`403` otherwise).
+
+### Project report `data` shape
+
+```json
+{
+  "project": {
+    "id": 3,
+    "name": "OpsFlow Launch",
+    "status": "active",
+    "start_date": null,
+    "due_date": "2026-09-01",
+    "created_at": "2026-07-01T10:00:00+00:00"
+  },
+  "tasks": {
+    "total": 0,
+    "by_status": {
+      "todo": 0,
+      "in_progress": 0,
+      "in_review": 0,
+      "blocked": 0,
+      "completed": 0,
+      "cancelled": 0
+    },
+    "by_priority": {
+      "low": 0,
+      "medium": 0,
+      "high": 0,
+      "urgent": 0
+    },
+    "overdue": 0,
+    "unassigned": 0
+  },
+  "members_count": 0
+}
+```
+
+### List employee reports
+
+```http
+GET /api/v1/reports/employees
+Authorization: Sanctum session (auth:sanctum)
+```
+
+**Query parameters:** `search`, `role_id`, `department_id`, `status` (`UserStatus`), `from_date`, `to_date`, `sort`, `direction`, `page`, `per_page`.
+
+**Authorization:** Administrator and Project Manager only (`403` for Employee).
+
+### Show employee report
+
+```http
+GET /api/v1/reports/employees/{user}
+Authorization: Sanctum session (auth:sanctum)
+```
+
+**Query parameters:** `from_date`, `to_date`.
+
+**Authorization:** Admin/PM any user; Employee **self only**.
+
+### Employee report `data` shape
+
+```json
+{
+  "user": {
+    "id": 12,
+    "first_name": "Jane",
+    "middle_name": null,
+    "last_name": "Doe",
+    "full_name": "Jane Doe",
+    "email": "jane@example.com",
+    "status": "active"
+  },
+  "tasks": {
+    "total": 0,
+    "by_status": {
+      "todo": 0,
+      "in_progress": 0,
+      "in_review": 0,
+      "blocked": 0,
+      "completed": 0,
+      "cancelled": 0
+    },
+    "by_priority": {
+      "low": 0,
+      "medium": 0,
+      "high": 0,
+      "urgent": 0
+    },
+    "overdue": 0,
+    "by_project": [
+      {
+        "project_id": 3,
+        "name": "OpsFlow Launch",
+        "total": 10
+      }
+    ]
+  }
+}
+```
+
+**Notes**
+
+- Read-only; no export/download routes in Milestone 7
+- Soft-deleted projects/tasks/users excluded
+- Date range filters tasks by `created_at` date (inclusive)
+- Overdue reuses Dashboard definition
+- List employee items omit `by_project`; detail includes it
+- Guest → `401`
+
+**Classes:** `ReportController`, `ReportService`, Form Requests under `Reports/`, `ProjectReportResource`, `EmployeeReportResource`, `ReportPolicy` (Gate abilities)
+
+---
+
 ## Activity Logs
 
-> Planned — future (not Milestone 6)
+> Planned — future (not Milestone 6 or 7)
 
-`GET /api/v1/activity-logs` will be defined when the Activity Logs milestone begins. Milestone 6 dashboard “recent” does **not** use this table.
+`GET /api/v1/activity-logs` will be defined when the Activity Logs milestone begins. Milestone 6 dashboard “recent” and Milestone 7 reports do **not** use this table.

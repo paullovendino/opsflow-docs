@@ -223,10 +223,22 @@ Spec: [docs/MILESTONE_6_DASHBOARD.md](docs/MILESTONE_6_DASHBOARD.md) · ADR: [de
 
 ---
 
+## Reports (Milestone 7 — ✅ Complete)
+
+Spec: [docs/MILESTONE_7_REPORTS.md](docs/MILESTONE_7_REPORTS.md) · ADR: [decisions/Reports.md](decisions/Reports.md)
+
+| Phase | Path | Coverage |
+|-------|------|----------|
+| 7.1–7.2 | `tests/Feature/Report/ProjectReportApiTest.php` | ✅ list/detail; filters; date range; overdue/unassigned; pagination; guest `401` |
+| 7.3 | `tests/Feature/Report/EmployeeReportApiTest.php` | ✅ list/detail; filters; `by_project`; pagination; validation |
+| 7.4 | `tests/Feature/Report/ReportAuthorizationTest.php` | ✅ Admin / PM / Employee matrix |
+
+---
+
 ## Remaining coverage (not yet)
 
 - Explicit `429` rate-limit assertion
 - CSRF rejection cases
 - Frontend Pinia auth tests
-- Milestone 7+ suites (Reports)
+- Milestone 8+ broader testing suites
 - Activity Logs suites

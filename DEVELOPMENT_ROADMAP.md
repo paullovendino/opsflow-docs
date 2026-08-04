@@ -31,10 +31,15 @@ The canonical roadmap lives in [ROADMAP.md](ROADMAP.md).
   - ✅ Phase 6.2 — Project & Task Statistics
   - ✅ Phase 6.3 — Recent Work Items
   - ✅ Phase 6.4 — Dashboard Authorization
+- ✅ **Milestone 7 — Reports (Complete)**
+  - ✅ Phase 7.1 — Reports API Foundation
+  - ✅ Phase 7.2 — Project Reports
+  - ✅ Phase 7.3 — Employee Reports
+  - ✅ Phase 7.4 — Reports Authorization
 
 ## Next
 
-**Phase 7 — Reports** (pending approval)
+**Phase 8 — Testing** (pending approval)
 
 Also pending from earlier phases: Vue 3 / Pinia authentication (`opsflow-web`).
 
@@ -42,4 +47,4 @@ Canonical roadmap: [ROADMAP.md](ROADMAP.md)
 
 ## Later
 
-Phases 7–9 and future versions: see [ROADMAP.md](ROADMAP.md).
+Phases 8–9 and future versions: see [ROADMAP.md](ROADMAP.md).

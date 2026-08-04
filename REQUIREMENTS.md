@@ -41,6 +41,19 @@ Department CRUD, Job Title CRUD, teams, branches, and organization settings are 
 
 ---
 
+## Reports
+
+> Milestone 7 — ✅ Complete (Phases 7.1–7.4)  
+> Spec: [docs/MILESTONE_7_REPORTS.md](docs/MILESTONE_7_REPORTS.md) · ADR: [decisions/Reports.md](decisions/Reports.md)
+
+- [x] Project reports list + detail (`GET /api/v1/reports/projects`, `GET /api/v1/reports/projects/{project}`)
+- [x] Employee reports list + detail (`GET /api/v1/reports/employees`, `GET /api/v1/reports/employees/{user}`)
+- [x] Optional date range (`from_date` / `to_date`) on task aggregates
+- [x] Visibility: Project reports scoped like Projects; Employee list Admin/PM; Employee detail self-only for Employees
+- [x] No new tables; no file exports in Milestone 7
+
+---
+
 ## User Management
 
 > Phase 3.3 — Implemented (CRUD APIs)

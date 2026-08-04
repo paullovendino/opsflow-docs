@@ -37,6 +37,11 @@ OpsFlow development roadmap by phase.
 | Phase 6.2 | Project & Task Statistics | ✅ Implemented |
 | Phase 6.3 | Recent Work Items | ✅ Implemented |
 | Phase 6.4 | Dashboard Authorization | ✅ Implemented |
+| **Milestone 7** | **Reports** | ✅ **Complete** (7.1–7.4) |
+| Phase 7.1 | Reports API Foundation | ✅ Implemented |
+| Phase 7.2 | Project Reports | ✅ Implemented |
+| Phase 7.3 | Employee Reports | ✅ Implemented |
+| Phase 7.4 | Reports Authorization | ✅ Implemented |
 
 ---
 
@@ -345,10 +350,48 @@ Vue Dashboard UI, Activity Logs, Remarks, Reports, caching/materialized views, d
 
 ## Phase 7 — Reports
 
-**Status: Pending**
+**Status: ✅ Complete (Phases 7.1–7.4)**  
+**Spec:** [docs/MILESTONE_7_REPORTS.md](docs/MILESTONE_7_REPORTS.md) · **ADR:** [decisions/Reports.md](decisions/Reports.md)
 
-- Project Reports
-- Employee Reports
+> Read-only Project / Employee analytical summaries over existing data. **No new tables.** Optional date range on task aggregates. Exports / Vue UI deferred.
+
+### Phase 7.1 — Reports API Foundation
+
+**Status: ✅ Implemented**
+
+- [x] `/api/v1/reports/*` route group under `auth:sanctum`
+- [x] `ReportController` / `ReportService` / `ReportPolicy`
+- [x] Guest `401` on all report routes
+- [x] PHPUnit Feature tests (foundation)
+
+### Phase 7.2 — Project Reports
+
+**Status: ✅ Implemented**
+
+- [x] `GET /api/v1/reports/projects` (paginated summaries)
+- [x] `GET /api/v1/reports/projects/{project}`
+- [x] Search / status / sort / date range; task aggregates + `members_count`
+- [x] PHPUnit Feature suite: `ProjectReportApiTest`
+
+### Phase 7.3 — Employee Reports
+
+**Status: ✅ Implemented**
+
+- [x] `GET /api/v1/reports/employees` (Admin/PM)
+- [x] `GET /api/v1/reports/employees/{user}`
+- [x] Assignment aggregates; detail `by_project`
+- [x] PHPUnit Feature suite: `EmployeeReportApiTest`
+
+### Phase 7.4 — Reports Authorization
+
+**Status: ✅ Implemented**
+
+- [x] Full Admin / PM / Employee matrix
+- [x] PHPUnit Feature suite: `ReportAuthorizationTest`
+
+### Explicitly out of scope (Milestone 7)
+
+PDF/CSV/Excel export, scheduled/email reports, Activity Logs, Remarks analytics, custom builders, caching/queues, Vue Reports UI, time tracking, replacing Dashboard.
 
 ---
 

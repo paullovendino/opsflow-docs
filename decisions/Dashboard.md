@@ -94,7 +94,7 @@ Vue Dashboard UI, Activity Logs, Remarks, Reports (Phase 7), caching/materialize
 - Employee isolation tests are mandatory before Milestone 6 is marked complete
 - Implemented via `Gate::define('viewDashboard', [DashboardPolicy::class, 'view'])` + `$this->authorize('viewDashboard')`
 - Do not invent beyond this ADR / Milestone 6 specification during follow-on work
-- Do not start Milestone 7 (Reports) until explicitly approved
+- Milestone 7 (Reports) has a separate ADR — do not start Reports coding until explicitly approved
 
 ## References
 

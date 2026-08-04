@@ -296,6 +296,14 @@ Dashboard is a read-only aggregate API (`GET /api/v1/dashboard`) over `projects`
 
 ---
 
+### Reports
+
+> Milestone 7 — ✅ Implemented · **no physical table**
+
+Reports are read-only aggregate APIs under `/api/v1/reports/...` over `projects`, `tasks`, and `users`. See [docs/MILESTONE_7_REPORTS.md](docs/MILESTONE_7_REPORTS.md) and [decisions/Reports.md](decisions/Reports.md).
+
+---
+
 ## Relationships
 
 ```text

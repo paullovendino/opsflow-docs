@@ -20,7 +20,7 @@ It lets administrators, project managers, and employees:
 - Organize projects and tasks
 - Assign work
 - Monitor progress
-- Improve operational visibility via dashboards (API complete) / reports (planned)
+- Improve operational visibility via dashboards / reports (API complete)
 
 **Organizational people model:**
 
@@ -40,14 +40,14 @@ Organization
 | `opsflow-docs` | Documentation + ADRs (this repo)                              |
 | `opsflow-web`  | Vue 3 SPA (exists as folder; frontend auth/app not built yet) |
 
-**Current status:** ✅ **Milestone 6 — Dashboard complete**. Next: **Phase 7 — Reports** — wait for explicit implementation approval.
+**Current status:** ✅ **Milestone 7 — Reports complete**. Next: **Phase 8 — Testing** — wait for explicit implementation approval.
 
 | Field | Value |
 |-------|--------|
-| Current milestone | Milestone 6 complete · next is **Milestone / Phase 7 — Reports** |
-| Current phase | Phase 6.4 complete · Milestone 6 done |
-| Completed (M6) | ✅ 6.1 Foundation · ✅ 6.2 Statistics · ✅ 6.3 Recent · ✅ 6.4 Authorization |
-| Remaining (M6) | — |
+| Current milestone | Milestone 7 complete · next is **Milestone / Phase 8 — Testing** |
+| Current phase | Phase 7.4 complete · Milestone 7 done |
+| Completed (M7) | ✅ 7.1 Foundation · ✅ 7.2 Project Reports · ✅ 7.3 Employee Reports · ✅ 7.4 Authorization |
+| Remaining (M7) | — |
 
 ---
 
@@ -69,7 +69,7 @@ opsflow-web (Vue)  --cookie + CSRF-->  opsflow-api (Laravel)  -->  PostgreSQL
 | Services               | Business logic                      |
 | Models                 | Persistence / relationships         |
 | Enums                  | Domain constants (no magic strings) |
-| Policies               | Coarse authorization (`UserPolicy`; `ProjectPolicy`; `TaskPolicy`; `DashboardPolicy` / `viewDashboard`) |
+| Policies               | Coarse authorization (`UserPolicy`; `ProjectPolicy`; `TaskPolicy`; `DashboardPolicy` / `viewDashboard`; `ReportPolicy` Gates) |
 | Queries                | List search / filter / sort / paginate (`UserQuery`; `ProjectQuery`; `TaskQuery`) |
 | `ApiExceptionRenderer` | Consistent API errors (incl. project member `409`) |
 
@@ -87,6 +87,7 @@ Tasks:    TaskController → authorize(TaskPolicy) → Form Request → TaskServ
           assignment → UpdateTaskAssignmentRequest → TaskService::changeAssignment
           status → UpdateTaskStatusRequest → TaskService::changeStatus
 Dashboard: DashboardController → authorize(viewDashboard) → ShowDashboardRequest → DashboardService → DashboardResource
+Reports:  ReportController → authorize(ReportPolicy Gates) → Form Requests → ReportService → ProjectReportResource / EmployeeReportResource
 Lookups:  LookupController → LookupService → RoleResource / DepartmentResource / JobTitleResource
 ```
 
@@ -104,13 +105,13 @@ app/
 │   ├── Controllers/
 │   │   └── Api/
 │   │       ├── BaseApiController.php
-│   │       └── V1/         # AuthController, HealthController, UserController, LookupController, ProjectController, TaskController, DashboardController
+│   │       └── V1/         # … DashboardController, ReportController
 │   ├── Middleware/
-│   ├── Requests/Api/V1/…   # Auth/, Users/, Projects/, Tasks/, Dashboard/ (ShowDashboardRequest)
-│   └── Resources/Api/V1/…  # User, Role, Department, JobTitle, Project, ProjectMember, Task, Dashboard
+│   ├── Requests/Api/V1/…   # Auth/, Users/, Projects/, Tasks/, Dashboard/, Reports/
+│   └── Resources/Api/V1/…  # … Dashboard, ProjectReport, EmployeeReport
 ├── Models/                 # User, Role, Department, JobTitle, Project, Task
-├── Policies/               # UserPolicy, ProjectPolicy, TaskPolicy, DashboardPolicy
-├── Providers/              # AppServiceProvider (morph map, RateLimiter, Gate::policy, Gate::define viewDashboard)
+├── Policies/               # UserPolicy, ProjectPolicy, TaskPolicy, DashboardPolicy, ReportPolicy
+├── Providers/              # AppServiceProvider (morph map, RateLimiter, Gate::policy, Gate::define)
 ├── Queries/
 │   ├── Users/UserQuery.php
 │   ├── Projects/ProjectQuery.php
@@ -122,7 +123,8 @@ app/
 │   ├── Users/UserService.php
 │   ├── Projects/ProjectService.php
 │   ├── Tasks/TaskService.php
-│   └── Dashboard/DashboardService.php
+│   ├── Dashboard/DashboardService.php
+│   └── Reports/ReportService.php
 └── Traits/                 # ApiResponse (incl. paginatedResponse)
 ```
 
@@ -184,6 +186,11 @@ ADR: [decisions/Tech-Stack.md](decisions/Tech-Stack.md)
 | 6.2 | Project & Task Statistics | ✅ **Implemented** |
 | 6.3 | Recent Work Items | ✅ **Implemented** |
 | 6.4 | Dashboard Authorization | ✅ **Implemented** |
+| **7** | **Reports** | ✅ **Complete** |
+| 7.1 | Reports API Foundation | ✅ **Implemented** |
+| 7.2 | Project Reports | ✅ **Implemented** |
+| 7.3 | Employee Reports | ✅ **Implemented** |
+| 7.4 | Reports Authorization | ✅ **Implemented** |
 
 **Phase 1:** PostgreSQL, Sanctum, `/api/v1`, CORS, envelope, exception renderer, morph map, roles seed, health check, folder structure.
 
@@ -223,6 +230,8 @@ ADR: [decisions/Tech-Stack.md](decisions/Tech-Stack.md)
 
 **Phase 6.1–6.4:** Dashboard read-only summary (`GET /api/v1/dashboard`); statistics + recent work items; `DashboardPolicy` / `viewDashboard`; no new tables.
 
+**Phase 7.1–7.4:** Reports (`/api/v1/reports/projects`, `/api/v1/reports/employees`); date range; `ReportPolicy` Gates; no new tables.
+
 See [CHANGELOG.md](CHANGELOG.md), [ROADMAP.md](ROADMAP.md).
 
 ---
@@ -231,9 +240,9 @@ See [CHANGELOG.md](CHANGELOG.md), [ROADMAP.md](ROADMAP.md).
 
 ### Immediate next (backend)
 
-**Phase 7 — Reports** (see §12) — wait for explicit implementation approval
+**Phase 8 — Testing** (see §12) — wait for explicit implementation approval
 
-Completed: Milestones 1–6 (through Dashboard).
+Completed: Milestones 1–7 (through Reports).
 
 Also pending from earlier phases:
 
@@ -248,20 +257,21 @@ Specification: [ROADMAP.md](ROADMAP.md)
 
 ### Later phases (do not invent early)
 
-broader Testing → Deployment
+Deployment
 
 ### Future versions
 
 Notifications, remarks, kanban, time tracking, mobile, multi-org, etc. ([ROADMAP.md](ROADMAP.md))
 
-### Explicitly out of scope for Milestone 6 / later
+### Explicitly out of scope for Milestone 7 / later
 
-- Activity Logs table / audit trail (true “who did what”)
-- Remarks, Reports (Phase 7), Vue Dashboard UI
-- Caching / materialized views / date-range analytics
-- Nested project dashboards, user-directory stats
-- Frontend Task / Project / Dashboard UI
-- Restricted status transition state machines (Tasks remain free)
+- PDF/CSV/Excel export, scheduled/email reports
+- Activity Logs table / audit trail
+- Remarks analytics, custom report builders
+- Caching / queues / materialized views
+- Vue Reports / Dashboard UI
+- Replacing Dashboard APIs
+- Time tracking reports
 
 ---
 
@@ -570,6 +580,29 @@ Docs: [AUTHENTICATION.md](AUTHENTICATION.md), [decisions/Authentication.md](deci
 
 ---
 
+## 8o. Reports summary (Milestone 7)
+
+| Method | Path | Notes |
+|--------|------|-------|
+| GET | `/api/v1/reports/projects` | Paginated project report summaries |
+| GET | `/api/v1/reports/projects/{project}` | Single project report |
+| GET | `/api/v1/reports/employees` | Paginated employee summaries (Admin/PM) |
+| GET | `/api/v1/reports/employees/{user}` | Single employee report |
+
+**Auth:** `auth:sanctum`  
+**Authorization:** `ReportPolicy` Gates — Project reports scoped like Projects; Employee list Admin/PM; Employee detail self-only for Employees
+
+**Approved business rules:**
+
+- No new tables; aggregates from `projects` + `tasks` + `users`
+- Optional `from_date` / `to_date` filters tasks by `created_at` date
+- Overdue reuses Milestone 6 definition; zero-filled enum buckets
+- Distinct from Dashboard snapshot API
+
+**Classes:** `ReportController`, `ReportService`, Form Requests, `ProjectReportResource`, `EmployeeReportResource`, `ReportPolicy`
+
+---
+
 ## 9. Current database status
 
 ### Implemented tables
@@ -612,9 +645,8 @@ Docs: [AUTHENTICATION.md](AUTHENTICATION.md), [decisions/Authentication.md](deci
 
 - `organizations` table / multi-tenant org settings
 - Activity Logs / Remarks tables
-- Reports aggregates
 
-ADRs: [DATABASE_DESIGN.md](DATABASE_DESIGN.md), [decisions/Database.md](decisions/Database.md), [decisions/Organization-User-Management.md](decisions/Organization-User-Management.md), [decisions/Project-Management.md](decisions/Project-Management.md), [decisions/Task-Management.md](decisions/Task-Management.md), [decisions/Dashboard.md](decisions/Dashboard.md)
+ADRs: [DATABASE_DESIGN.md](DATABASE_DESIGN.md), [decisions/Database.md](decisions/Database.md), [decisions/Organization-User-Management.md](decisions/Organization-User-Management.md), [decisions/Project-Management.md](decisions/Project-Management.md), [decisions/Task-Management.md](decisions/Task-Management.md), [decisions/Dashboard.md](decisions/Dashboard.md), [decisions/Reports.md](decisions/Reports.md)
 
 ---
 
@@ -649,12 +681,12 @@ ADRs: [DATABASE_DESIGN.md](DATABASE_DESIGN.md), [decisions/Database.md](decision
 6. **Form Requests + API Resources** (Form Requests not required for parameter-less lookup GETs)
 7. **PHP Enums** instead of magic strings
 8. **Sanctum SPA cookies** for first-party auth — do not replace with ad-hoc JWT without an ADR
-9. **Guest + `throttle:login`** on login; **`auth:sanctum`** on logout/me/users/lookups/projects/tasks/dashboard
+9. **Guest + `throttle:login`** on login; **`auth:sanctum`** on logout/me/users/lookups/projects/tasks/dashboard/reports
 10. **Credential allowlist** into `Auth::attempt()`
 11. **Morph aliases only for existing models**
 12. **Do not expand schema beyond the approved ERD** without updating `decisions/Database.md`
-13. **Do not implement later modules early** (Milestone 7 Reports / Activity Logs) unless the milestone phase is approved
-14. **Authorize via Policies** — do not scatter manual role checks outside policies (`UserPolicy`, `ProjectPolicy`, `TaskPolicy`, `DashboardPolicy` / `viewDashboard`)
+13. **Do not implement later modules early** (Milestone 8 / Activity Logs) unless the milestone phase is approved
+14. **Authorize via Policies** — do not scatter manual role checks outside policies (`UserPolicy`, `ProjectPolicy`, `TaskPolicy`, `DashboardPolicy` / `viewDashboard`, `ReportPolicy` Gates)
 15. **CORS / Sanctum domains stay environment-driven**
 16. **Update docs/ADRs when behavior changes**
 17. **One feature = one commit** when asked to commit
@@ -663,12 +695,13 @@ ADRs: [DATABASE_DESIGN.md](DATABASE_DESIGN.md), [decisions/Database.md](decision
 20. **Project owner ≠ automatic member** — `created_by` and `project_members` are independent; duplicate members → `409`
 21. **Task status / assignment patches are separate endpoints** — create/update bodies do not change assignment after create or status
 22. **Dashboard is schema-neutral in Milestone 6** — aggregates only; no Activity Logs table for “recent”
+23. **Reports are schema-neutral in Milestone 7** — Project/Employee read models; no export tables; do not replace Dashboard
 
 ### Coding standards snapshot
 
 - Laravel 13 + PSR-12 + `declare(strict_types=1)`
 - DI; no magic strings; no duplicated logic
-- Match patterns: `UserController` / `UserService` / `UserQuery` / `UserPolicy`; `LookupController` / `LookupService`; `ProjectController` / `ProjectService` / `ProjectQuery` / `ProjectPolicy`; `TaskController` / `TaskService` / `TaskQuery` / `TaskPolicy`; `DashboardController` / `DashboardService` / `DashboardPolicy` / `DashboardResource`
+- Match patterns: `UserController` / `UserService` / `UserQuery` / `UserPolicy`; `LookupController` / `LookupService`; `ProjectController` / `ProjectService` / `ProjectQuery` / `ProjectPolicy`; `TaskController` / `TaskService` / `TaskQuery` / `TaskPolicy`; `DashboardController` / `DashboardService` / `DashboardPolicy` / `DashboardResource`; `ReportController` / `ReportService` / `ReportPolicy` / report Resources
 
 Details: [CODING_STANDARDS.md](CODING_STANDARDS.md), [CURSOR_RULES.md](CURSOR_RULES.md)
 
@@ -691,23 +724,23 @@ Details: [CODING_STANDARDS.md](CODING_STANDARDS.md), [CURSOR_RULES.md](CURSOR_RU
 
 ## 12. Immediate next milestone
 
-### Phase 7 — Reports
+### Phase 8 — Testing
 
 **Status:** Pending — wait for explicit user approval before coding.
 
-**Completed:** Milestones 1–6 (Backend Foundation through Dashboard).
+**Completed:** Milestones 1–7 (Backend Foundation through Reports).
 
-**Specification:** [ROADMAP.md](ROADMAP.md) · design package TBD before implementation
+**Specification:** [ROADMAP.md](ROADMAP.md) · broader API/frontend testing package TBD before implementation
 
-**Phase 7 scope (high level):**
+**Phase 8 scope (high level):**
 
 | Area | Notes |
 |------|-------|
-| Planned | Project Reports, Employee Reports (design before coding) |
+| Planned | Broader API testing, frontend testing, bug fixes (design before coding) |
 
 **Also pending:** Vue 3 / Pinia authentication (`opsflow-web`)
 
-**Do not invent** Reports APIs or schema until a design package / ADR is approved.
+**Do not invent** new modules or expand scope without an approved plan.
 
 ---
 
@@ -746,6 +779,10 @@ Details: [CODING_STANDARDS.md](CODING_STANDARDS.md), [CURSOR_RULES.md](CURSOR_RU
 | PATCH | `/api/v1/tasks/{task}/assignment` | `auth:sanctum` | Administrator, Project Manager |
 | PATCH | `/api/v1/tasks/{task}/status` | `auth:sanctum` | Admin, PM; Employee assigned to self only |
 | GET | `/api/v1/dashboard` | `auth:sanctum` | All authenticated; data scoped by role |
+| GET | `/api/v1/reports/projects` | `auth:sanctum` | Admin, PM (all); Employee owned/member |
+| GET | `/api/v1/reports/projects/{project}` | `auth:sanctum` | Admin, PM (all); Employee owned/member |
+| GET | `/api/v1/reports/employees` | `auth:sanctum` | Administrator, Project Manager |
+| GET | `/api/v1/reports/employees/{user}` | `auth:sanctum` | Admin, PM; Employee self only |
 
 ---
 
@@ -771,7 +808,7 @@ Specs: [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md) · [docs/MILESTONE_3_ORGANIZ
 - `RefreshDatabase`; session driver `cookie` in tests
 - Stateful SPA simulated with `Origin: http://localhost:5173`
 - After logout/guest follow-ups, tests may call `auth()->forgetGuards()` (Laravel 13 test-client quirk)
-- **Last known full suite:** 197 tests passed (Phases 1–6.4 / Milestone 6 complete)
+- **Last known full suite:** 212 tests passed (Phases 1–7.4 / Milestone 7 complete)
 
 | Suite | Path | Coverage |
 |-------|------|----------|
@@ -795,12 +832,15 @@ Specs: [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md) · [docs/MILESTONE_3_ORGANIZ
 | Task status | `tests/Feature/Task/TaskStatusApiTest.php` | status patch; all enums; create/update status-free; Employee assigned-to-self; guest `401` |
 | Dashboard APIs | `tests/Feature/Dashboard/DashboardApiTest.php` | envelope; statistics; overdue; assigned_to_me; recent; clamp; validation; guest `401` |
 | Dashboard authz | `tests/Feature/Dashboard/DashboardAuthorizationTest.php` | Admin / PM / Employee visibility matrix |
+| Project reports | `tests/Feature/Report/ProjectReportApiTest.php` | list/detail; filters; date range; overdue/unassigned; pagination; guest `401` |
+| Employee reports | `tests/Feature/Report/EmployeeReportApiTest.php` | list/detail; `by_project`; date range; soft-deleted project exclusion |
+| Report authz | `tests/Feature/Report/ReportAuthorizationTest.php` | Admin / PM / Employee matrix |
 
 ```bash
 php artisan test
 ```
 
-Deferred: dedicated `429` test, CSRF failure cases, frontend tests, Milestone 7+ suites.
+Deferred: dedicated `429` test, CSRF failure cases, frontend tests, Milestone 8+ suites.
 
 Details: [TESTING.md](TESTING.md)
 
@@ -846,6 +886,7 @@ _(Re-check with `git status` before committing.)_
 | `docs/MILESTONE_4_…`     | Milestone 4 implementation spec       |
 | `docs/MILESTONE_5_…`     | Milestone 5 implementation spec       |
 | `docs/MILESTONE_6_…`     | Milestone 6 implementation spec       |
+| `docs/MILESTONE_7_…`     | Milestone 7 implementation spec       |
 | `PROJECT_OVERVIEW.md`    | Product overview                      |
 | `REQUIREMENTS.md`        | Functional requirements               |
 | `ARCHITECTURE.md`        | System architecture                   |
@@ -860,17 +901,17 @@ _(Re-check with `git status` before committing.)_
 | `DEVELOPMENT_ROADMAP.md` | Pointer to `ROADMAP.md`               |
 | `CHANGELOG.md`           | Milestone changelog                   |
 | `UI_PAGES.md`            | UI inventory                          |
-| `decisions/`             | ADRs (incl. `Dashboard.md`)           |
+| `decisions/`             | ADRs (incl. `Reports.md`)             |
 | `diagrams/`              | Draw.io placeholders (empty — future) |
 
 ---
 
 ## Quick start for the next session
 
-1. Read this handoff + [ROADMAP.md](ROADMAP.md) Phase 7 · confirm no Reports design ADR yet
+1. Read this handoff + [ROADMAP.md](ROADMAP.md) Phase 8 · confirm Testing milestone scope before coding
 2. Confirm git branch/status in `opsflow-api` / `opsflow-docs`
-3. ✅ Milestone 6 is complete — next is **Phase 7 — Reports** — **wait for explicit implementation approval** (and design package before coding)
-4. Do **not** invent Reports APIs/schema without an approved design
+3. ✅ Milestone 7 is complete — next is **Phase 8 — Testing** — **wait for explicit implementation approval**
+4. Do **not** invent new product modules without an approved design
 5. Do **not** modify code when the user asks for docs-only tasks
 6. Vue Pinia auth (`opsflow-web`) remains pending from earlier phases
 
@@ -900,7 +941,7 @@ cd opsflow-docs
 | Location   | `opsflow-docs/HANDOFF.md`                      |
 | Supersedes | Ad-hoc chat memory                             |
 | Maintain   | Update when milestones complete or ADRs change |
-| Ready for  | Next session → Phase 7 Reports (after design + implementation approval) |
+| Ready for  | Next session → Phase 8 Testing (after approval) |
 
 ## Project Principles
 

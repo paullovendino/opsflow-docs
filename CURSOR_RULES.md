@@ -21,9 +21,9 @@
 - Follow approved decisions in `opsflow-docs/decisions/`.
 - Prefer `opsflow-docs/docs/DOMAIN_MODEL.md` for business concepts.
 - Prefer milestone specs under `opsflow-docs/docs/` before implementing a phase.
-- Do not implement future modules early (Remarks/Activity Logs/Reports/advanced RBAC) unless the milestone says so.
-- Milestones **3–6** backend are **complete**. Do **not** implement Phase 7 (Reports) without explicit implementation approval.
-- Match existing patterns: `UserController` → Form Request → `UserService` / `UserQuery` → Resources; authorize via `UserPolicy`; lookups use `LookupController` → `LookupService` → Resources. For Projects/Tasks, mirror with Controller / Service / Query / Policy per milestone specs. For Dashboard: `DashboardController` → `ShowDashboardRequest` → `DashboardService` → `DashboardResource` + `viewDashboard` Gate per `docs/MILESTONE_6_DASHBOARD.md`.
+- Do not implement future modules early (Remarks/Activity Logs/advanced RBAC) unless the milestone says so.
+- Milestones **3–7** backend are **complete**. Do **not** implement Phase 8 (broader Testing milestone) or invent new modules without explicit approval.
+- Match existing patterns: Users/Projects/Tasks/Dashboard/Reports as documented. For Reports: `ReportController` → Form Requests → `ReportService` → Resources + `ReportPolicy` Gates per `docs/MILESTONE_7_REPORTS.md`.
 
 ## API
 
@@ -38,7 +38,7 @@
 - PostgreSQL only.
 - Use `Relation::enforceMorphMap` for polymorphic aliases.
 - Register morph aliases only for models that already exist.
-- Milestone 6 adds **no** new tables — do not invent `activity_logs` for the dashboard.
+- Milestones 6–7 add **no** new tables — do not invent `activity_logs` or report tables for these milestones.
 
 ## Frontend
 
@@ -46,4 +46,4 @@
 - Use Axios for API requests.
 - Use Vue Router navigation guards.
 - Use Composition API only.
-- Vue Dashboard UI is **out of scope** for Milestone 6 API work.
+- Vue Dashboard / Reports UI is **out of scope** for Milestone 6–7 API work.

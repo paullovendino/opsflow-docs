@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted — Milestone 3 complete; Milestone 4 complete; Milestone 5 complete (`tasks` + full Task Management APIs); Milestone 6 Dashboard complete (**schema-neutral** — no new tables)
+Accepted — Milestone 3–7 complete; Milestone 6–7 Dashboard/Reports are **schema-neutral** (no new tables)
 
 ## Context
 
@@ -73,6 +73,7 @@ Legacy single `name` column is replaced during ERD alignment. Keep `email_verifi
 | Phase 4 | `projects` + `project_members` (**Milestone 4 complete** — schema, CRUD, members, queries, authorization) |
 | Phase 5 | `tasks` (**Milestone 5 complete** — schema + CRUD + assignment + queries + authz + status) |
 | Phase 6 | **No schema change** — Dashboard aggregates over existing `projects` / `tasks` (**complete**) |
+| Phase 7 | **No schema change** — Reports aggregates over existing `projects` / `tasks` / `users` (**complete**) |
 | Later | Remarks, Activity Logs |
 
 ### Projects ERD (Milestone 4 — complete)
@@ -119,3 +120,4 @@ Do not invent schema beyond the approved ERD without updating this decision and 
 - [decisions/Project-Management.md](Project-Management.md)
 - [decisions/Task-Management.md](Task-Management.md)
 - [decisions/Dashboard.md](Dashboard.md)
+- [decisions/Reports.md](Reports.md)

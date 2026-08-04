@@ -58,7 +58,7 @@ Follows `CODING_STANDARDS.md`:
 | Queries | List search / filter / sort / pagination |
 | Models | Persistence / relationships |
 | Enums | Domain constants |
-| Policies | Coarse authorization (`UserPolicy`, `ProjectPolicy`, `TaskPolicy`, `DashboardPolicy` via `viewDashboard` Gate) |
+| Policies | Coarse authorization (`UserPolicy`, `ProjectPolicy`, `TaskPolicy`, `DashboardPolicy` via `viewDashboard` Gate; `ReportPolicy` via report Gates) |
 | Exceptions + `ApiExceptionRenderer` | Consistent API errors |
 
 Authentication example:
@@ -95,6 +95,11 @@ Dashboard example (Milestone 6 — implemented):
 
 `DashboardController` → authorize(`viewDashboard`) → `ShowDashboardRequest` → `DashboardService::summary` → `DashboardResource`  
 Read-only aggregates over `projects` / `tasks`; no new tables; recent = derived work items
+
+Reports example (Milestone 7 — implemented):
+
+`ReportController` → authorize(`ReportPolicy` Gates) → Form Requests → `ReportService` → `ProjectReportResource` / `EmployeeReportResource`  
+Read-only Project / Employee aggregates; optional date range; no new tables
 
 ---
 
@@ -164,6 +169,16 @@ Enforced via `App\Policies\TaskPolicy`. See [docs/MILESTONE_5_TASK_MANAGEMENT.md
 
 Enforced via `Gate::define('viewDashboard', [DashboardPolicy::class, 'view'])` + scoping in `DashboardService`. See [docs/MILESTONE_6_DASHBOARD.md](docs/MILESTONE_6_DASHBOARD.md).
 
+**Phase 7.4 — Implemented.** Project / Employee report abilities:
+
+| Role | Project reports | Employee report list | Employee report detail |
+|------|-----------------|----------------------|------------------------|
+| Administrator | all | ✅ | any user |
+| Project Manager | all | ✅ | any user |
+| Employee | owned-or-member | ❌ | self only |
+
+Enforced via `ReportPolicy` Gate abilities + scoping in `ReportService`. See [docs/MILESTONE_7_REPORTS.md](docs/MILESTONE_7_REPORTS.md).
+
 ---
 
 ## Cross-Cutting Concerns
@@ -226,7 +241,12 @@ API routes (`api/*`) render through `App\Exceptions\ApiExceptionRenderer` using 
 | Phase 6.3 — Recent Work Items | ✅ Implemented |
 | Phase 6.4 — Dashboard Authorization | ✅ Implemented |
 | **Milestone 6 — Dashboard** | ✅ **Complete** (6.1–6.4) |
-| Phase 7 — Reports | ⏳ Pending |
+| Phase 7.1 — Reports API Foundation | ✅ Implemented |
+| Phase 7.2 — Project Reports | ✅ Implemented |
+| Phase 7.3 — Employee Reports | ✅ Implemented |
+| Phase 7.4 — Reports Authorization | ✅ Implemented |
+| **Milestone 7 — Reports** | ✅ **Complete** (7.1–7.4) |
+| Phase 8 — Testing | ⏳ Pending |
 | Remarks / Activity Logs | Planned |
 | Vue Pinia auth | Planned |
 | Deployment | Planned |

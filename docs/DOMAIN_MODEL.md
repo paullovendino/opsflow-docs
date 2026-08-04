@@ -491,7 +491,38 @@ A **read-only operational summary** for authenticated users: project/task statis
 
 ### Future Expansion
 
-- Activity-Log-backed feeds, date-range analytics, Reports (Phase 7), Vue widgets, caching
+- Activity-Log-backed feeds, date-range analytics via Reports (Milestone 7), Vue widgets, caching
+
+---
+
+## Reports (Milestone 7 — ✅ Implemented)
+
+### Purpose
+
+**Read-only, filterable analytical summaries** focused on Projects and Employees (assignees), including optional date-range windows on task aggregates.
+
+### Responsibilities
+
+- Project report list + detail (task breakdowns, overdue, unassigned, members count)
+- Employee report list (Admin/PM) + detail (assignment aggregates, by-project on detail)
+- Respect Project / Task / User visibility rules
+
+### Relationships
+
+- Not a persisted entity — computed from Project, Task, and User
+- Distinct from Dashboard (snapshot) and from Activity Logs (audit)
+
+### Important Business Rules
+
+- Routes under `/api/v1/reports/...` (**implemented**)
+- No new database tables in Milestone 7
+- Optional `from_date` / `to_date` filter tasks by `created_at` date
+- Overdue definition matches Dashboard (Milestone 6)
+- Spec: [MILESTONE_7_REPORTS.md](MILESTONE_7_REPORTS.md) · ADR: [decisions/Reports.md](../decisions/Reports.md)
+
+### Future Expansion
+
+- File exports, scheduled reports, Activity-Log analytics, Vue Reports UI
 
 ---
 
@@ -499,9 +530,9 @@ A **read-only operational summary** for authenticated users: project/task statis
 
 1. **Structure first:** Organization defines Departments, Job Titles, and Roles.
 2. **People next:** Users are created with a Role and optional Department/Job Title.
-3. **Authorization:** Role decides what the User may do (User Management in Milestone 3; Projects in Milestone 4; Tasks in Milestone 5; Dashboard view in Milestone 6).
-4. **Work:** Users create Projects, add members, create/assign Tasks; Dashboard summarizes that work; later leave Remarks and generate Activity Logs.
-5. **Independence preserved:** Changing a user’s Job Title must not silently change permissions; changing Role must not silently change department membership; project membership does not grant system Role permissions; task assignment does not grant Project Management mutate rights beyond the Task matrix; Dashboard does not invent separate ACLs beyond Project/Task visibility.
+3. **Authorization:** Role decides what the User may do (User Management in Milestone 3; Projects in Milestone 4; Tasks in Milestone 5; Dashboard view in Milestone 6; Reports in Milestone 7).
+4. **Work:** Users create Projects, add members, create/assign Tasks; Dashboard summarizes snapshots; Reports analyze by project/employee; later leave Remarks and generate Activity Logs.
+5. **Independence preserved:** Changing a user’s Job Title must not silently change permissions; changing Role must not silently change department membership; project membership does not grant system Role permissions; task assignment does not grant Project Management mutate rights beyond the Task matrix; Dashboard/Reports do not invent separate ACLs beyond Project/Task/User visibility.
 
 ---
 
@@ -516,8 +547,10 @@ A **read-only operational summary** for authenticated users: project/task statis
 | [decisions/Project-Management.md](../decisions/Project-Management.md) | Milestone 4 ADR |
 | [decisions/Task-Management.md](../decisions/Task-Management.md) | Milestone 5 ADR |
 | [decisions/Dashboard.md](../decisions/Dashboard.md) | Milestone 6 ADR |
+| [decisions/Reports.md](../decisions/Reports.md) | Milestone 7 ADR |
 | [decisions/Database.md](../decisions/Database.md) | Database ADR |
 | [MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md](MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md) | Milestone 3 implementation specification |
 | [MILESTONE_4_PROJECT_MANAGEMENT.md](MILESTONE_4_PROJECT_MANAGEMENT.md) | Milestone 4 implementation specification |
 | [MILESTONE_5_TASK_MANAGEMENT.md](MILESTONE_5_TASK_MANAGEMENT.md) | Milestone 5 implementation specification |
 | [MILESTONE_6_DASHBOARD.md](MILESTONE_6_DASHBOARD.md) | Milestone 6 implementation specification |
+| [MILESTONE_7_REPORTS.md](MILESTONE_7_REPORTS.md) | Milestone 7 implementation specification |

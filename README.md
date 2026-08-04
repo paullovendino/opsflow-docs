@@ -42,6 +42,11 @@ Central documentation for the OpsFlow SaaS platform.
 | Phase 6.2 — Project & Task Statistics | ✅ Implemented |
 | Phase 6.3 — Recent Work Items | ✅ Implemented |
 | Phase 6.4 — Dashboard Authorization | ✅ Implemented |
+| **Milestone 7 — Reports** | ✅ **Complete** (7.1–7.4) |
+| Phase 7.1 — Reports API Foundation | ✅ Implemented |
+| Phase 7.2 — Project Reports | ✅ Implemented |
+| Phase 7.3 — Employee Reports | ✅ Implemented |
+| Phase 7.4 — Reports Authorization | ✅ Implemented |
 
 ## Documentation Index
 
@@ -54,6 +59,7 @@ Central documentation for the OpsFlow SaaS platform.
 | [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md) | Milestone 4 implementation specification |
 | [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md) | Milestone 5 implementation specification |
 | [docs/MILESTONE_6_DASHBOARD.md](docs/MILESTONE_6_DASHBOARD.md) | Milestone 6 implementation specification |
+| [docs/MILESTONE_7_REPORTS.md](docs/MILESTONE_7_REPORTS.md) | Milestone 7 implementation specification |
 | [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md) | Product overview and tech stack |
 | [REQUIREMENTS.md](REQUIREMENTS.md) | Functional and non-functional requirements |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | System and backend architecture |
@@ -83,4 +89,5 @@ Central documentation for the OpsFlow SaaS platform.
 - Projects (Milestone 4): `/api/v1/projects`, members, queries, `ProjectPolicy`
 - Tasks (Milestone 5 complete): `/api/v1/tasks` CRUD, assignment, queries, `TaskPolicy`, status — see [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md)
 - Dashboard (Milestone 6 complete): `GET /api/v1/dashboard` — see [docs/MILESTONE_6_DASHBOARD.md](docs/MILESTONE_6_DASHBOARD.md)
-- Next: Phase 7 — Reports — see [HANDOFF.md](HANDOFF.md) · [ROADMAP.md](ROADMAP.md)
+- Reports (Milestone 7 complete): `/api/v1/reports/projects`, `/api/v1/reports/employees` — see [docs/MILESTONE_7_REPORTS.md](docs/MILESTONE_7_REPORTS.md)
+- Next: Phase 8 — Testing — see [HANDOFF.md](HANDOFF.md) · [ROADMAP.md](ROADMAP.md)

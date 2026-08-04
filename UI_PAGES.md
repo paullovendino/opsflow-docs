@@ -57,9 +57,19 @@
 
 ---
 
+## Reports
+
+> Milestone 7 API complete; Vue UI later  
+> Spec: [docs/MILESTONE_7_REPORTS.md](docs/MILESTONE_7_REPORTS.md)
+
+- Project Reports (API: `/api/v1/reports/projects`)
+- Employee Reports (API: `/api/v1/reports/employees`)
+
+---
+
 ## Activity Logs
 
-> Planned — future (not Milestone 6; dashboard recent ≠ activity logs)
+> Planned — future (not Milestone 6 or 7; dashboard recent ≠ activity logs; reports ≠ activity logs)
 
 - Activity List
 
