@@ -8,7 +8,10 @@
 
 ## Dashboard
 
-- Dashboard Overview
+> Milestone 6 API complete; Vue UI later  
+> Spec: [docs/MILESTONE_6_DASHBOARD.md](docs/MILESTONE_6_DASHBOARD.md)
+
+- Dashboard Overview (API: `GET /api/v1/dashboard` — statistics + recent work items; Vue pending)
 
 ---
 
@@ -44,7 +47,7 @@
 
 ## Task Management
 
-> Milestone 5 API design approved; Vue UI later
+> Milestone 5 API complete; Vue UI later
 
 - Task List
 - Create Task
@@ -55,6 +58,8 @@
 ---
 
 ## Activity Logs
+
+> Planned — future (not Milestone 6; dashboard recent ≠ activity logs)
 
 - Activity List
 

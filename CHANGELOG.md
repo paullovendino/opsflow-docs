@@ -8,6 +8,23 @@ Format follows a lightweight Keep a Changelog style.
 
 ## [Unreleased] — v1.0.0 (Development)
 
+### Dashboard (Milestone 6) — ✅ Implemented · Milestone 6 complete
+
+- `GET /api/v1/dashboard` under `auth:sanctum`
+- `DashboardController` / `DashboardService` / `ShowDashboardRequest` / `DashboardResource`
+- `DashboardPolicy` via `Gate::define('viewDashboard')`; Admin/PM org-wide; Employee owned-or-member scoping
+- Statistics: project/task totals, by_status, by_priority; overdue; assigned_to_me
+- Recent work items merged by `updated_at`; `recent_limit` default 10, max 25 (clamp)
+- No new tables; soft-deleted rows excluded
+- PHPUnit Feature suites: `DashboardApiTest`, `DashboardAuthorizationTest`
+- Docs synchronized; next is Phase 7 — Reports (pending approval)
+
+### Dashboard design package (Milestone 6) — 📋 Documentation only
+
+- Created [docs/MILESTONE_6_DASHBOARD.md](docs/MILESTONE_6_DASHBOARD.md) and [decisions/Dashboard.md](decisions/Dashboard.md)
+- Read-only `GET /api/v1/dashboard`; no new tables; statistics + derived recent work items; visibility mirrors Projects/Tasks
+- Companion docs synchronized; **implementation completed in Milestone 6**
+
 ### Task Status Workflow (Phase 5.6) — ✅ Implemented · Milestone 5 complete
 
 - `PATCH /api/v1/tasks/{task}/status` under `auth:sanctum`
@@ -15,7 +32,7 @@ Format follows a lightweight Keep a Changelog style.
 - Any `TaskStatus` value accepted; no transition graph; create/update remain status-free
 - Authorize via existing `TaskPolicy::updateStatus` (Employee: assigned to self + accessible project)
 - PHPUnit Feature suite: `tests/Feature/Task/TaskStatusApiTest.php`
-- Milestone 5 (Task Management) complete; docs synchronized; next is Phase 6 — Dashboard (pending approval)
+- Milestone 5 (Task Management) complete; docs synchronized; next is Milestone 6 — Dashboard (design package)
 
 ### Task Authorization (Phase 5.5) — ✅ Implemented
 

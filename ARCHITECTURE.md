@@ -58,7 +58,7 @@ Follows `CODING_STANDARDS.md`:
 | Queries | List search / filter / sort / pagination |
 | Models | Persistence / relationships |
 | Enums | Domain constants |
-| Policies | Coarse authorization (`UserPolicy`, `ProjectPolicy`, `TaskPolicy`) |
+| Policies | Coarse authorization (`UserPolicy`, `ProjectPolicy`, `TaskPolicy`, `DashboardPolicy` via `viewDashboard` Gate) |
 | Exceptions + `ApiExceptionRenderer` | Consistent API errors |
 
 Authentication example:
@@ -90,6 +90,11 @@ Task Management example (Milestone 5 — implemented):
 `TaskController` → authorize(`TaskPolicy`) → Form Requests → `TaskService` → `Task` → `TaskResource`  
 `index` → `IndexTasksRequest` → `TaskService::list` → `TaskQuery` (+ Employee visibility) → paginated `TaskResource` + `meta`  
 Status via `PATCH .../status` (`UpdateTaskStatusRequest` / `TaskService::changeStatus`)
+
+Dashboard example (Milestone 6 — implemented):
+
+`DashboardController` → authorize(`viewDashboard`) → `ShowDashboardRequest` → `DashboardService::summary` → `DashboardResource`  
+Read-only aggregates over `projects` / `tasks`; no new tables; recent = derived work items
 
 ---
 
@@ -149,6 +154,16 @@ Enforced via `App\Policies\ProjectPolicy` and `$this->authorize()` in `ProjectCo
 
 Enforced via `App\Policies\TaskPolicy`. See [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md).
 
+**Phase 6.4 — Implemented.** Coarse dashboard view + data scoping:
+
+| Role | Dashboard |
+|------|-----------|
+| Administrator | View; org-wide aggregates |
+| Project Manager | View; org-wide aggregates |
+| Employee | View; owned-or-member scoped aggregates |
+
+Enforced via `Gate::define('viewDashboard', [DashboardPolicy::class, 'view'])` + scoping in `DashboardService`. See [docs/MILESTONE_6_DASHBOARD.md](docs/MILESTONE_6_DASHBOARD.md).
+
 ---
 
 ## Cross-Cutting Concerns
@@ -206,7 +221,12 @@ API routes (`api/*`) render through `App\Exceptions\ApiExceptionRenderer` using 
 | Phase 5.5 — Task Authorization | ✅ Implemented |
 | Phase 5.6 — Task Status Workflow | ✅ Implemented |
 | **Milestone 5** | ✅ **Complete** (5.1–5.6) |
-| Phase 6 — Dashboard | ⏳ Pending |
+| Phase 6.1 — Dashboard API Foundation | ✅ Implemented |
+| Phase 6.2 — Project & Task Statistics | ✅ Implemented |
+| Phase 6.3 — Recent Work Items | ✅ Implemented |
+| Phase 6.4 — Dashboard Authorization | ✅ Implemented |
+| **Milestone 6 — Dashboard** | ✅ **Complete** (6.1–6.4) |
+| Phase 7 — Reports | ⏳ Pending |
 | Remarks / Activity Logs | Planned |
 | Vue Pinia auth | Planned |
 | Deployment | Planned |

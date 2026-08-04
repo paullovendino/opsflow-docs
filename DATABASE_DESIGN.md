@@ -274,7 +274,7 @@ Conceptual only in [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md). Physical column
 
 ### Activity Logs
 
-> Planned — later phase
+> Planned — later phase (not Milestone 6)
 
 - id
 - user_id
@@ -283,6 +283,16 @@ Conceptual only in [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md). Physical column
 - description
 - ip_address
 - created_at
+
+Milestone 6 Dashboard “recent” uses Project/Task `updated_at` only — **no** `activity_logs` table.
+
+---
+
+### Dashboard
+
+> Milestone 6 — ✅ Implemented · **no physical table**
+
+Dashboard is a read-only aggregate API (`GET /api/v1/dashboard`) over `projects` and `tasks`. See [docs/MILESTONE_6_DASHBOARD.md](docs/MILESTONE_6_DASHBOARD.md) and [decisions/Dashboard.md](decisions/Dashboard.md).
 
 ---
 

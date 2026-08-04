@@ -32,6 +32,11 @@ OpsFlow development roadmap by phase.
 | Phase 5.4 | Task Queries | ✅ Implemented |
 | Phase 5.5 | Task Authorization | ✅ Implemented |
 | Phase 5.6 | Task Status Workflow | ✅ Implemented |
+| **Milestone 6** | **Dashboard** | ✅ **Complete** (6.1–6.4) |
+| Phase 6.1 | Dashboard API Foundation | ✅ Implemented |
+| Phase 6.2 | Project & Task Statistics | ✅ Implemented |
+| Phase 6.3 | Recent Work Items | ✅ Implemented |
+| Phase 6.4 | Dashboard Authorization | ✅ Implemented |
 
 ---
 
@@ -287,17 +292,54 @@ Specification:
 
 ### Explicitly out of scope (Milestone 5)
 
-Multiple assignees, attachments, checklists, labels, time tracking, dependencies/subtasks, activity logs, remarks/comments, notifications, recurring tasks, Vue Task UI, dashboard/report aggregates.
+Multiple assignees, attachments, checklists, labels, time tracking, dependencies/subtasks, activity logs, remarks/comments, notifications, recurring tasks, Vue Task UI. (Dashboard is Milestone 6.)
 
 ---
 
 ## Phase 6 — Dashboard
 
-**Status: Pending**
+**Status: ✅ Complete (Phases 6.1–6.4)**  
+**Spec:** [docs/MILESTONE_6_DASHBOARD.md](docs/MILESTONE_6_DASHBOARD.md) · **ADR:** [decisions/Dashboard.md](decisions/Dashboard.md)
 
-- Charts
-- Statistics
-- Recent Activities
+> Read-only aggregates over existing Projects/Tasks. **No new tables.** Recent feed = derived work items (not Activity Logs). Vue UI deferred.
+
+### Phase 6.1 — Dashboard API Foundation
+
+**Status: ✅ Implemented**
+
+- [x] `GET /api/v1/dashboard` under `auth:sanctum`
+- [x] `DashboardController` / `DashboardService` / `DashboardResource` / `ShowDashboardRequest`
+- [x] Guest `401`; response envelope + approved `data` shape scaffold
+- [x] PHPUnit Feature tests (foundation)
+
+### Phase 6.2 — Project & Task Statistics
+
+**Status: ✅ Implemented**
+
+- [x] Project `total` + `by_status` (zero-filled `ProjectStatus`)
+- [x] Task `total` + `by_status` + `by_priority` + `overdue` + `assigned_to_me`
+- [x] Visibility scoping (Admin/PM all; Employee owned-or-member)
+- [x] PHPUnit Feature tests (statistics)
+
+### Phase 6.3 — Recent Work Items
+
+**Status: ✅ Implemented**
+
+- [x] Merged recent projects + tasks by `updated_at` desc
+- [x] `recent_limit` (default 10, max 25, clamp)
+- [x] PHPUnit Feature tests (recent feed)
+
+### Phase 6.4 — Dashboard Authorization
+
+**Status: ✅ Implemented**
+
+- [x] `DashboardPolicy` (view for all authenticated roles) + `$this->authorize('viewDashboard')`
+- [x] Employee isolation Feature tests
+- [x] PHPUnit Feature suite: `DashboardAuthorizationTest`
+
+### Explicitly out of scope (Milestone 6)
+
+Vue Dashboard UI, Activity Logs, Remarks, Reports, caching/materialized views, date-range analytics, user-directory stats, nested project dashboards, live updates.
 
 ---
 

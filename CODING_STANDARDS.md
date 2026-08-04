@@ -170,6 +170,20 @@ Details: [AUTHENTICATION.md](AUTHENTICATION.md)
 
 ---
 
+## Dashboard (Milestone 6 — ✅ Complete)
+
+> Follow [docs/MILESTONE_6_DASHBOARD.md](docs/MILESTONE_6_DASHBOARD.md) and [decisions/Dashboard.md](decisions/Dashboard.md). Do not invent beyond the approved ADR.
+
+- Thin `DashboardController`; business logic in `App\Services\Dashboard\DashboardService`
+- Validate query params with `ShowDashboardRequest` (`recent_limit`)
+- Authorize with `Gate::define('viewDashboard', [DashboardPolicy::class, 'view'])` via `$this->authorize('viewDashboard')`
+- Respond with `DashboardResource` (never raw models / query rows)
+- Read-only aggregates over existing `projects` / `tasks` — **no new tables**
+- Recent feed = derived work items (not Activity Logs)
+- Visibility: Admin/PM org-wide; Employee owned-or-member (same rules as Project/Task)
+
+---
+
 ## Frontend
 
 - Vue 3 Composition API only.

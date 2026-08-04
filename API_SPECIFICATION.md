@@ -907,14 +907,83 @@ Remark endpoints will be defined when the Remarks milestone begins.
 
 ## Dashboard
 
-> Planned
+> Milestone 6 — ✅ Implemented  
+> Spec: [docs/MILESTONE_6_DASHBOARD.md](docs/MILESTONE_6_DASHBOARD.md) · ADR: [decisions/Dashboard.md](decisions/Dashboard.md)
 
+### Show dashboard
+
+```http
 GET /api/v1/dashboard
+Authorization: Sanctum session (auth:sanctum)
+```
+
+**Query parameters**
+
+| Param | Rules | Default |
+|-------|--------|---------|
+| `recent_limit` | optional integer; clamped to 1–25 | `10` |
+
+**Authorization:** All authenticated roles may view. Aggregate data is scoped: Admin/PM org-wide; Employee owned-or-member projects (and tasks therein).
+
+**Success `data` shape**
+
+```json
+{
+  "projects": {
+    "total": 0,
+    "by_status": {
+      "planning": 0,
+      "active": 0,
+      "on_hold": 0,
+      "completed": 0,
+      "archived": 0
+    }
+  },
+  "tasks": {
+    "total": 0,
+    "by_status": {
+      "todo": 0,
+      "in_progress": 0,
+      "in_review": 0,
+      "blocked": 0,
+      "completed": 0,
+      "cancelled": 0
+    },
+    "by_priority": {
+      "low": 0,
+      "medium": 0,
+      "high": 0,
+      "urgent": 0
+    },
+    "overdue": 0,
+    "assigned_to_me": 0
+  },
+  "recent": []
+}
+```
+
+**Recent item discriminators**
+
+| `type` | Fields |
+|--------|--------|
+| `task` | `id`, `title`, `status`, `project_id`, `updated_at` |
+| `project` | `id`, `name`, `status`, `updated_at` |
+
+**Notes**
+
+- Read-only; no create/update/delete dashboard routes
+- Soft-deleted projects/tasks excluded
+- Overdue: `due_date` &lt; today and status not `completed` / `cancelled`
+- `by_status` / `by_priority` keys always present (zero-filled)
+- Recent feed is derived work items (not Activity Logs)
+- Guest → `401`
+
+**Classes:** `DashboardController`, `DashboardService`, `ShowDashboardRequest`, `DashboardResource`, `DashboardPolicy` (`Gate::define('viewDashboard')`)
 
 ---
 
 ## Activity Logs
 
-> Planned
+> Planned — future (not Milestone 6)
 
-GET /api/v1/activity-logs
+`GET /api/v1/activity-logs` will be defined when the Activity Logs milestone begins. Milestone 6 dashboard “recent” does **not** use this table.

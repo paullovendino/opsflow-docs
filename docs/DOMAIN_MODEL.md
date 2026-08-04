@@ -443,7 +443,7 @@ An auditable record of significant actions taken in the system.
 
 - Record who did what, in which module, with a description
 - Support operational visibility and accountability
-- Feed recent-activity views on dashboards
+- Eventually feed true audit-style recent-activity views
 
 ### Relationships
 
@@ -452,8 +452,9 @@ An auditable record of significant actions taken in the system.
 
 ### Important Business Rules
 
-- Not implemented in Milestone 3
+- **Not** implemented in Milestones 3–6
 - Distinct from Remarks: logs are system/audit oriented
+- Distinct from Milestone 6 Dashboard **recent work items** (derived from Project/Task `updated_at`)
 - Retention and detail level decided in a later milestone
 
 ### Future Expansion
@@ -462,13 +463,45 @@ An auditable record of significant actions taken in the system.
 
 ---
 
+## Dashboard (Milestone 6 — ✅ Implemented)
+
+### Purpose
+
+A **read-only operational summary** for authenticated users: project/task statistics, card metrics (overdue, assigned-to-me), and a recent work-items feed.
+
+### Responsibilities
+
+- Aggregate counts suitable for statistics cards and frontend charts
+- Respect the same project/task visibility rules as Milestones 4–5
+- Surface recently updated Projects and Tasks (derived feed)
+
+### Relationships
+
+- Not a persisted entity — computed from Project and Task
+- Does **not** require Activity Log or Remark tables in Milestone 6
+
+### Important Business Rules
+
+- Single endpoint: `GET /api/v1/dashboard` (**implemented**)
+- No new database tables in Milestone 6
+- Soft-deleted projects/tasks excluded
+- Admin/PM: organization-wide aggregates; Employee: owned-or-member scope
+- Overdue tasks: `due_date` &lt; today and status not `completed` / `cancelled`
+- Spec: [MILESTONE_6_DASHBOARD.md](MILESTONE_6_DASHBOARD.md) · ADR: [decisions/Dashboard.md](../decisions/Dashboard.md)
+
+### Future Expansion
+
+- Activity-Log-backed feeds, date-range analytics, Reports (Phase 7), Vue widgets, caching
+
+---
+
 ## How Entities Interact in OpsFlow
 
 1. **Structure first:** Organization defines Departments, Job Titles, and Roles.
 2. **People next:** Users are created with a Role and optional Department/Job Title.
-3. **Authorization:** Role decides what the User may do (User Management in Milestone 3; Projects in Milestone 4; Tasks in Milestone 5).
-4. **Work:** Users create Projects, add members, create/assign Tasks, and later leave Remarks and generate Activity Logs.
-5. **Independence preserved:** Changing a user’s Job Title must not silently change permissions; changing Role must not silently change department membership; project membership does not grant system Role permissions; task assignment does not grant Project Management mutate rights beyond the Task matrix.
+3. **Authorization:** Role decides what the User may do (User Management in Milestone 3; Projects in Milestone 4; Tasks in Milestone 5; Dashboard view in Milestone 6).
+4. **Work:** Users create Projects, add members, create/assign Tasks; Dashboard summarizes that work; later leave Remarks and generate Activity Logs.
+5. **Independence preserved:** Changing a user’s Job Title must not silently change permissions; changing Role must not silently change department membership; project membership does not grant system Role permissions; task assignment does not grant Project Management mutate rights beyond the Task matrix; Dashboard does not invent separate ACLs beyond Project/Task visibility.
 
 ---
 
@@ -482,7 +515,9 @@ An auditable record of significant actions taken in the system.
 | [decisions/Organization-User-Management.md](../decisions/Organization-User-Management.md) | Milestone 3 ADR |
 | [decisions/Project-Management.md](../decisions/Project-Management.md) | Milestone 4 ADR |
 | [decisions/Task-Management.md](../decisions/Task-Management.md) | Milestone 5 ADR |
+| [decisions/Dashboard.md](../decisions/Dashboard.md) | Milestone 6 ADR |
 | [decisions/Database.md](../decisions/Database.md) | Database ADR |
 | [MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md](MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md) | Milestone 3 implementation specification |
 | [MILESTONE_4_PROJECT_MANAGEMENT.md](MILESTONE_4_PROJECT_MANAGEMENT.md) | Milestone 4 implementation specification |
 | [MILESTONE_5_TASK_MANAGEMENT.md](MILESTONE_5_TASK_MANAGEMENT.md) | Milestone 5 implementation specification |
+| [MILESTONE_6_DASHBOARD.md](MILESTONE_6_DASHBOARD.md) | Milestone 6 implementation specification |

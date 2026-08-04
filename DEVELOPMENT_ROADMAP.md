@@ -26,14 +26,19 @@ The canonical roadmap lives in [ROADMAP.md](ROADMAP.md).
   - ✅ Phase 5.4 — Task Queries
   - ✅ Phase 5.5 — Task Authorization
   - ✅ Phase 5.6 — Task Status Workflow
+- ✅ **Milestone 6 — Dashboard (Complete)**
+  - ✅ Phase 6.1 — Dashboard API Foundation
+  - ✅ Phase 6.2 — Project & Task Statistics
+  - ✅ Phase 6.3 — Recent Work Items
+  - ✅ Phase 6.4 — Dashboard Authorization
 
 ## Next
 
-**Phase 6 — Dashboard** (pending approval)
+**Phase 7 — Reports** (pending approval)
 
 Also pending from earlier phases: Vue 3 / Pinia authentication (`opsflow-web`).
 
-Specification pointer: [ROADMAP.md](ROADMAP.md)
+Canonical roadmap: [ROADMAP.md](ROADMAP.md)
 
 ## Later
 

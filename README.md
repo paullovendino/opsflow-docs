@@ -37,6 +37,11 @@ Central documentation for the OpsFlow SaaS platform.
 | Phase 5.4 — Task Queries | ✅ Implemented |
 | Phase 5.5 — Task Authorization | ✅ Implemented |
 | Phase 5.6 — Task Status Workflow | ✅ Implemented |
+| **Milestone 6 — Dashboard** | ✅ **Complete** (6.1–6.4) |
+| Phase 6.1 — Dashboard API Foundation | ✅ Implemented |
+| Phase 6.2 — Project & Task Statistics | ✅ Implemented |
+| Phase 6.3 — Recent Work Items | ✅ Implemented |
+| Phase 6.4 — Dashboard Authorization | ✅ Implemented |
 
 ## Documentation Index
 
@@ -48,6 +53,7 @@ Central documentation for the OpsFlow SaaS platform.
 | [docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md](docs/MILESTONE_3_ORGANIZATION_USER_MANAGEMENT.md) | Milestone 3 implementation specification |
 | [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md) | Milestone 4 implementation specification |
 | [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md) | Milestone 5 implementation specification |
+| [docs/MILESTONE_6_DASHBOARD.md](docs/MILESTONE_6_DASHBOARD.md) | Milestone 6 implementation specification |
 | [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md) | Product overview and tech stack |
 | [REQUIREMENTS.md](REQUIREMENTS.md) | Functional and non-functional requirements |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | System and backend architecture |
@@ -76,4 +82,5 @@ Central documentation for the OpsFlow SaaS platform.
 - Authorization (Phase 3.6): coarse User Management policies (`UserPolicy`)
 - Projects (Milestone 4): `/api/v1/projects`, members, queries, `ProjectPolicy`
 - Tasks (Milestone 5 complete): `/api/v1/tasks` CRUD, assignment, queries, `TaskPolicy`, status — see [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md)
-- Next: Phase 6 — Dashboard — see [HANDOFF.md](HANDOFF.md) · [ROADMAP.md](ROADMAP.md)
+- Dashboard (Milestone 6 complete): `GET /api/v1/dashboard` — see [docs/MILESTONE_6_DASHBOARD.md](docs/MILESTONE_6_DASHBOARD.md)
+- Next: Phase 7 — Reports — see [HANDOFF.md](HANDOFF.md) · [ROADMAP.md](ROADMAP.md)

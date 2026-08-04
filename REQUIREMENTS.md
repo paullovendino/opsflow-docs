@@ -28,10 +28,16 @@ Department CRUD, Job Title CRUD, teams, branches, and organization settings are 
 
 ## Dashboard
 
-- Project summary
-- Task summary
-- Recent activities
-- Statistics cards
+> Milestone 6 — ✅ Complete (Phases 6.1–6.4)  
+> Spec: [docs/MILESTONE_6_DASHBOARD.md](docs/MILESTONE_6_DASHBOARD.md) · ADR: [decisions/Dashboard.md](decisions/Dashboard.md)
+
+- [x] Project summary (`projects.total`, `projects.by_status`)
+- [x] Task summary (`tasks.total`, `tasks.by_status`, `tasks.by_priority`)
+- [x] Statistics cards (`overdue`, `assigned_to_me`)
+- [x] Recent work items (derived from projects/tasks — not Activity Logs)
+- [x] Chart-ready JSON breakdowns (backend does not render charts)
+- [x] Visibility: Admin/PM org-wide; Employee owned-or-member
+- [x] `GET /api/v1/dashboard` under `auth:sanctum`
 
 ---
 
@@ -101,6 +107,8 @@ Department CRUD, Job Title CRUD, teams, branches, and organization settings are 
 ---
 
 ## Activity Logs
+
+> Planned — future (not Milestone 6)
 
 - User actions
 - Task updates

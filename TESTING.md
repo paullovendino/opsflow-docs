@@ -197,7 +197,7 @@ Spec: [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEME
 | 4.4 | `tests/Feature/Project/ProjectListQueryTest.php` | ✅ search, filters, sort, pagination, clamp, validation |
 | 4.5 | `tests/Feature/Project/ProjectAuthorizationTest.php` | ✅ Admin / PM / Employee matrix (owned-or-member for Employee) |
 
-## Task Management (Milestone 5 — in progress)
+## Task Management (Milestone 5 — ✅ Complete)
 
 Spec: [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md)
 
@@ -212,9 +212,21 @@ Spec: [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md)
 
 ---
 
+## Dashboard (Milestone 6 — ✅ Complete)
+
+Spec: [docs/MILESTONE_6_DASHBOARD.md](docs/MILESTONE_6_DASHBOARD.md) · ADR: [decisions/Dashboard.md](decisions/Dashboard.md)
+
+| Phase | Path | Coverage |
+|-------|------|----------|
+| 6.1–6.3 | `tests/Feature/Dashboard/DashboardApiTest.php` | ✅ envelope; statistics; overdue; assigned_to_me; recent merge/limit/clamp; guest `401`; validation |
+| 6.4 | `tests/Feature/Dashboard/DashboardAuthorizationTest.php` | ✅ Admin / PM / Employee visibility matrix; policy view |
+
+---
+
 ## Remaining coverage (not yet)
 
 - Explicit `429` rate-limit assertion
 - CSRF rejection cases
 - Frontend Pinia auth tests
-- Milestone 6+ suites
+- Milestone 7+ suites (Reports)
+- Activity Logs suites

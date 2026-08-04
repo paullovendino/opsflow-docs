@@ -21,9 +21,9 @@
 - Follow approved decisions in `opsflow-docs/decisions/`.
 - Prefer `opsflow-docs/docs/DOMAIN_MODEL.md` for business concepts.
 - Prefer milestone specs under `opsflow-docs/docs/` before implementing a phase.
-- Do not implement future modules early (Projects/Tasks/Remarks/advanced RBAC) unless the milestone says so.
-- Current Milestone 3 backend is **complete**. Phases **4.1–4.3** are complete — do **not** start Phase 4.4 without explicit implementation approval.
-- Match existing patterns: `UserController` → Form Request → `UserService` / `UserQuery` → Resources; authorize via `UserPolicy`; lookups use `LookupController` → `LookupService` → Resources (no Form Requests for collection GETs). For Projects, mirror with `ProjectController` / `ProjectService` / `ProjectQuery` / `ProjectPolicy` per `docs/MILESTONE_4_PROJECT_MANAGEMENT.md`.
+- Do not implement future modules early (Remarks/Activity Logs/Reports/advanced RBAC) unless the milestone says so.
+- Milestones **3–6** backend are **complete**. Do **not** implement Phase 7 (Reports) without explicit implementation approval.
+- Match existing patterns: `UserController` → Form Request → `UserService` / `UserQuery` → Resources; authorize via `UserPolicy`; lookups use `LookupController` → `LookupService` → Resources. For Projects/Tasks, mirror with Controller / Service / Query / Policy per milestone specs. For Dashboard: `DashboardController` → `ShowDashboardRequest` → `DashboardService` → `DashboardResource` + `viewDashboard` Gate per `docs/MILESTONE_6_DASHBOARD.md`.
 
 ## API
 
@@ -38,6 +38,7 @@
 - PostgreSQL only.
 - Use `Relation::enforceMorphMap` for polymorphic aliases.
 - Register morph aliases only for models that already exist.
+- Milestone 6 adds **no** new tables — do not invent `activity_logs` for the dashboard.
 
 ## Frontend
 
@@ -45,3 +46,4 @@
 - Use Axios for API requests.
 - Use Vue Router navigation guards.
 - Use Composition API only.
+- Vue Dashboard UI is **out of scope** for Milestone 6 API work.

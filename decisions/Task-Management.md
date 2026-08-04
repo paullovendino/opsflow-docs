@@ -113,7 +113,7 @@ Mirror Project / User Management:
 
 ### Explicitly out of scope for Milestone 5
 
-Multiple assignees, attachments, checklists, labels, time tracking, dependencies/subtasks, activity logs, remarks/comments, notifications, recurring tasks, project transfer of tasks, restricted transition state machines, Vue Task UI, dashboard/report aggregates.
+Multiple assignees, attachments, checklists, labels, time tracking, dependencies/subtasks, activity logs, remarks/comments, notifications, recurring tasks, project transfer of tasks, restricted transition state machines, Vue Task UI. (Dashboard aggregates are Milestone 6 — see [decisions/Dashboard.md](Dashboard.md).)
 
 ## Consequences
 

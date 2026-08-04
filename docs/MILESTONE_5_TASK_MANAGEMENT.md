@@ -476,8 +476,10 @@ Explicitly deferred (do **not** implement in Milestone 5):
 - Moving a task to another project (`project_id` change)
 - Restricted status transition state machine (graph enforcement)
 - Vue Task Management UI
-- Dashboard / Reports aggregates
 - Nested-only routes under `/projects/{project}/tasks` as the primary API (top-level `/api/v1/tasks` is approved)
+- Reports aggregates (Phase 7)
+
+> Note: Dashboard aggregates moved to Milestone 6 — see [MILESTONE_6_DASHBOARD.md](MILESTONE_6_DASHBOARD.md).
 
 ---
 
