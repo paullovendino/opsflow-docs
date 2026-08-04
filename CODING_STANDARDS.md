@@ -205,7 +205,11 @@ Details: [AUTHENTICATION.md](AUTHENTICATION.md)
 - Use Pinia.
 - Use Axios (`withCredentials: true` for Sanctum SPA auth).
 - Use Vue Router guards.
+- Use Tailwind CSS (no UI component framework unless approved via ADR).
 - Keep components small and reusable.
+- Milestone 8 structure: nested `layouts/` + `views/`, `services/` for HTTP, `stores/` for Pinia — see [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md).
+- Login auth errors stay inline on the login form; do not auto-route every API `403` to `/403`.
+- Do not call Dashboard/Users/Projects/Tasks/Reports APIs for product UI inside Milestone 8.
 
 ---
 

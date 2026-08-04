@@ -239,6 +239,7 @@ Spec: [docs/MILESTONE_7_REPORTS.md](docs/MILESTONE_7_REPORTS.md) · ADR: [decisi
 
 - Explicit `429` rate-limit assertion
 - CSRF rejection cases
-- Frontend Pinia auth tests
-- Milestone 8+ broader testing suites
+- Frontend automated tests (**Phase 9 — Testing**; after Milestone 8 SPA exists)
 - Activity Logs suites
+
+Milestone 8 (Frontend Foundation) does **not** require a Vitest/Cypress suite — manual auth/shell checks only. See [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md).

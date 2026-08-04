@@ -123,4 +123,16 @@ Align credentials with `phpunit.xml` or override via environment.
 
 ## Frontend
 
-Vue SPA setup is pending (`opsflow-web`). When available, run it on Vite port `5173` to match CORS and Sanctum stateful defaults.
+`opsflow-web` is a Vue 3 + Vite scaffold. **Milestone 8 — Frontend Foundation** (design package) covers Pinia, Vue Router, Axios, Tailwind, Sanctum auth, and the app shell.
+
+Until Milestone 8 is implemented:
+
+```sh
+cd opsflow-web
+npm install
+npm run dev
+```
+
+Run the SPA on Vite port **5173** so it matches CORS and Sanctum stateful defaults (`http://localhost:5173`). Set `VITE_API_BASE_URL` to the API origin (typically `http://localhost:8000`).
+
+Spec: [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md)

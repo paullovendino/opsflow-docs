@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted — Milestone 3–7 complete; Milestone 6–7 Dashboard/Reports are **schema-neutral** (no new tables)
+Accepted — Milestone 3–7 complete; Milestone 6–7 Dashboard/Reports are **schema-neutral** (no new tables); Milestone 8 Frontend Foundation is **schema-neutral** (SPA only)
 
 ## Context
 
@@ -74,6 +74,7 @@ Legacy single `name` column is replaced during ERD alignment. Keep `email_verifi
 | Phase 5 | `tasks` (**Milestone 5 complete** — schema + CRUD + assignment + queries + authz + status) |
 | Phase 6 | **No schema change** — Dashboard aggregates over existing `projects` / `tasks` (**complete**) |
 | Phase 7 | **No schema change** — Reports aggregates over existing `projects` / `tasks` / `users` (**complete**) |
+| Phase 8 | **No schema change** — Frontend Foundation (`opsflow-web` only; design package) |
 | Later | Remarks, Activity Logs |
 
 ### Projects ERD (Milestone 4 — complete)
@@ -121,3 +122,4 @@ Do not invent schema beyond the approved ERD without updating this decision and 
 - [decisions/Task-Management.md](Task-Management.md)
 - [decisions/Dashboard.md](Dashboard.md)
 - [decisions/Reports.md](Reports.md)
+- [decisions/Frontend-Foundation.md](Frontend-Foundation.md)

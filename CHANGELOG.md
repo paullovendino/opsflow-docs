@@ -8,6 +8,16 @@ Format follows a lightweight Keep a Changelog style.
 
 ## [Unreleased] — v1.0.0 (Development)
 
+### Frontend Foundation design package (Milestone 8) — 📋 Documentation only
+
+- Created [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) and [decisions/Frontend-Foundation.md](decisions/Frontend-Foundation.md)
+- Phases 8.1 Application · 8.2 Authentication · 8.3 UI Foundation for `opsflow-web`
+- Approved stack: Vue 3, TypeScript, Pinia, Vue Router, Axios, Tailwind CSS (no UI framework)
+- Absorbs pending Vue/Pinia Sanctum auth; App Home shell only — no Dashboard/Users/Projects/Tasks/Reports pages
+- Roadmap: former Phase 8 Testing → **Phase 9**; former Phase 9 Deployment → **Phase 10**
+- Design review sync: locked nested layouts, `@tailwindcss/vite`, 15s Axios timeout, topbar logout, no global `403` redirect, AuthUser normalization, SETUP/AUTHENTICATION companions
+- Companion docs synchronized; **implementation awaits explicit approval**
+
 ### Reports (Milestone 7) — ✅ Implemented · Milestone 7 complete
 
 - `GET /api/v1/reports/projects`, `GET /api/v1/reports/projects/{project}`
@@ -17,7 +27,7 @@ Format follows a lightweight Keep a Changelog style.
 - Optional `from_date` / `to_date` on task `created_at`; overdue / unassigned / by_project (detail)
 - No new tables
 - PHPUnit Feature suites: `ProjectReportApiTest`, `EmployeeReportApiTest`, `ReportAuthorizationTest`
-- Docs synchronized; next is Phase 8 — Testing (pending approval)
+- Docs synchronized; next is Milestone 8 — Frontend Foundation (design package)
 
 ### Reports design package (Milestone 7) — 📋 Documentation only
 

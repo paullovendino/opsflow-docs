@@ -123,6 +123,10 @@ Read-only Project / Employee aggregates; optional date range; no new tables
 
 Details: [AUTHENTICATION.md](AUTHENTICATION.md)
 
+### Frontend consumer (Milestone 8 — designed)
+
+SPA auth consumption is specified in [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) and [decisions/Frontend-Foundation.md](decisions/Frontend-Foundation.md): Axios `withCredentials`, CSRF cookie, Pinia auth store, Vue Router guards. **Not implemented until Milestone 8 approval.**
+
 ---
 
 ## Authorization Architecture
@@ -178,6 +182,24 @@ Enforced via `Gate::define('viewDashboard', [DashboardPolicy::class, 'view'])` +
 | Employee | owned-or-member | ❌ | self only |
 
 Enforced via `ReportPolicy` Gate abilities + scoping in `ReportService`. See [docs/MILESTONE_7_REPORTS.md](docs/MILESTONE_7_REPORTS.md).
+
+---
+
+## Frontend Architecture (`opsflow-web`)
+
+> Milestone 8 — 📋 Design package · [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md)
+
+| Layer | Role |
+|-------|------|
+| Views | Thin pages (`LoginView`, `AppHomeView`, error views) |
+| Layouts | `GuestLayout`, `AuthLayout` (sidebar + topbar shell) |
+| Router | History mode; nested Guest/Auth layouts; `requiresAuth` / `guest` guards |
+| Pinia | `auth` (session user), `ui` (toasts / mobile nav) |
+| Services | Axios instance + `authService` (no raw `fetch`) |
+| Components | Shared UI + layout primitives (Tailwind; no UI kit) |
+| Types | API envelope + auth user shapes |
+
+Feature module pages (Dashboard / Users / Projects / Tasks / Reports) are **out of Milestone 8**.
 
 ---
 
@@ -246,7 +268,8 @@ API routes (`api/*`) render through `App\Exceptions\ApiExceptionRenderer` using 
 | Phase 7.3 — Employee Reports | ✅ Implemented |
 | Phase 7.4 — Reports Authorization | ✅ Implemented |
 | **Milestone 7 — Reports** | ✅ **Complete** (7.1–7.4) |
-| Phase 8 — Testing | ⏳ Pending |
+| Phase 8 — Frontend Foundation | 📋 Design package (awaiting implementation) |
+| Phase 9 — Testing | ⏳ Pending |
 | Remarks / Activity Logs | Planned |
-| Vue Pinia auth | Planned |
-| Deployment | Planned |
+| Feature Vue pages (Dashboard/Users/Projects/Tasks/Reports) | After Milestone 8 |
+| Phase 10 — Deployment | Planned |

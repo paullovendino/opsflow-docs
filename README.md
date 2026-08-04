@@ -16,7 +16,7 @@ Central documentation for the OpsFlow SaaS platform.
 |-----------|--------|
 | Phase 1 — Project Setup (API foundation) | ✅ Completed |
 | Phase 2 — Authentication (API) | ✅ Completed |
-| Phase 2 — Pinia auth (Vue) | Pending |
+| Phase 2 — Pinia auth (Vue) | 📋 Milestone 8.2 (design package; awaiting implementation) |
 | **Milestone 3 — Organization & User Management** | ✅ **Complete** (3.1–3.6) |
 | Phase 3.1 — Organization Foundation | ✅ Implemented |
 | Phase 3.2 — User Domain Foundation | ✅ Implemented |
@@ -47,6 +47,10 @@ Central documentation for the OpsFlow SaaS platform.
 | Phase 7.2 — Project Reports | ✅ Implemented |
 | Phase 7.3 — Employee Reports | ✅ Implemented |
 | Phase 7.4 — Reports Authorization | ✅ Implemented |
+| **Milestone 8 — Frontend Foundation** | 📋 **Design package** (awaiting implementation) |
+| Phase 8.1 — Application Foundation | 📋 Designed |
+| Phase 8.2 — Authentication Foundation | 📋 Designed |
+| Phase 8.3 — UI Foundation | 📋 Designed |
 
 ## Documentation Index
 
@@ -60,6 +64,7 @@ Central documentation for the OpsFlow SaaS platform.
 | [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md) | Milestone 5 implementation specification |
 | [docs/MILESTONE_6_DASHBOARD.md](docs/MILESTONE_6_DASHBOARD.md) | Milestone 6 implementation specification |
 | [docs/MILESTONE_7_REPORTS.md](docs/MILESTONE_7_REPORTS.md) | Milestone 7 implementation specification |
+| [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) | Milestone 8 implementation specification |
 | [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md) | Product overview and tech stack |
 | [REQUIREMENTS.md](REQUIREMENTS.md) | Functional and non-functional requirements |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | System and backend architecture |
@@ -90,4 +95,4 @@ Central documentation for the OpsFlow SaaS platform.
 - Tasks (Milestone 5 complete): `/api/v1/tasks` CRUD, assignment, queries, `TaskPolicy`, status — see [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md)
 - Dashboard (Milestone 6 complete): `GET /api/v1/dashboard` — see [docs/MILESTONE_6_DASHBOARD.md](docs/MILESTONE_6_DASHBOARD.md)
 - Reports (Milestone 7 complete): `/api/v1/reports/projects`, `/api/v1/reports/employees` — see [docs/MILESTONE_7_REPORTS.md](docs/MILESTONE_7_REPORTS.md)
-- Next: Phase 8 — Testing — see [HANDOFF.md](HANDOFF.md) · [ROADMAP.md](ROADMAP.md)
+- Next: Milestone 8 — Frontend Foundation (design package) — see [HANDOFF.md](HANDOFF.md) · [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md)

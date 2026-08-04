@@ -88,12 +88,13 @@ v1.0.0 (Development)
 
 - ✅ Phase 1 API foundation: completed
 - ✅ Phase 2 Authentication (API): completed
-- Phase 2 Authentication (Vue/Pinia): pending
+- Phase 2 Authentication (Vue/Pinia): 📋 Milestone 8.2 (design package; awaiting implementation)
 - ✅ **Milestone 3 — Organization & User Management: complete** (Phases 3.1–3.6)
 - Milestone 4 — Project Management: ✅ complete (Phases 4.1–4.5)
 - Milestone 5 — Task Management: ✅ Complete (5.1–5.6)
 - Milestone 6 — Dashboard: ✅ Complete (6.1–6.4)
 - Milestone 7 — Reports: ✅ Complete (7.1–7.4)
+- Milestone 8 — Frontend Foundation: 📋 Design package (8.1–8.3) — awaiting implementation approval
 
 This project serves as a production-quality portfolio application demonstrating full-stack software engineering skills including:
 

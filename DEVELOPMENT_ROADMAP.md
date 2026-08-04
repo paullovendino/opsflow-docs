@@ -39,12 +39,18 @@ The canonical roadmap lives in [ROADMAP.md](ROADMAP.md).
 
 ## Next
 
-**Phase 8 — Testing** (pending approval)
+**Milestone 8 — Frontend Foundation** (📋 design package complete — awaiting implementation approval)
 
-Also pending from earlier phases: Vue 3 / Pinia authentication (`opsflow-web`).
+- Spec: [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md)
+- ADR: [decisions/Frontend-Foundation.md](decisions/Frontend-Foundation.md)
+- Phases: 8.1 Application · 8.2 Authentication · 8.3 UI Foundation
+- Absorbs pending Vue 3 / Pinia authentication (`opsflow-web`)
 
 Canonical roadmap: [ROADMAP.md](ROADMAP.md)
 
 ## Later
 
-Phases 8–9 and future versions: see [ROADMAP.md](ROADMAP.md).
+- Phase 9 — Testing
+- Phase 10 — Deployment
+- Feature Vue pages (Dashboard / Users / Projects / Tasks / Reports)
+- Future versions: see [ROADMAP.md](ROADMAP.md)

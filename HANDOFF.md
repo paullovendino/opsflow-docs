@@ -38,15 +38,16 @@ Organization
 | -------------- | ------------------------------------------------------------- |
 | `opsflow-api`  | Laravel REST API (active backend)                             |
 | `opsflow-docs` | Documentation + ADRs (this repo)                              |
-| `opsflow-web`  | Vue 3 SPA (exists as folder; frontend auth/app not built yet) |
+| `opsflow-web`  | Vue 3 SPA (create-vue scaffold; Milestone 8 Frontend Foundation designed) |
 
-**Current status:** ✅ **Milestone 7 — Reports complete**. Next: **Phase 8 — Testing** — wait for explicit implementation approval.
+**Current status:** ✅ **Milestone 7 — Reports complete**. Next: **Milestone 8 — Frontend Foundation** — design package complete; **wait for explicit implementation approval**.
 
 | Field | Value |
 |-------|--------|
-| Current milestone | Milestone 7 complete · next is **Milestone / Phase 8 — Testing** |
-| Current phase | Phase 7.4 complete · Milestone 7 done |
+| Current milestone | Milestone 7 complete · next is **Milestone 8 — Frontend Foundation** |
+| Current phase | Design package for 8.1–8.3 complete · implementation not started |
 | Completed (M7) | ✅ 7.1 Foundation · ✅ 7.2 Project Reports · ✅ 7.3 Employee Reports · ✅ 7.4 Authorization |
+| Planned (M8) | 📋 8.1 Application Foundation · 📋 8.2 Authentication Foundation · 📋 8.3 UI Foundation |
 | Remaining (M7) | — |
 
 ---
@@ -142,10 +143,12 @@ Routes: `routes/api.php` (prefixed `/api` + `v1` groups)
 - **Laravel Sanctum** — SPA cookie authentication
 - **REST API** under `/api/v1`
 
-### Frontend (planned / separate repo)
+### Frontend (`opsflow-web` — Milestone 8 designed)
 
 - Vue 3 Composition API + TypeScript
 - Pinia, Vue Router, Tailwind CSS, Axios (`withCredentials: true`)
+- Spec: [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) · ADR: [decisions/Frontend-Foundation.md](decisions/Frontend-Foundation.md)
+- Status: scaffold only until Milestone 8 implementation is approved
 
 ### Tooling
 
@@ -191,6 +194,10 @@ ADR: [decisions/Tech-Stack.md](decisions/Tech-Stack.md)
 | 7.2 | Project Reports | ✅ **Implemented** |
 | 7.3 | Employee Reports | ✅ **Implemented** |
 | 7.4 | Reports Authorization | ✅ **Implemented** |
+| **8** | **Frontend Foundation** | 📋 **Design package** (awaiting implementation approval) |
+| 8.1 | Application Foundation | 📋 Designed |
+| 8.2 | Authentication Foundation | 📋 Designed |
+| 8.3 | UI Foundation | 📋 Designed |
 
 **Phase 1:** PostgreSQL, Sanctum, `/api/v1`, CORS, envelope, exception renderer, morph map, roles seed, health check, folder structure.
 
@@ -238,40 +245,36 @@ See [CHANGELOG.md](CHANGELOG.md), [ROADMAP.md](ROADMAP.md).
 
 ## 5. Remaining roadmap
 
-### Immediate next (backend)
+### Immediate next
 
-**Phase 8 — Testing** (see §12) — wait for explicit implementation approval
+**Milestone 8 — Frontend Foundation** (see §12) — design package complete; wait for explicit **implementation** approval
 
-Completed: Milestones 1–7 (through Reports).
+Specification: [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) · [decisions/Frontend-Foundation.md](decisions/Frontend-Foundation.md) · [ROADMAP.md](ROADMAP.md)
 
-Also pending from earlier phases:
+Completed: Milestones 1–7 (API through Reports).
 
-- Vue 3 / Pinia authentication (`opsflow-web`)
+### Still pending
 
-Specification: [ROADMAP.md](ROADMAP.md)
-
-### Still pending from earlier phases
-
-- Vue 3 / Pinia authentication (`opsflow-web`)
+- Milestone 8 implementation (`opsflow-web` app foundation + Sanctum Pinia auth + shell UI)
 - GitHub repos finalized (as applicable)
 
 ### Later phases (do not invent early)
 
-Deployment
+- Phase 9 — Testing
+- Phase 10 — Deployment
+- Feature Vue pages (Dashboard / Users / Projects / Tasks / Reports) after Milestone 8
 
 ### Future versions
 
 Notifications, remarks, kanban, time tracking, mobile, multi-org, etc. ([ROADMAP.md](ROADMAP.md))
 
-### Explicitly out of scope for Milestone 7 / later
+### Explicitly out of scope for Milestone 8
 
-- PDF/CSV/Excel export, scheduled/email reports
-- Activity Logs table / audit trail
-- Remarks analytics, custom report builders
-- Caching / queues / materialized views
-- Vue Reports / Dashboard UI
-- Replacing Dashboard APIs
-- Time tracking reports
+- Dashboard / Users / Projects / Tasks / Reports **pages**
+- Frontend automated test suite (Phase 9)
+- Deployment (Phase 10)
+- UI component frameworks
+- Backend schema / new API endpoints
 
 ---
 
@@ -311,6 +314,7 @@ Notifications, remarks, kanban, time tracking, mobile, multi-org, etc. ([ROADMAP
 - `Origin`/`Referer` on stateful domains (local: `http://localhost:5173`)
 - Axios `withCredentials: true`
 - CSRF header from `XSRF-TOKEN` cookie
+- Frontend consumer design: [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) · [decisions/Frontend-Foundation.md](decisions/Frontend-Foundation.md) (awaiting implementation)
 
 Docs: [AUTHENTICATION.md](AUTHENTICATION.md), [decisions/Authentication.md](decisions/Authentication.md), [API_SPECIFICATION.md](API_SPECIFICATION.md)
 
@@ -685,7 +689,7 @@ ADRs: [DATABASE_DESIGN.md](DATABASE_DESIGN.md), [decisions/Database.md](decision
 10. **Credential allowlist** into `Auth::attempt()`
 11. **Morph aliases only for existing models**
 12. **Do not expand schema beyond the approved ERD** without updating `decisions/Database.md`
-13. **Do not implement later modules early** (Milestone 8 / Activity Logs) unless the milestone phase is approved
+13. **Do not implement later modules early** (Activity Logs / feature Vue pages) unless the milestone phase is approved; Milestone 8 is Frontend Foundation only
 14. **Authorize via Policies** — do not scatter manual role checks outside policies (`UserPolicy`, `ProjectPolicy`, `TaskPolicy`, `DashboardPolicy` / `viewDashboard`, `ReportPolicy` Gates)
 15. **CORS / Sanctum domains stay environment-driven**
 16. **Update docs/ADRs when behavior changes**
@@ -713,7 +717,7 @@ Details: [CODING_STANDARDS.md](CODING_STANDARDS.md), [CURSOR_RULES.md](CURSOR_RU
 2. **Laravel 13 HTTP tests** — guard caching requires `forgetGuards()` in some multi-request auth tests
 3. **Draw.io diagrams empty** — future docs milestone
 4. **No Postman/Bruno collection checked in** — future
-5. **`opsflow-web` / Pinia auth not implemented**
+5. **`opsflow-web` still create-vue scaffold** — Milestone 8 Frontend Foundation designed; not implemented yet
 6. **Historical “Laravel 12” wording** in old git commits vs actual Laravel 13
 7. **Resource wrapping inconsistency** — login uses `data.user` + `resolve()`; `/me` uses Resource in `data` (intentional for now)
 8. **Environment-config hardening** deferred (secrets, production cookie domain strategy)
@@ -724,23 +728,25 @@ Details: [CODING_STANDARDS.md](CODING_STANDARDS.md), [CURSOR_RULES.md](CURSOR_RU
 
 ## 12. Immediate next milestone
 
-### Phase 8 — Testing
+### Milestone 8 — Frontend Foundation
 
-**Status:** Pending — wait for explicit user approval before coding.
+**Status:** 📋 Design package complete — **wait for explicit implementation approval before coding.**
 
 **Completed:** Milestones 1–7 (Backend Foundation through Reports).
 
-**Specification:** [ROADMAP.md](ROADMAP.md) · broader API/frontend testing package TBD before implementation
+**Specification:** [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) · ADR: [decisions/Frontend-Foundation.md](decisions/Frontend-Foundation.md)
 
 **Phase 8 scope (high level):**
 
-| Area | Notes |
-|------|-------|
-| Planned | Broader API testing, frontend testing, bug fixes (design before coding) |
+| Phase | Scope |
+|-------|--------|
+| 8.1 | Application foundation (folders, Pinia/Router/Axios/Tailwind, env, API client, types) |
+| 8.2 | Authentication foundation (CSRF, login/logout, `/me`, guards, Guest vs Auth layouts, auth store) |
+| 8.3 | UI foundation (sidebar, topbar, shell, responsive nav, loading/empty/error, toast, shared components) |
 
-**Also pending:** Vue 3 / Pinia authentication (`opsflow-web`)
+**Out of scope:** Dashboard/Users/Projects/Tasks/Reports pages · Testing (Phase 9) · Deployment (Phase 10)
 
-**Do not invent** new modules or expand scope without an approved plan.
+**Do not invent** feature module UIs or expand scope without an approved plan.
 
 ---
 
@@ -840,7 +846,7 @@ Specs: [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md) · [docs/MILESTONE_3_ORGANIZ
 php artisan test
 ```
 
-Deferred: dedicated `429` test, CSRF failure cases, frontend tests, Milestone 8+ suites.
+Deferred: dedicated `429` test, CSRF failure cases, frontend automated tests (Phase 9), Activity Logs suites.
 
 Details: [TESTING.md](TESTING.md)
 
@@ -869,7 +875,7 @@ _(Re-check with `git status` before committing.)_
 ### Monorepo folder `OpsFlow/`
 
 - Not a meaningful single git root; treat **api** and **docs** as separate repos
-- `opsflow-web/` present as sibling (frontend not started in earnest)
+- `opsflow-web/` present as sibling (create-vue scaffold; Milestone 8 designed, not implemented)
 
 **Convention:** one feature = one commit when asked to commit.
 
@@ -887,6 +893,7 @@ _(Re-check with `git status` before committing.)_
 | `docs/MILESTONE_5_…`     | Milestone 5 implementation spec       |
 | `docs/MILESTONE_6_…`     | Milestone 6 implementation spec       |
 | `docs/MILESTONE_7_…`     | Milestone 7 implementation spec       |
+| `docs/MILESTONE_8_…`     | Milestone 8 Frontend Foundation spec  |
 | `PROJECT_OVERVIEW.md`    | Product overview                      |
 | `REQUIREMENTS.md`        | Functional requirements               |
 | `ARCHITECTURE.md`        | System architecture                   |
@@ -901,19 +908,19 @@ _(Re-check with `git status` before committing.)_
 | `DEVELOPMENT_ROADMAP.md` | Pointer to `ROADMAP.md`               |
 | `CHANGELOG.md`           | Milestone changelog                   |
 | `UI_PAGES.md`            | UI inventory                          |
-| `decisions/`             | ADRs (incl. `Reports.md`)             |
+| `decisions/`             | ADRs (incl. `Reports.md`, `Frontend-Foundation.md`) |
 | `diagrams/`              | Draw.io placeholders (empty — future) |
 
 ---
 
 ## Quick start for the next session
 
-1. Read this handoff + [ROADMAP.md](ROADMAP.md) Phase 8 · confirm Testing milestone scope before coding
-2. Confirm git branch/status in `opsflow-api` / `opsflow-docs`
-3. ✅ Milestone 7 is complete — next is **Phase 8 — Testing** — **wait for explicit implementation approval**
-4. Do **not** invent new product modules without an approved design
+1. Read this handoff + [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) · [decisions/Frontend-Foundation.md](decisions/Frontend-Foundation.md)
+2. Confirm git branch/status in `opsflow-api` / `opsflow-docs` / `opsflow-web`
+3. ✅ Milestone 7 is complete — next is **Milestone 8 — Frontend Foundation** — **wait for explicit implementation approval**
+4. Do **not** invent Dashboard/Users/Projects/Tasks/Reports UI inside Milestone 8
 5. Do **not** modify code when the user asks for docs-only tasks
-6. Vue Pinia auth (`opsflow-web`) remains pending from earlier phases
+6. Do **not** write `opsflow-web` application code until Milestone 8 implementation is approved
 
 ### Essential commands
 
@@ -926,6 +933,11 @@ php artisan migrate
 php artisan db:seed
 php artisan serve
 php artisan test
+
+# Web (after Milestone 8 implementation starts)
+cd opsflow-web
+npm install
+npm run dev
 
 # Docs
 cd opsflow-docs
@@ -941,7 +953,7 @@ cd opsflow-docs
 | Location   | `opsflow-docs/HANDOFF.md`                      |
 | Supersedes | Ad-hoc chat memory                             |
 | Maintain   | Update when milestones complete or ADRs change |
-| Ready for  | Next session → Phase 8 Testing (after approval) |
+| Ready for  | Next session → Milestone 8 Frontend Foundation **implementation** (after approval) |
 
 ## Project Principles
 

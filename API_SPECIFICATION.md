@@ -35,6 +35,15 @@ Health check for the API process.
 
 Sanctum SPA cookie authentication.
 
+Frontend consumption (Milestone 8 design): [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) · [decisions/Frontend-Foundation.md](decisions/Frontend-Foundation.md).
+
+SPA must:
+
+- Call `GET /sanctum/csrf-cookie` immediately before login
+- Send Axios requests with `withCredentials: true` and `X-XSRF-TOKEN`
+- Treat login success user as `data.user`; `/me` user as `data` (normalize in the SPA)
+- Show login `401` / inactive `403` / `422` inline on the login form (not via a global `/403` redirect)
+
 Prerequisite for browser/SPA clients:
 
 ### GET /sanctum/csrf-cookie

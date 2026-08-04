@@ -8,7 +8,7 @@
 - [x] Current authenticated user (`GET /api/v1/auth/me`)
 - [x] Inactive users cannot log in (`403` / `Account is inactive.`)
 - [x] Coarse role-based access for User Management (Phase 3.6)
-- [ ] Frontend Pinia authentication
+- [ ] Frontend Pinia authentication (**Milestone 8.2** — design package; awaiting implementation)
 
 ---
 
@@ -108,6 +108,19 @@ Department CRUD, Job Title CRUD, teams, branches, and organization settings are 
   - Project Manager — full task management (all tasks)
   - Employee — list/view tasks in accessible projects; status only when assigned to self
 - [x] Task status patch (`PATCH /api/v1/tasks/{task}/status`)
+
+---
+
+## Frontend Foundation
+
+> Milestone 8 — 📋 Design package · awaiting implementation  
+> Spec: [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) · ADR: [decisions/Frontend-Foundation.md](decisions/Frontend-Foundation.md)
+
+- [ ] Application foundation (folders, Pinia, Vue Router, Axios, Tailwind, env, API client)
+- [ ] Sanctum CSRF login / logout / `/me` bootstrap + route guards
+- [ ] Guest vs Auth layouts; App Home shell (not Dashboard feature page)
+- [ ] Sidebar / topbar / responsive nav / loading / empty / error / toast primitives
+- [ ] No Dashboard / Users / Projects / Tasks / Reports pages in Milestone 8
 
 ---
 

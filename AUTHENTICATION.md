@@ -82,6 +82,19 @@ Axios requirements:
 - `withCredentials: true`
 - Send CSRF header derived from the `XSRF-TOKEN` cookie
 
+### Frontend consumer (Milestone 8 — designed)
+
+SPA implementation is specified in [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) and [decisions/Frontend-Foundation.md](decisions/Frontend-Foundation.md):
+
+- Pinia auth store + `/me` bootstrap (cookie session; no bearer token storage)
+- Always `GET /sanctum/csrf-cookie` immediately before login (and again before login after logout)
+- Normalize login `data.user` and `/me` `data` into one `AuthUser`
+- Login `401` / inactive `403` / validation `422` shown **inline** on LoginView
+- Global Axios `403` interceptor must **not** auto-route to `/403` (avoids hijacking login inactive errors)
+- Vue Router guards: `requiresAuth` / `guest`
+
+**Not implemented** until Milestone 8 implementation is explicitly approved.
+
 ---
 
 ## Session Management
@@ -210,7 +223,7 @@ ADR: [decisions/Organization-User-Management.md](decisions/Organization-User-Man
 
 ### Deferred further
 
-- Pinia auth store and Vue route guards
+- Pinia auth store and Vue route guards → **Milestone 8** ([docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md))
 - Advanced RBAC / permission management
 - Failed-login activity logging
 - Optional remember-me

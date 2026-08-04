@@ -42,6 +42,10 @@ OpsFlow development roadmap by phase.
 | Phase 7.2 | Project Reports | ✅ Implemented |
 | Phase 7.3 | Employee Reports | ✅ Implemented |
 | Phase 7.4 | Reports Authorization | ✅ Implemented |
+| **Milestone 8** | **Frontend Foundation** | 📋 **Design package** (awaiting implementation) |
+| Phase 8.1 | Application Foundation | 📋 Designed |
+| Phase 8.2 | Authentication Foundation | 📋 Designed |
+| Phase 8.3 | UI Foundation | 📋 Designed |
 
 ---
 
@@ -50,7 +54,7 @@ OpsFlow development roadmap by phase.
 **Status: ✅ Completed (backend)**
 
 - [x] Laravel 13 API (`opsflow-api`)
-- [ ] Vue 3 frontend repository
+- [x] Vue 3 frontend repository scaffold (`opsflow-web` create-vue; product app = Milestone 8)
 - [x] PostgreSQL configuration
 - [x] Laravel Sanctum installed (SPA cookie mode)
 - [x] API versioning (`/api/v1`)
@@ -68,10 +72,10 @@ OpsFlow development roadmap by phase.
 
 ## Phase 2 — Authentication
 
-**Status: ✅ Completed (API)** · Pinia/Vue pending
+**Status: ✅ Completed (API)** · Vue/Pinia auth → Milestone 8
 
 - [x] Sanctum SPA cookie login/logout
-- [x] CSRF cookie flow (configured; frontend consumes `/sanctum/csrf-cookie`)
+- [x] CSRF cookie flow (configured; frontend consumes `/sanctum/csrf-cookie` in Milestone 8)
 - [x] Protected API routes (`auth:sanctum`)
 - [x] Current authenticated user endpoint (`GET /api/v1/auth/me`)
 - [x] Login rate limiting (`throttle:login`)
@@ -79,7 +83,7 @@ OpsFlow development roadmap by phase.
 - [x] Credential allowlist for `Auth::attempt()`
 - [x] Auth feature tests
 - [x] Authentication documentation
-- [ ] Pinia authentication on Vue
+- [ ] Pinia authentication on Vue (**Milestone 8.2**)
 
 ---
 
@@ -395,17 +399,55 @@ PDF/CSV/Excel export, scheduled/email reports, Activity Logs, Remarks analytics,
 
 ---
 
-## Phase 8 — Testing
+## Phase 8 — Frontend Foundation
 
-**Status: Pending**
+**Status: 📋 Design package complete** — awaiting implementation approval
 
-- API Testing
+Specification:
+
+- [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md)
+- [decisions/Frontend-Foundation.md](decisions/Frontend-Foundation.md)
+
+### Phase 8.1 — Application Foundation
+
+- [ ] Folder structure (`layouts`, `views`, `router`, `stores`, `services`, `types`, `components`, …)
+- [ ] Install Pinia, Vue Router, Axios, Tailwind CSS
+- [ ] Environment variables (`VITE_API_BASE_URL`, `VITE_APP_NAME`)
+- [ ] Axios API client (`withCredentials`, CSRF headers, envelope types)
+- [ ] Router skeleton; remove create-vue welcome UI
+
+### Phase 8.2 — Authentication Foundation
+
+- [ ] Sanctum CSRF → login → logout → `/me` bootstrap
+- [ ] Pinia auth store + session restore via cookies
+- [ ] Route guards (`requiresAuth` / `guest`)
+- [ ] GuestLayout vs AuthLayout
+- [ ] Login page
+
+### Phase 8.3 — UI Foundation
+
+- [ ] Sidebar, topbar, app shell, responsive navigation
+- [ ] Loading / empty / error pages
+- [ ] Toast strategy (first-party Pinia + host)
+- [ ] Shared UI components (`AppButton`, `AppInput`, `AppSpinner`, …)
+
+### Explicitly out of scope (Milestone 8)
+
+Dashboard / Users / Projects / Tasks / Reports pages · automated frontend testing · deployment · UI frameworks · new API/schema
+
+---
+
+## Phase 9 — Testing
+
+**Status: Pending** (after Milestone 8)
+
+- API Testing (remaining gaps + broader suites)
 - Frontend Testing
 - Bug Fixes
 
 ---
 
-## Phase 9 — Deployment
+## Phase 10 — Deployment
 
 **Status: Pending**
 
