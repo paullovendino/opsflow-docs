@@ -123,9 +123,9 @@ Read-only Project / Employee aggregates; optional date range; no new tables
 
 Details: [AUTHENTICATION.md](AUTHENTICATION.md)
 
-### Frontend consumer (Milestone 8 — designed)
+### Frontend consumer (Milestone 8 — ✅ implemented)
 
-SPA auth consumption is specified in [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) and [decisions/Frontend-Foundation.md](decisions/Frontend-Foundation.md): Axios `withCredentials`, CSRF cookie, Pinia auth store, Vue Router guards. **Not implemented until Milestone 8 approval.**
+SPA auth consumption is specified in [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) and [decisions/Frontend-Foundation.md](decisions/Frontend-Foundation.md): Axios `withCredentials`, CSRF cookie, Pinia auth store, Vue Router guards. **Implemented in `opsflow-web`.**
 
 ---
 
@@ -187,19 +187,21 @@ Enforced via `ReportPolicy` Gate abilities + scoping in `ReportService`. See [do
 
 ## Frontend Architecture (`opsflow-web`)
 
-> Milestone 8 — 📋 Design package · [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md)
+> Milestone 8 — ✅ Complete · [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md)  
+> Milestone 9 — 🔄 In progress (✅ 9.1) · [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md)
 
 | Layer | Role |
 |-------|------|
-| Views | Thin pages (`LoginView`, `AppHomeView`, error views) |
-| Layouts | `GuestLayout`, `AuthLayout` (sidebar + topbar shell) |
-| Router | History mode; nested Guest/Auth layouts; `requiresAuth` / `guest` guards |
-| Pinia | `auth` (session user), `ui` (toasts / mobile nav) |
-| Services | Axios instance + `authService` (no raw `fetch`) |
-| Components | Shared UI + layout primitives (Tailwind; no UI kit) |
-| Types | API envelope + auth user shapes |
+| Views | Thin pages under `modules/*/views` (+ auth/error views) |
+| Layouts | `GuestLayout`, `AuthLayout` (nested routes) |
+| Modules | `dashboard` (✅), `users` / `projects` / `tasks` / `reports` (planned) |
+| Router | History mode; `requiresAuth` / `guest`; `/` → `/dashboard` |
+| Pinia | `auth`, `ui` (module list state via composables by default) |
+| Services | Axios `http` + domain `*Service.ts` (`dashboardService` ✅) |
+| Components | Shared UI + layout; Tailwind only (no chart lib / UI kit) |
+| Types | Envelope + domain shapes |
 
-Feature module pages (Dashboard / Users / Projects / Tasks / Reports) are **out of Milestone 8**.
+Feature module pages ship phase-by-phase under Milestone 9; implement only after explicit phase approval.
 
 ---
 
@@ -268,8 +270,8 @@ API routes (`api/*`) render through `App\Exceptions\ApiExceptionRenderer` using 
 | Phase 7.3 — Employee Reports | ✅ Implemented |
 | Phase 7.4 — Reports Authorization | ✅ Implemented |
 | **Milestone 7 — Reports** | ✅ **Complete** (7.1–7.4) |
-| Phase 8 — Frontend Foundation | 📋 Design package (awaiting implementation) |
-| Phase 9 — Testing | ⏳ Pending |
+| Phase 8 — Frontend Foundation | ✅ **Complete** (8.1–8.3) |
+| Phase 9 — Frontend Modules | 🔄 In progress (✅ 9.1 Dashboard UI) |
+| Phase 10 — Testing | ⏳ Pending |
 | Remarks / Activity Logs | Planned |
-| Feature Vue pages (Dashboard/Users/Projects/Tasks/Reports) | After Milestone 8 |
-| Phase 10 — Deployment | Planned |
+| Phase 11 — Deployment | Planned |

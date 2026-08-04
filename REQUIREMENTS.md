@@ -8,7 +8,7 @@
 - [x] Current authenticated user (`GET /api/v1/auth/me`)
 - [x] Inactive users cannot log in (`403` / `Account is inactive.`)
 - [x] Coarse role-based access for User Management (Phase 3.6)
-- [ ] Frontend Pinia authentication (**Milestone 8.2** — design package; awaiting implementation)
+- [x] Frontend Pinia authentication (**Milestone 8.2**)
 
 ---
 
@@ -113,14 +113,27 @@ Department CRUD, Job Title CRUD, teams, branches, and organization settings are 
 
 ## Frontend Foundation
 
-> Milestone 8 — 📋 Design package · awaiting implementation  
+> Milestone 8 — ✅ Complete (Phases 8.1–8.3)  
 > Spec: [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) · ADR: [decisions/Frontend-Foundation.md](decisions/Frontend-Foundation.md)
 
-- [ ] Application foundation (folders, Pinia, Vue Router, Axios, Tailwind, env, API client)
-- [ ] Sanctum CSRF login / logout / `/me` bootstrap + route guards
-- [ ] Guest vs Auth layouts; App Home shell (not Dashboard feature page)
-- [ ] Sidebar / topbar / responsive nav / loading / empty / error / toast primitives
-- [ ] No Dashboard / Users / Projects / Tasks / Reports pages in Milestone 8
+- [x] Application foundation (folders, Pinia, Vue Router, Axios, Tailwind, env, API client)
+- [x] Sanctum CSRF login / logout / `/me` bootstrap + route guards
+- [x] Guest vs Auth layouts; App Home shell (replaced by Dashboard in Milestone 9.1)
+- [x] Sidebar / topbar / responsive nav / loading / empty / error / toast primitives
+- [x] No Dashboard / Users / Projects / Tasks / Reports pages in Milestone 8
+
+---
+
+## Frontend Modules
+
+> Milestone 9 — 🔄 In progress (✅ Phase 9.1) · next Phase 9.2 awaiting approval  
+> Spec: [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md) · ADR: [decisions/Frontend-Modules.md](decisions/Frontend-Modules.md)
+
+- [x] Dashboard UI (9.1)
+- [ ] User Management UI (9.2)
+- [ ] Project Management UI (9.3)
+- [ ] Task Management UI — table, not Kanban (9.4)
+- [ ] Reports UI (9.5)
 
 ---
 

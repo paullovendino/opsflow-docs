@@ -42,10 +42,16 @@ OpsFlow development roadmap by phase.
 | Phase 7.2 | Project Reports | ✅ Implemented |
 | Phase 7.3 | Employee Reports | ✅ Implemented |
 | Phase 7.4 | Reports Authorization | ✅ Implemented |
-| **Milestone 8** | **Frontend Foundation** | 📋 **Design package** (awaiting implementation) |
-| Phase 8.1 | Application Foundation | 📋 Designed |
-| Phase 8.2 | Authentication Foundation | 📋 Designed |
-| Phase 8.3 | UI Foundation | 📋 Designed |
+| **Milestone 8** | **Frontend Foundation** | ✅ **Complete** (8.1–8.3) |
+| Phase 8.1 | Application Foundation | ✅ Implemented |
+| Phase 8.2 | Authentication Foundation | ✅ Implemented |
+| Phase 8.3 | UI Foundation | ✅ Implemented |
+| **Milestone 9** | **Frontend Modules** | 🔄 **In progress** (9.1 complete) |
+| Phase 9.1 | Dashboard UI | ✅ Implemented |
+| Phase 9.2 | User Management | 📋 Designed |
+| Phase 9.3 | Project Management | 📋 Designed |
+| Phase 9.4 | Task Management | 📋 Designed |
+| Phase 9.5 | Reports | 📋 Designed |
 
 ---
 
@@ -72,7 +78,7 @@ OpsFlow development roadmap by phase.
 
 ## Phase 2 — Authentication
 
-**Status: ✅ Completed (API)** · Vue/Pinia auth → Milestone 8
+**Status: ✅ Completed (API)** · Vue/Pinia auth → Milestone 8 ✅
 
 - [x] Sanctum SPA cookie login/logout
 - [x] CSRF cookie flow (configured; frontend consumes `/sanctum/csrf-cookie` in Milestone 8)
@@ -83,7 +89,7 @@ OpsFlow development roadmap by phase.
 - [x] Credential allowlist for `Auth::attempt()`
 - [x] Auth feature tests
 - [x] Authentication documentation
-- [ ] Pinia authentication on Vue (**Milestone 8.2**)
+- [x] Pinia authentication on Vue (**Milestone 8.2**)
 
 ---
 
@@ -401,7 +407,7 @@ PDF/CSV/Excel export, scheduled/email reports, Activity Logs, Remarks analytics,
 
 ## Phase 8 — Frontend Foundation
 
-**Status: 📋 Design package complete** — awaiting implementation approval
+**Status: ✅ Complete (Phases 8.1–8.3)**
 
 Specification:
 
@@ -410,36 +416,80 @@ Specification:
 
 ### Phase 8.1 — Application Foundation
 
-- [ ] Folder structure (`layouts`, `views`, `router`, `stores`, `services`, `types`, `components`, …)
-- [ ] Install Pinia, Vue Router, Axios, Tailwind CSS
-- [ ] Environment variables (`VITE_API_BASE_URL`, `VITE_APP_NAME`)
-- [ ] Axios API client (`withCredentials`, CSRF headers, envelope types)
-- [ ] Router skeleton; remove create-vue welcome UI
+- [x] Folder structure (`layouts`, `views`, `router`, `stores`, `services`, `types`, `components`, …)
+- [x] Install Pinia, Vue Router, Axios, Tailwind CSS
+- [x] Environment variables (`VITE_API_BASE_URL`, `VITE_APP_NAME`)
+- [x] Axios API client (`withCredentials`, CSRF headers, envelope types)
+- [x] Router skeleton; remove create-vue welcome UI
 
 ### Phase 8.2 — Authentication Foundation
 
-- [ ] Sanctum CSRF → login → logout → `/me` bootstrap
-- [ ] Pinia auth store + session restore via cookies
-- [ ] Route guards (`requiresAuth` / `guest`)
-- [ ] GuestLayout vs AuthLayout
-- [ ] Login page
+- [x] Sanctum CSRF → login → logout → `/me` bootstrap
+- [x] Pinia auth store + session restore via cookies
+- [x] Route guards (`requiresAuth` / `guest`)
+- [x] GuestLayout vs AuthLayout
+- [x] Login page
 
 ### Phase 8.3 — UI Foundation
 
-- [ ] Sidebar, topbar, app shell, responsive navigation
-- [ ] Loading / empty / error pages
-- [ ] Toast strategy (first-party Pinia + host)
-- [ ] Shared UI components (`AppButton`, `AppInput`, `AppSpinner`, …)
+- [x] Sidebar, topbar, app shell, responsive navigation
+- [x] Loading / empty / error pages
+- [x] Toast strategy (first-party Pinia + host)
+- [x] Shared UI components (`AppButton`, `AppInput`, `AppSpinner`, …)
 
 ### Explicitly out of scope (Milestone 8)
 
-Dashboard / Users / Projects / Tasks / Reports pages · automated frontend testing · deployment · UI frameworks · new API/schema
+Dashboard / Users / Projects / Tasks / Reports pages · automated frontend testing · deployment · UI frameworks · new API/schema  
+*(Feature module UIs → Milestone 9)*
 
 ---
 
-## Phase 9 — Testing
+## Phase 9 — Frontend Modules
 
-**Status: Pending** (after Milestone 8)
+**Status: 🔄 In progress** — ✅ Phase 9.1 complete · awaiting Phase 9.2 approval
+
+Specification:
+
+- [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md)
+- [decisions/Frontend-Modules.md](decisions/Frontend-Modules.md)
+
+### Phase 9.1 — Dashboard UI
+
+- [x] `/` → `/dashboard`; consume `GET /api/v1/dashboard`
+- [x] Stat cards, Tailwind status bars, recent work
+- [x] Enable sidebar Dashboard link
+- [x] Skeleton / empty recent / error+retry
+
+### Phase 9.2 — User Management
+
+- [ ] User list/search/filters/pagination
+- [ ] Create/Edit/Show pages; Profile; status/delete confirms
+- [ ] Lookups for selects
+
+### Phase 9.3 — Project Management
+
+- [ ] Project list + CRUD pages + status
+- [ ] Members on project show
+
+### Phase 9.4 — Task Management
+
+- [ ] Task table (not Kanban) + CRUD
+- [ ] Assignment + status controls; priority badges
+
+### Phase 9.5 — Reports
+
+- [ ] Project/Employee report list + detail
+- [ ] Date filters; cards + Tailwind charts + tables
+
+### Explicitly out of scope (Milestone 9)
+
+Kanban · chart libraries · exports · Activity Logs UI · Testing (Phase 10) · Deployment (Phase 11) · new API/schema
+
+---
+
+## Phase 10 — Testing
+
+**Status: Pending** (after Milestone 9)
 
 - API Testing (remaining gaps + broader suites)
 - Frontend Testing
@@ -447,7 +497,7 @@ Dashboard / Users / Projects / Tasks / Reports pages · automated frontend testi
 
 ---
 
-## Phase 10 — Deployment
+## Phase 11 — Deployment
 
 **Status: Pending**
 

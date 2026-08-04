@@ -8,6 +8,32 @@ Format follows a lightweight Keep a Changelog style.
 
 ## [Unreleased] — v1.0.0 (Development)
 
+### Dashboard UI (Phase 9.1) — ✅ Implemented
+
+- `opsflow-web`: `/dashboard` landing; authenticated `/` redirects to dashboard
+- `dashboardService` + `useDashboard`; types matching `GET /api/v1/dashboard`
+- Stat cards, Tailwind status bars (projects/tasks by status, tasks by priority), recent work list
+- `DashboardSkeleton` / empty recent / inline error+retry; sidebar Dashboard link enabled
+- Shared `AppBadge` / `StatusBadge`; removed App Home placeholder
+- `npm run type-check` + `npm run build` green
+- Docs synchronized; next is Phase 9.2 — User Management (awaiting approval)
+
+### Frontend Modules design package (Milestone 9) — 📋 Documentation only
+
+- Created [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md) and [decisions/Frontend-Modules.md](decisions/Frontend-Modules.md)
+- Phases 9.1 Dashboard · 9.2 Users · 9.3 Projects · 9.4 Tasks · 9.5 Reports
+- Locked: `/` → `/dashboard`; table (not Kanban); Create/Edit pages; Tailwind charts (no chart lib); `modules/` folder
+- Roadmap: Testing → **Phase 10**; Deployment → **Phase 11**
+- Companion docs synchronized; **Phase 9.1 implemented**
+
+### Frontend Foundation (Milestone 8) — ✅ Implemented · Milestone 8 complete
+
+- `opsflow-web`: Pinia, Vue Router, Axios, Tailwind (`@tailwindcss/vite`)
+- Sanctum CSRF login / logout / `/me` bootstrap; Guest + Auth layouts; App Home shell (replaced by Dashboard in 9.1)
+- Shared UI: sidebar, topbar, toast, spinner, empty state, 403/404
+- `npm run type-check` + `npm run build` green
+- Docs synchronized; next was Milestone 9 — Frontend Modules
+
 ### Frontend Foundation design package (Milestone 8) — 📋 Documentation only
 
 - Created [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) and [decisions/Frontend-Foundation.md](decisions/Frontend-Foundation.md)
@@ -16,7 +42,7 @@ Format follows a lightweight Keep a Changelog style.
 - Absorbs pending Vue/Pinia Sanctum auth; App Home shell only — no Dashboard/Users/Projects/Tasks/Reports pages
 - Roadmap: former Phase 8 Testing → **Phase 9**; former Phase 9 Deployment → **Phase 10**
 - Design review sync: locked nested layouts, `@tailwindcss/vite`, 15s Axios timeout, topbar logout, no global `403` redirect, AuthUser normalization, SETUP/AUTHENTICATION companions
-- Companion docs synchronized; **implementation awaits explicit approval**
+- Companion docs synchronized; **implementation completed in Milestone 8**
 
 ### Reports (Milestone 7) — ✅ Implemented · Milestone 7 complete
 

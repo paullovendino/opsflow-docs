@@ -38,17 +38,17 @@ Organization
 | -------------- | ------------------------------------------------------------- |
 | `opsflow-api`  | Laravel REST API (active backend)                             |
 | `opsflow-docs` | Documentation + ADRs (this repo)                              |
-| `opsflow-web`  | Vue 3 SPA (create-vue scaffold; Milestone 8 Frontend Foundation designed) |
+| `opsflow-web`  | Vue 3 SPA (Milestone 8 complete · Phase 9.1 Dashboard UI complete) |
 
-**Current status:** ✅ **Milestone 7 — Reports complete**. Next: **Milestone 8 — Frontend Foundation** — design package complete; **wait for explicit implementation approval**.
+**Current status:** ✅ **Phase 9.1 — Dashboard UI complete**. Next: **Phase 9.2 — User Management** — **wait for explicit implementation approval**.
 
 | Field | Value |
 |-------|--------|
-| Current milestone | Milestone 7 complete · next is **Milestone 8 — Frontend Foundation** |
-| Current phase | Design package for 8.1–8.3 complete · implementation not started |
-| Completed (M7) | ✅ 7.1 Foundation · ✅ 7.2 Project Reports · ✅ 7.3 Employee Reports · ✅ 7.4 Authorization |
-| Planned (M8) | 📋 8.1 Application Foundation · 📋 8.2 Authentication Foundation · 📋 8.3 UI Foundation |
-| Remaining (M7) | — |
+| Current milestone | **Milestone 9 — Frontend Modules** (in progress) |
+| Current phase | ✅ 9.1 Dashboard UI · next is **9.2 User Management** (awaiting approval) |
+| Completed (M8) | ✅ 8.1 · ✅ 8.2 · ✅ 8.3 |
+| Completed (M9) | ✅ 9.1 Dashboard UI |
+| Planned (M9) | 📋 9.2 Users · 📋 9.3 Projects · 📋 9.4 Tasks · 📋 9.5 Reports |
 
 ---
 
@@ -143,12 +143,13 @@ Routes: `routes/api.php` (prefixed `/api` + `v1` groups)
 - **Laravel Sanctum** — SPA cookie authentication
 - **REST API** under `/api/v1`
 
-### Frontend (`opsflow-web` — Milestone 8 designed)
+### Frontend (`opsflow-web` — Milestone 8 complete)
 
 - Vue 3 Composition API + TypeScript
 - Pinia, Vue Router, Tailwind CSS, Axios (`withCredentials: true`)
 - Spec: [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) · ADR: [decisions/Frontend-Foundation.md](decisions/Frontend-Foundation.md)
-- Status: scaffold only until Milestone 8 implementation is approved
+- Auth shell: Guest/Auth layouts, login/logout/`/me` bootstrap
+- Next UI: Phase 9.2 User Management — [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md)
 
 ### Tooling
 
@@ -194,10 +195,16 @@ ADR: [decisions/Tech-Stack.md](decisions/Tech-Stack.md)
 | 7.2 | Project Reports | ✅ **Implemented** |
 | 7.3 | Employee Reports | ✅ **Implemented** |
 | 7.4 | Reports Authorization | ✅ **Implemented** |
-| **8** | **Frontend Foundation** | 📋 **Design package** (awaiting implementation approval) |
-| 8.1 | Application Foundation | 📋 Designed |
-| 8.2 | Authentication Foundation | 📋 Designed |
-| 8.3 | UI Foundation | 📋 Designed |
+| **8** | **Frontend Foundation** | ✅ **Complete** |
+| 8.1 | Application Foundation | ✅ **Implemented** |
+| 8.2 | Authentication Foundation | ✅ **Implemented** |
+| 8.3 | UI Foundation | ✅ **Implemented** |
+| **9** | **Frontend Modules** | 🔄 **In progress** (9.1 complete) |
+| 9.1 | Dashboard UI | ✅ **Implemented** |
+| 9.2 | User Management | 📋 Designed |
+| 9.3 | Project Management | 📋 Designed |
+| 9.4 | Task Management | 📋 Designed |
+| 9.5 | Reports | 📋 Designed |
 
 **Phase 1:** PostgreSQL, Sanctum, `/api/v1`, CORS, envelope, exception renderer, morph map, roles seed, health check, folder structure.
 
@@ -239,6 +246,10 @@ ADR: [decisions/Tech-Stack.md](decisions/Tech-Stack.md)
 
 **Phase 7.1–7.4:** Reports (`/api/v1/reports/projects`, `/api/v1/reports/employees`); date range; `ReportPolicy` Gates; no new tables.
 
+**Phase 8.1–8.3:** `opsflow-web` Frontend Foundation — Pinia/Router/Axios/Tailwind; Sanctum CSRF auth; Guest/Auth shell.
+
+**Phase 9.1:** Dashboard UI — `/dashboard` landing; `GET /api/v1/dashboard`; stat cards, Tailwind status bars, recent work; skeleton / empty / error+retry.
+
 See [CHANGELOG.md](CHANGELOG.md), [ROADMAP.md](ROADMAP.md).
 
 ---
@@ -247,33 +258,32 @@ See [CHANGELOG.md](CHANGELOG.md), [ROADMAP.md](ROADMAP.md).
 
 ### Immediate next
 
-**Milestone 8 — Frontend Foundation** (see §12) — design package complete; wait for explicit **implementation** approval
+**Phase 9.2 — User Management** (see §12) — wait for explicit implementation approval
 
-Specification: [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) · [decisions/Frontend-Foundation.md](decisions/Frontend-Foundation.md) · [ROADMAP.md](ROADMAP.md)
+Specification: [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md) · [decisions/Frontend-Modules.md](decisions/Frontend-Modules.md) · [ROADMAP.md](ROADMAP.md)
 
-Completed: Milestones 1–7 (API through Reports).
+Completed: Milestones 1–8 · Phase 9.1 Dashboard UI.
 
 ### Still pending
 
-- Milestone 8 implementation (`opsflow-web` app foundation + Sanctum Pinia auth + shell UI)
+- Milestone 9 remaining phases (Users → Projects → Tasks → Reports UIs)
+- Phase 10 — Testing
+- Phase 11 — Deployment
 - GitHub repos finalized (as applicable)
 
 ### Later phases (do not invent early)
 
-- Phase 9 — Testing
-- Phase 10 — Deployment
-- Feature Vue pages (Dashboard / Users / Projects / Tasks / Reports) after Milestone 8
+Kanban and other v1.2+ items after core module UIs.
 
 ### Future versions
 
 Notifications, remarks, kanban, time tracking, mobile, multi-org, etc. ([ROADMAP.md](ROADMAP.md))
 
-### Explicitly out of scope for Milestone 8
+### Explicitly out of scope for Milestone 9
 
-- Dashboard / Users / Projects / Tasks / Reports **pages**
-- Frontend automated test suite (Phase 9)
-- Deployment (Phase 10)
-- UI component frameworks
+- Chart libraries / UI frameworks / Kanban
+- PDF/CSV exports, Activity Logs / Remarks UI
+- Automated test suite (Phase 10) · Deployment (Phase 11)
 - Backend schema / new API endpoints
 
 ---
@@ -312,9 +322,9 @@ Notifications, remarks, kanban, time tracking, mobile, multi-org, etc. ([ROADMAP
 ### SPA client requirements
 
 - `Origin`/`Referer` on stateful domains (local: `http://localhost:5173`)
-- Axios `withCredentials: true`
+- Axios `withCredentials: true` + `withXSRFToken: true`
 - CSRF header from `XSRF-TOKEN` cookie
-- Frontend consumer design: [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) · [decisions/Frontend-Foundation.md](decisions/Frontend-Foundation.md) (awaiting implementation)
+- Frontend consumer design: [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) · [decisions/Frontend-Foundation.md](decisions/Frontend-Foundation.md) (**implemented**)
 
 Docs: [AUTHENTICATION.md](AUTHENTICATION.md), [decisions/Authentication.md](decisions/Authentication.md), [API_SPECIFICATION.md](API_SPECIFICATION.md)
 
@@ -689,7 +699,7 @@ ADRs: [DATABASE_DESIGN.md](DATABASE_DESIGN.md), [decisions/Database.md](decision
 10. **Credential allowlist** into `Auth::attempt()`
 11. **Morph aliases only for existing models**
 12. **Do not expand schema beyond the approved ERD** without updating `decisions/Database.md`
-13. **Do not implement later modules early** (Activity Logs / feature Vue pages) unless the milestone phase is approved; Milestone 8 is Frontend Foundation only
+13. **Do not implement later modules early** (Activity Logs / Kanban) unless approved; Milestone 9 phases must proceed **9.1 → 9.5** in order
 14. **Authorize via Policies** — do not scatter manual role checks outside policies (`UserPolicy`, `ProjectPolicy`, `TaskPolicy`, `DashboardPolicy` / `viewDashboard`, `ReportPolicy` Gates)
 15. **CORS / Sanctum domains stay environment-driven**
 16. **Update docs/ADRs when behavior changes**
@@ -717,7 +727,7 @@ Details: [CODING_STANDARDS.md](CODING_STANDARDS.md), [CURSOR_RULES.md](CURSOR_RU
 2. **Laravel 13 HTTP tests** — guard caching requires `forgetGuards()` in some multi-request auth tests
 3. **Draw.io diagrams empty** — future docs milestone
 4. **No Postman/Bruno collection checked in** — future
-5. **`opsflow-web` still create-vue scaffold** — Milestone 8 Frontend Foundation designed; not implemented yet
+5. **Feature Vue module pages** — Phase 9.1 Dashboard implemented; remaining modules await phase approval (9.2+)
 6. **Historical “Laravel 12” wording** in old git commits vs actual Laravel 13
 7. **Resource wrapping inconsistency** — login uses `data.user` + `resolve()`; `/me` uses Resource in `data` (intentional for now)
 8. **Environment-config hardening** deferred (secrets, production cookie domain strategy)
@@ -728,25 +738,28 @@ Details: [CODING_STANDARDS.md](CODING_STANDARDS.md), [CURSOR_RULES.md](CURSOR_RU
 
 ## 12. Immediate next milestone
 
-### Milestone 8 — Frontend Foundation
+### Milestone 9 — Frontend Modules
 
-**Status:** 📋 Design package complete — **wait for explicit implementation approval before coding.**
+**Status:** 🔄 In progress — ✅ Phase 9.1 complete · **wait for explicit Phase 9.2 approval before coding.**
 
-**Completed:** Milestones 1–7 (Backend Foundation through Reports).
+**Completed:** Milestones 1–8 · Phase 9.1 Dashboard UI.
 
-**Specification:** [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) · ADR: [decisions/Frontend-Foundation.md](decisions/Frontend-Foundation.md)
+**Specification:** [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md) · ADR: [decisions/Frontend-Modules.md](decisions/Frontend-Modules.md)
 
-**Phase 8 scope (high level):**
+**Phase 9 scope (high level):**
 
-| Phase | Scope |
-|-------|--------|
-| 8.1 | Application foundation (folders, Pinia/Router/Axios/Tailwind, env, API client, types) |
-| 8.2 | Authentication foundation (CSRF, login/logout, `/me`, guards, Guest vs Auth layouts, auth store) |
-| 8.3 | UI foundation (sidebar, topbar, shell, responsive nav, loading/empty/error, toast, shared components) |
+| Phase | Scope | Status |
+|-------|--------|--------|
+| 9.1 | Dashboard UI (`GET /dashboard`; landing redirect) | ✅ Implemented |
+| 9.2 | User Management | 📋 Designed — next |
+| 9.3 | Project Management | 📋 Designed |
+| 9.4 | Task Management | 📋 Designed |
+| 9.5 | Reports | 📋 Designed |
 
-**Out of scope:** Dashboard/Users/Projects/Tasks/Reports pages · Testing (Phase 9) · Deployment (Phase 10)
+**Out of scope:** Kanban · chart libraries · exports · Testing (Phase 10) · Deployment (Phase 11)
 
-**Do not invent** feature module UIs or expand scope without an approved plan.
+**Do not invent** backend APIs or skip phase order.
+
 
 ---
 
@@ -875,7 +888,7 @@ _(Re-check with `git status` before committing.)_
 ### Monorepo folder `OpsFlow/`
 
 - Not a meaningful single git root; treat **api** and **docs** as separate repos
-- `opsflow-web/` present as sibling (create-vue scaffold; Milestone 8 designed, not implemented)
+- `opsflow-web/` Milestone 8 Frontend Foundation implemented (auth shell; feature pages pending)
 
 **Convention:** one feature = one commit when asked to commit.
 
@@ -894,6 +907,7 @@ _(Re-check with `git status` before committing.)_
 | `docs/MILESTONE_6_…`     | Milestone 6 implementation spec       |
 | `docs/MILESTONE_7_…`     | Milestone 7 implementation spec       |
 | `docs/MILESTONE_8_…`     | Milestone 8 Frontend Foundation spec  |
+| `docs/MILESTONE_9_…`     | Milestone 9 Frontend Modules spec     |
 | `PROJECT_OVERVIEW.md`    | Product overview                      |
 | `REQUIREMENTS.md`        | Functional requirements               |
 | `ARCHITECTURE.md`        | System architecture                   |
@@ -908,19 +922,19 @@ _(Re-check with `git status` before committing.)_
 | `DEVELOPMENT_ROADMAP.md` | Pointer to `ROADMAP.md`               |
 | `CHANGELOG.md`           | Milestone changelog                   |
 | `UI_PAGES.md`            | UI inventory                          |
-| `decisions/`             | ADRs (incl. `Reports.md`, `Frontend-Foundation.md`) |
+| `decisions/`             | ADRs (incl. `Frontend-Foundation.md`, `Frontend-Modules.md`) |
 | `diagrams/`              | Draw.io placeholders (empty — future) |
 
 ---
 
 ## Quick start for the next session
 
-1. Read this handoff + [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) · [decisions/Frontend-Foundation.md](decisions/Frontend-Foundation.md)
+1. Read this handoff + [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md) · [decisions/Frontend-Modules.md](decisions/Frontend-Modules.md)
 2. Confirm git branch/status in `opsflow-api` / `opsflow-docs` / `opsflow-web`
-3. ✅ Milestone 7 is complete — next is **Milestone 8 — Frontend Foundation** — **wait for explicit implementation approval**
-4. Do **not** invent Dashboard/Users/Projects/Tasks/Reports UI inside Milestone 8
+3. ✅ Phase 9.1 is complete — next is **Phase 9.2 — User Management** — **wait for explicit approval**
+4. Do **not** skip phase order (9.1 → 9.5); do **not** invent backend APIs
 5. Do **not** modify code when the user asks for docs-only tasks
-6. Do **not** write `opsflow-web` application code until Milestone 8 implementation is approved
+6. SPA auth shell + Dashboard UI are live; Users/Projects/Tasks/Reports UIs remain designed only
 
 ### Essential commands
 
@@ -934,9 +948,10 @@ php artisan db:seed
 php artisan serve
 php artisan test
 
-# Web (after Milestone 8 implementation starts)
+# Web
 cd opsflow-web
 npm install
+cp .env.example .env
 npm run dev
 
 # Docs
@@ -953,7 +968,7 @@ cd opsflow-docs
 | Location   | `opsflow-docs/HANDOFF.md`                      |
 | Supersedes | Ad-hoc chat memory                             |
 | Maintain   | Update when milestones complete or ADRs change |
-| Ready for  | Next session → Milestone 8 Frontend Foundation **implementation** (after approval) |
+| Ready for  | Next session → Milestone 9 Frontend Modules **Phase 9.2** (after approval) |
 
 ## Project Principles
 

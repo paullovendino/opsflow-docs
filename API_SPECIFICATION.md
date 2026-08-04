@@ -35,12 +35,12 @@ Health check for the API process.
 
 Sanctum SPA cookie authentication.
 
-Frontend consumption (Milestone 8 design): [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) · [decisions/Frontend-Foundation.md](decisions/Frontend-Foundation.md).
+Frontend consumption (Milestone 8 — ✅; Phase 9.1 Dashboard UI — ✅; remaining M9 phases designed): [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) · [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md).
 
 SPA must:
 
 - Call `GET /sanctum/csrf-cookie` immediately before login
-- Send Axios requests with `withCredentials: true` and `X-XSRF-TOKEN`
+- Send Axios requests with `withCredentials: true`, `withXSRFToken: true`, and `X-XSRF-TOKEN`
 - Treat login success user as `data.user`; `/me` user as `data` (normalize in the SPA)
 - Show login `401` / inactive `403` / `422` inline on the login form (not via a global `/403` redirect)
 
@@ -916,8 +916,8 @@ Remark endpoints will be defined when the Remarks milestone begins.
 
 ## Dashboard
 
-> Milestone 6 — ✅ Implemented  
-> Spec: [docs/MILESTONE_6_DASHBOARD.md](docs/MILESTONE_6_DASHBOARD.md) · ADR: [decisions/Dashboard.md](decisions/Dashboard.md)
+> Milestone 6 — ✅ Implemented (API) · Phase 9.1 — ✅ Dashboard UI (`opsflow-web`)  
+> Spec: [docs/MILESTONE_6_DASHBOARD.md](docs/MILESTONE_6_DASHBOARD.md) · ADR: [decisions/Dashboard.md](decisions/Dashboard.md) · UI: [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md)
 
 ### Show dashboard
 

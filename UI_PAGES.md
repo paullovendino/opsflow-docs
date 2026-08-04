@@ -2,7 +2,7 @@
 
 ## Public
 
-> Milestone 8 — Login in scope (design package)
+> Milestone 8 — ✅ Login implemented
 
 - Login (`/login` — Milestone 8.2)
 
@@ -10,94 +10,77 @@
 
 ## App shell (Milestone 8)
 
-> Spec: [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) · ADR: [decisions/Frontend-Foundation.md](decisions/Frontend-Foundation.md)
+> ✅ Complete · Spec: [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md)
 
-- App Home (`/` — authenticated shell placeholder; **not** Dashboard feature UI)
-- Forbidden (`/403`)
-- Not Found (catch-all)
-- Auth layout: sidebar + topbar (Milestone 8.3); **Logout in topbar**
+- Auth layout: sidebar + topbar; **Logout in topbar**
 - Guest layout: centered login
+- Forbidden (`/403`) · Not Found (catch-all)
+- Landing: authenticated `/` → `/dashboard` (Phase 9.1)
 
 ---
 
 ## Dashboard
 
-> Milestone 6 API complete; Vue UI **after** Milestone 8  
-> Spec: [docs/MILESTONE_6_DASHBOARD.md](docs/MILESTONE_6_DASHBOARD.md)
+> API: Milestone 6 ✅ · Vue: Phase 9.1 ✅  
+> Spec: [docs/MILESTONE_6_DASHBOARD.md](docs/MILESTONE_6_DASHBOARD.md) · [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md)
 
-- Dashboard Overview (API: `GET /api/v1/dashboard` — statistics + recent work items; Vue pending — **out of Milestone 8**)
+- Dashboard Overview (`/dashboard` — `GET /api/v1/dashboard`)
+- Stat cards · Tailwind status bars · recent work
+- Skeleton / empty recent / error+retry
+- Landing: `/` → `/dashboard`
 
 ---
 
 ## Organization & User Management
 
-> Frontend pages planned **after** Milestone 8. Backend User CRUD APIs implemented (Phase 3.3).
+> API: Milestone 3 ✅ · Vue: Milestone 9.2 (designed)
 
-- User List (API: search/filters/sorting/pagination + authz — Milestone 3 complete; UI pending)
-- Create User
-- Edit User
-- User Details
-- My Profile
-
-### Reference data (read-only UI)
-
-> Lookup APIs implemented in Phase 3.4 (`/api/v1/lookups/*`); Vue screens later
-
-- Roles lookup (no CRUD screens in Milestone 3)
-- Departments lookup (no CRUD screens in Milestone 3)
-- Job Titles lookup (no CRUD screens in Milestone 3)
+- User List (`/users`)
+- Create User (`/users/create`) — **page**
+- Edit User (`/users/:id/edit`) — **page**
+- User Details (`/users/:id`)
+- My Profile (`/profile`)
+- Lookups via selects (no CRUD screens)
 
 ---
 
 ## Project Management
 
-> Vue UI after Milestone 8
+> API: Milestone 4 ✅ · Vue: Milestone 9.3 (designed)
 
-- Project List
-- Create Project
-- Edit Project
-- Project Details
-- Project Members (Milestone 4 API; Vue UI later)
+- Project List / Create / Edit / Details
+- Project Members (on Show)
 
 ---
 
 ## Task Management
 
-> Milestone 5 API complete; Vue UI after Milestone 8
+> API: Milestone 5 ✅ · Vue: Milestone 9.4 (designed) — **table only** (Kanban later)
 
-- Task List
-- Create Task
-- Edit Task
-- Task Details
-- Task Assignment / Status (API: Milestone 5)
+- Task List / Create / Edit / Details
+- Assignment / Status controls
 
 ---
 
 ## Reports
 
-> Milestone 7 API complete; Vue UI after Milestone 8  
-> Spec: [docs/MILESTONE_7_REPORTS.md](docs/MILESTONE_7_REPORTS.md)
+> API: Milestone 7 ✅ · Vue: Milestone 9.5 (designed)
 
-- Project Reports (API: `/api/v1/reports/projects`)
-- Employee Reports (API: `/api/v1/reports/employees`)
+- Project Reports list + detail
+- Employee Reports list + detail
+- Date filters (`from_date` / `to_date`)
 
 ---
 
 ## Activity Logs
 
-> Planned — future (not Milestone 6, 7, or 8; dashboard recent ≠ activity logs; reports ≠ activity logs)
+> Planned — future
 
 - Activity List
-
----
-
-## Profile
-
-- My Profile (after Milestone 8)
 
 ---
 
 ## Settings
 
 - Account Settings
-- Organization Settings (future — out of scope for Milestone 3)
+- Organization Settings (future)

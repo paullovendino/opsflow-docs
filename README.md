@@ -16,7 +16,7 @@ Central documentation for the OpsFlow SaaS platform.
 |-----------|--------|
 | Phase 1 — Project Setup (API foundation) | ✅ Completed |
 | Phase 2 — Authentication (API) | ✅ Completed |
-| Phase 2 — Pinia auth (Vue) | 📋 Milestone 8.2 (design package; awaiting implementation) |
+| Phase 2 — Pinia auth (Vue) | ✅ Milestone 8.2 |
 | **Milestone 3 — Organization & User Management** | ✅ **Complete** (3.1–3.6) |
 | Phase 3.1 — Organization Foundation | ✅ Implemented |
 | Phase 3.2 — User Domain Foundation | ✅ Implemented |
@@ -47,10 +47,16 @@ Central documentation for the OpsFlow SaaS platform.
 | Phase 7.2 — Project Reports | ✅ Implemented |
 | Phase 7.3 — Employee Reports | ✅ Implemented |
 | Phase 7.4 — Reports Authorization | ✅ Implemented |
-| **Milestone 8 — Frontend Foundation** | 📋 **Design package** (awaiting implementation) |
-| Phase 8.1 — Application Foundation | 📋 Designed |
-| Phase 8.2 — Authentication Foundation | 📋 Designed |
-| Phase 8.3 — UI Foundation | 📋 Designed |
+| **Milestone 8 — Frontend Foundation** | ✅ **Complete** (8.1–8.3) |
+| Phase 8.1 — Application Foundation | ✅ Implemented |
+| Phase 8.2 — Authentication Foundation | ✅ Implemented |
+| Phase 8.3 — UI Foundation | ✅ Implemented |
+| **Milestone 9 — Frontend Modules** | 🔄 **In progress** (9.1 complete) |
+| Phase 9.1 — Dashboard UI | ✅ Implemented |
+| Phase 9.2 — User Management | 📋 Designed |
+| Phase 9.3 — Project Management | 📋 Designed |
+| Phase 9.4 — Task Management | 📋 Designed |
+| Phase 9.5 — Reports | 📋 Designed |
 
 ## Documentation Index
 
@@ -65,6 +71,7 @@ Central documentation for the OpsFlow SaaS platform.
 | [docs/MILESTONE_6_DASHBOARD.md](docs/MILESTONE_6_DASHBOARD.md) | Milestone 6 implementation specification |
 | [docs/MILESTONE_7_REPORTS.md](docs/MILESTONE_7_REPORTS.md) | Milestone 7 implementation specification |
 | [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) | Milestone 8 implementation specification |
+| [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md) | Milestone 9 implementation specification |
 | [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md) | Product overview and tech stack |
 | [REQUIREMENTS.md](REQUIREMENTS.md) | Functional and non-functional requirements |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | System and backend architecture |
@@ -95,4 +102,4 @@ Central documentation for the OpsFlow SaaS platform.
 - Tasks (Milestone 5 complete): `/api/v1/tasks` CRUD, assignment, queries, `TaskPolicy`, status — see [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md)
 - Dashboard (Milestone 6 complete): `GET /api/v1/dashboard` — see [docs/MILESTONE_6_DASHBOARD.md](docs/MILESTONE_6_DASHBOARD.md)
 - Reports (Milestone 7 complete): `/api/v1/reports/projects`, `/api/v1/reports/employees` — see [docs/MILESTONE_7_REPORTS.md](docs/MILESTONE_7_REPORTS.md)
-- Next: Milestone 8 — Frontend Foundation (design package) — see [HANDOFF.md](HANDOFF.md) · [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md)
+- Next: Phase 9.2 — User Management (awaiting approval) — see [HANDOFF.md](HANDOFF.md) · [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md)

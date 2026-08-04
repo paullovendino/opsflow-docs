@@ -2,11 +2,11 @@
 
 ## Status
 
-Accepted (Design) — Milestone 8 awaiting **implementation approval** (design review sync 2026-08-04)
+Accepted — Milestone 8 complete (Phases 8.1–8.3)
 
 ## Context
 
-OpsFlow completed API Milestones 1–7. `opsflow-web` exists only as a create-vue scaffold (Vue + Vite + TypeScript) with **no** Pinia, Vue Router, Axios, Tailwind, auth, or app shell.
+OpsFlow completed API Milestones 1–7. `opsflow-web` existed only as a create-vue scaffold (Vue + Vite + TypeScript) with **no** Pinia, Vue Router, Axios, Tailwind, auth, or app shell.
 
 The roadmap previously listed Phase 8 as a vague “Testing” bucket while Vue/Pinia auth remained an unresolved Phase 2 follow-up. Frontend testing cannot precede a real SPA foundation. Milestone 8 therefore establishes the **Frontend Foundation** before feature UIs and before a dedicated Testing phase.
 
@@ -28,11 +28,11 @@ Vue 3 (Composition API) · TypeScript · Pinia · Vue Router · Axios · Tailwin
 
 ### Phasing
 
-| Phase | Scope |
-|-------|--------|
-| 8.1 | Application foundation — folders, tooling, env, Axios client, types, router skeleton, remove create-vue welcome |
-| 8.2 | Authentication foundation — CSRF, login/logout, `/me` bootstrap, auth store, guards, Guest vs Auth layouts |
-| 8.3 | UI foundation — sidebar, topbar, shell, responsive nav, loading/empty/error, toast, shared UI components |
+| Phase | Scope | Status |
+|-------|--------|--------|
+| 8.1 | Application foundation — folders, tooling, env, Axios client, types, router skeleton, remove create-vue welcome | ✅ Implemented |
+| 8.2 | Authentication foundation — CSRF, login/logout, `/me` bootstrap, auth store, guards, Guest vs Auth layouts | ✅ Implemented |
+| 8.3 | UI foundation — sidebar, topbar, shell, responsive nav, loading/empty/error, toast, shared UI components | ✅ Implemented |
 
 ### Auth model
 
@@ -60,6 +60,7 @@ Vue 3 (Composition API) · TypeScript · Pinia · Vue Router · Axios · Tailwin
 | Tailwind | `@tailwindcss/vite` |
 | Env | `.env.example` + local `.env` |
 | Axios timeout | 15000 ms |
+| Axios CSRF (cross-origin) | `withXSRFToken: true` + Laravel XSRF cookie/header names |
 | Logout UI | Topbar (sidebar has no logout) |
 | Global `403` interceptor | No auto-navigate to `/403`; LoginView owns login `403`s |
 | AuthUser | Normalize login `data.user` and `/me` `data` to `UserResource`-aligned shape |
@@ -82,9 +83,10 @@ Vue 3 (Composition API) · TypeScript · Pinia · Vue Router · Axios · Tailwin
 
 | Phase | Milestone |
 |-------|-----------|
-| **8** | **Frontend Foundation** (this ADR) |
-| **9** | Testing (API + frontend automated testing, bug fixes) — formerly Phase 8 |
-| **10** | Deployment — formerly Phase 9 |
+| **8** | **Frontend Foundation** (this ADR) — ✅ complete |
+| **9** | **Frontend Modules** — see [Frontend-Modules.md](Frontend-Modules.md) |
+| **10** | Testing |
+| **11** | Deployment |
 
 ### Explicitly out of scope
 
@@ -92,12 +94,10 @@ Feature module pages, frontend test frameworks as a deliverable, deployment, reg
 
 ## Consequences
 
-- Companion docs must point **next** work at Milestone 8 Frontend Foundation (design → approval → code)
-- Phase 2 “Pinia auth pending” is absorbed by Milestone 8.2
-- Database ADR: Milestone 8 is **schema-neutral**
-- `AUTHENTICATION.md` / Auth ADR: frontend consumer finally specified
-- Do **not** implement Milestone 8 until the user explicitly approves
-- Do not invent Dashboard/Users/Projects/Tasks/Reports UI inside Milestone 8
+- Companion docs mark Milestone 8 complete; next is **Phase 9 — Testing** (after approval)
+- Phase 2 “Pinia auth pending” is delivered by Milestone 8.2
+- Database ADR: Milestone 8 remains **schema-neutral**
+- Do not invent Dashboard/Users/Projects/Tasks/Reports UI until those frontend milestones are designed and approved
 
 ## References
 

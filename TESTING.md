@@ -239,7 +239,8 @@ Spec: [docs/MILESTONE_7_REPORTS.md](docs/MILESTONE_7_REPORTS.md) · ADR: [decisi
 
 - Explicit `429` rate-limit assertion
 - CSRF rejection cases
-- Frontend automated tests (**Phase 9 — Testing**; after Milestone 8 SPA exists)
+- Frontend automated tests (**Phase 10 — Testing**; after Milestone 9 module UIs)
 - Activity Logs suites
 
-Milestone 8 (Frontend Foundation) does **not** require a Vitest/Cypress suite — manual auth/shell checks only. See [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md).
+Milestone 8 (Frontend Foundation) — ✅ complete; manual auth/shell checks apply.  
+Milestone 9 module UIs — Phase 9.1 Dashboard implemented; remaining phases designed; automated tests deferred to Phase 10. See [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md).

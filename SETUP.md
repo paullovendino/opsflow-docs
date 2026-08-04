@@ -123,13 +123,12 @@ Align credentials with `phpunit.xml` or override via environment.
 
 ## Frontend
 
-`opsflow-web` is a Vue 3 + Vite scaffold. **Milestone 8 — Frontend Foundation** (design package) covers Pinia, Vue Router, Axios, Tailwind, Sanctum auth, and the app shell.
-
-Until Milestone 8 is implemented:
+`opsflow-web` Milestone 8 Frontend Foundation is implemented (Pinia auth shell).
 
 ```sh
 cd opsflow-web
 npm install
+cp .env.example .env
 npm run dev
 ```
 

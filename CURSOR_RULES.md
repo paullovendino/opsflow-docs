@@ -22,8 +22,8 @@
 - Prefer `opsflow-docs/docs/DOMAIN_MODEL.md` for business concepts.
 - Prefer milestone specs under `opsflow-docs/docs/` before implementing a phase.
 - Do not implement future modules early (Remarks/Activity Logs/advanced RBAC) unless the milestone says so.
-- Milestones **3–7** backend are **complete**. Milestone **8 — Frontend Foundation** is **designed** — do **not** implement `opsflow-web` application code until the user explicitly approves Milestone 8 implementation.
-- Match existing patterns: Users/Projects/Tasks/Dashboard/Reports as documented. For Reports: `ReportController` → Form Requests → `ReportService` → Resources + `ReportPolicy` Gates per `docs/MILESTONE_7_REPORTS.md`. For frontend: follow `docs/MILESTONE_8_FRONTEND_FOUNDATION.md` / `decisions/Frontend-Foundation.md`.
+- Milestones **3–8** and **Phase 9.1** are **complete**. Do **not** implement Phase 9.2+ until the user explicitly approves. Do **not** implement Phase 10 Testing early.
+- Match existing patterns. Frontend modules: follow `docs/MILESTONE_9_FRONTEND_MODULES.md` / `decisions/Frontend-Modules.md`. Foundation: `docs/MILESTONE_8_FRONTEND_FOUNDATION.md`.
 
 ## API
 
@@ -43,9 +43,10 @@
 ## Frontend
 
 - Use Pinia for global state.
-- Use Axios for API requests (`withCredentials: true`).
+- Use Axios for API requests (`withCredentials: true`, `withXSRFToken: true`).
 - Use Vue Router navigation guards.
 - Use Composition API only.
 - Use Tailwind CSS; **no UI framework** unless an ADR approves one.
-- Follow [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) for Milestone 8.
-- Vue Dashboard / Users / Projects / Tasks / Reports UI is **out of scope** for Milestone 8.
+- Follow [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) for the auth shell (✅ Milestone 8).
+- Follow [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md) for feature modules (✅ 9.1; remaining phases after approval).
+- No chart library / UI kit / Kanban in Milestone 9 unless an ADR changes that.

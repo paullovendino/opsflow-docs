@@ -1,8 +1,8 @@
 # Milestone 8 — Frontend Foundation
 
-**Status:** 📋 Design package complete — **awaiting implementation approval**  
+**Status:** ✅ Milestone 8 complete (Phases 8.1–8.3)  
 **Product version:** v1.0.0 (Development)  
-**Last updated:** 2026-08-04 (design review sync)
+**Last updated:** 2026-08-04
 
 > Implementation specification for Milestone 8 (`opsflow-web`).  
 > ADR: [decisions/Frontend-Foundation.md](../decisions/Frontend-Foundation.md)  
@@ -47,9 +47,9 @@ Implementation **starts from this scaffold** and replaces welcome UI with OpsFlo
 
 | Phase | Scope | Status |
 |-------|--------|--------|
-| **8.1 Application Foundation** | Folder structure; Vue/Pinia/Router/Tailwind install; env; Axios client; types; replace scaffold entry | 📋 Designed |
-| **8.2 Authentication Foundation** | CSRF → login → session; `/me` bootstrap; auth store; guards; Guest vs Auth layouts; login page | 📋 Designed |
-| **8.3 UI Foundation** | Sidebar; topbar; app shell; responsive nav; loading/empty/error pages; toast; shared UI components | 📋 Designed |
+| **8.1 Application Foundation** | Folder structure; Vue/Pinia/Router/Tailwind install; env; Axios client; types; replace scaffold entry | ✅ Implemented |
+| **8.2 Authentication Foundation** | CSRF → login → session; `/me` bootstrap; auth store; guards; Guest vs Auth layouts; login page | ✅ Implemented |
+| **8.3 UI Foundation** | Sidebar; topbar; app shell; responsive nav; loading/empty/error pages; toast; shared UI components | ✅ Implemented |
 
 **Phase order is mandatory.** Do not start a later phase until the prior phase is complete and approved.
 
@@ -83,7 +83,7 @@ Implementation **starts from this scaffold** and replaces welcome UI with OpsFlo
 | Logout placement | **Topbar** user area (name/email + Logout). Sidebar = brand + nav only. |
 | `/403` access | Available to **guest and authenticated** users; **no** `requiresAuth` / `guest` meta. |
 | Global `403` interceptor | **Do not** auto-navigate to `/403`. Reject the promise with the envelope; callers handle UX. Login form owns inactive / already-authenticated messages. Optional toast only when a caller does not handle the error. |
-| Login `403` cases | `Account is inactive.` → show on **LoginView**. `Already authenticated.` → re-bootstrap via `/me` (or trust store) and redirect to `home` (guest guard should usually prevent this). |
+| Login `403` cases | `Account is inactive.` → show on **LoginView**. `Already authenticated.` → `refreshUser()` via `/me` and redirect to `home` (guest guard should usually prevent this). |
 | Login `401` | Show API message / generic invalid credentials on **LoginView** (not a toast-only flow). |
 | CSRF | Always `GET /sanctum/csrf-cookie` **immediately before** login (also after logout before a new login, because logout regenerates the CSRF token). |
 | AuthUser shape | Normalize login `data.user` and `/me` `data` into one `AuthUser` matching `UserResource` fields needed by the shell: `id`, `first_name`, `middle_name`, `last_name`, `full_name`, `email`, `avatar`, `status`, `last_login_at`, nested `role` (at least `id`, `name`), optional `department` / `job_title`. |
@@ -236,7 +236,7 @@ type ApiEnvelope<T> = {
 | Setting | Value |
 |---------|--------|
 | `withCredentials` | `true` |
-| CSRF | Configure Axios `xsrfCookieName: 'XSRF-TOKEN'`, `xsrfHeaderName: 'X-XSRF-TOKEN'` (Laravel defaults). Cookie value is URL-encoded; Axios decodes when using these options. |
+| CSRF | `withXSRFToken: true`, `xsrfCookieName: 'XSRF-TOKEN'`, `xsrfHeaderName: 'X-XSRF-TOKEN'` (Laravel defaults). Required for cross-origin SPA→API (`localhost:5173` → `:8000`); Axios 1.x does not send the XSRF header on cross-origin requests unless `withXSRFToken` is true. Cookie value is URL-encoded; Axios decodes when using these options. |
 | Accept | `application/json` |
 | Timeout | **15000** ms |
 
@@ -263,15 +263,15 @@ Do not invent new backend error shapes.
 
 ### 5.9 Phase 8.1 deliverables checklist
 
-- [ ] Install Pinia, Vue Router, Axios, Tailwind CSS via **`@tailwindcss/vite`**
-- [ ] Create folder structure above (no `placeholders/` directory)
-- [ ] `.env.example` + typed env
-- [ ] `http.ts` Axios instance (`withCredentials`, XSRF names, **15000** ms timeout)
-- [ ] `types/api.ts` + `types/auth.ts` (`AuthUser`)
-- [ ] Router skeleton with **nested** Guest/Auth layouts + placeholder views
-- [ ] Replace create-vue welcome UI from `App.vue` / remove unused scaffold components
-- [ ] `index.html` title → OpsFlow
-- [ ] App still type-checks and builds
+- [x] Install Pinia, Vue Router, Axios, Tailwind CSS via **`@tailwindcss/vite`**
+- [x] Create folder structure above (no `placeholders/` directory)
+- [x] `.env.example` + typed env
+- [x] `http.ts` Axios instance (`withCredentials`, XSRF names, **15000** ms timeout)
+- [x] `types/api.ts` + `types/auth.ts` (`AuthUser`)
+- [x] Router skeleton with **nested** Guest/Auth layouts + placeholder views
+- [x] Replace create-vue welcome UI from `App.vue` / remove unused scaffold components
+- [x] `index.html` title → OpsFlow
+- [x] App still type-checks and builds
 
 **Out of scope for 8.1:** Working login UX polish, full shell chrome, feature pages.
 
@@ -366,13 +366,13 @@ Implement in `router/guards.ts`; keep `router/index.ts` thin.
 
 ### 6.8 Phase 8.2 deliverables checklist
 
-- [ ] `authService.ts` (csrf, login, logout, me)
-- [ ] `stores/auth.ts`
-- [ ] `LoginView` wired end-to-end against local API
-- [ ] Bootstrap on startup
-- [ ] Guards for guest/auth routes
-- [ ] GuestLayout + AuthLayout shells (chrome can be minimal until 8.3)
-- [ ] Manual verification: login, refresh restores session via cookie + `/me`, logout
+- [x] `authService.ts` (csrf, login, logout, me)
+- [x] `stores/auth.ts`
+- [x] `LoginView` wired end-to-end against local API
+- [x] Bootstrap on startup
+- [x] Guards for guest/auth routes
+- [x] GuestLayout + AuthLayout shells (chrome can be minimal until 8.3)
+- [x] Manual verification: login, refresh restores session via cookie + `/me`, logout
 
 **Out of scope for 8.2:** Dashboard/Users/Projects/Tasks/Reports UI; registration; password reset.
 
@@ -464,13 +464,13 @@ Keep components presentational; no feature-domain props beyond shell needs.
 
 ### 7.10 Phase 8.3 deliverables checklist
 
-- [ ] Sidebar + Topbar + Auth shell polish
-- [ ] Responsive drawer behavior
-- [ ] Loading / empty / error views wired
-- [ ] Toast store + host
-- [ ] Shared UI primitives above
-- [ ] Create-vue CSS/theme leftovers removed in favor of Tailwind-based shell
-- [ ] Type-check + production build pass
+- [x] Sidebar + Topbar + Auth shell polish
+- [x] Responsive drawer behavior
+- [x] Loading / empty / error views wired
+- [x] Toast store + host
+- [x] Shared UI primitives above
+- [x] Create-vue CSS/theme leftovers removed in favor of Tailwind-based shell
+- [x] Type-check + production build pass
 
 ---
 
@@ -535,15 +535,16 @@ Broader automated testing is **Phase 9**.
 - [x] `docs/MILESTONE_8_FRONTEND_FOUNDATION.md` exists
 - [x] `decisions/Frontend-Foundation.md` ADR exists
 - [x] Companion docs synchronized
-- [ ] Implementation approved by user before coding
+- [x] Implementation approved by user before coding
 
 ### Implementation (after approval)
 
-- [ ] Phases 8.1–8.3 complete per checklists
-- [ ] Sanctum cookie auth works against local `opsflow-api`
-- [ ] No feature module pages shipped
-- [ ] No new backend schema/API invented
-- [ ] Docs flipped to ✅ Implemented as phases complete
+- [x] Phases 8.1–8.3 complete per checklists
+- [x] Sanctum cookie auth wired against local `opsflow-api` contracts
+- [x] No feature module pages shipped
+- [x] No new backend schema/API invented
+- [x] Docs flipped to ✅ Implemented as phases complete
+- [x] `npm run type-check` and `npm run build` succeed
 
 ---
 

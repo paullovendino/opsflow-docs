@@ -66,7 +66,7 @@ Use **Laravel Sanctum SPA cookie authentication**.
 - Production requires matching SPA/API top-level domain (or subdomain) strategy
 - Token auth for mobile can be added later without replacing SPA cookie auth
 - References: [AUTHENTICATION.md](../AUTHENTICATION.md), [API_SPECIFICATION.md](../API_SPECIFICATION.md), [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](../docs/MILESTONE_8_FRONTEND_FOUNDATION.md)
-- Pinia auth store remains a frontend Milestone 8.2 deliverable ([docs/MILESTONE_8_FRONTEND_FOUNDATION.md](../docs/MILESTONE_8_FRONTEND_FOUNDATION.md))
+- Pinia auth store delivered in Milestone 8.2 ([docs/MILESTONE_8_FRONTEND_FOUNDATION.md](../docs/MILESTONE_8_FRONTEND_FOUNDATION.md))
 - Login inactive (`403`) and invalid credentials (`401`) are form concerns on the SPA; do not conflate with a global forbidden page
 
 ## References
