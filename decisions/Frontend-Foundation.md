@@ -94,10 +94,10 @@ Feature module pages, frontend test frameworks as a deliverable, deployment, reg
 
 ## Consequences
 
-- Companion docs mark Milestone 8 complete; next is **Phase 9 — Testing** (after approval)
+- Companion docs mark Milestone 8 complete; feature UIs shipped in **Milestone 9** (✅ complete); next is **Phase 10 — Testing & QA** (after approval); then Phase 11 — Deployment
 - Phase 2 “Pinia auth pending” is delivered by Milestone 8.2
 - Database ADR: Milestone 8 remains **schema-neutral**
-- Do not invent Dashboard/Users/Projects/Tasks/Reports UI until those frontend milestones are designed and approved
+- Milestone 9 delivered Dashboard/Users/Projects/Tasks/Reports UIs — see [decisions/Frontend-Modules.md](Frontend-Modules.md)
 
 ## References
 

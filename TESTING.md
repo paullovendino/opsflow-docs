@@ -239,8 +239,8 @@ Spec: [docs/MILESTONE_7_REPORTS.md](docs/MILESTONE_7_REPORTS.md) · ADR: [decisi
 
 - Explicit `429` rate-limit assertion
 - CSRF rejection cases
-- Frontend automated tests (**Phase 10 — Testing**; after Milestone 9 module UIs)
+- Frontend automated tests (**Phase 10 — Testing & QA**; Milestone 9 module UIs complete — awaiting approval)
 - Activity Logs suites
 
 Milestone 8 (Frontend Foundation) — ✅ complete; manual auth/shell checks apply.  
-Milestone 9 module UIs — Phase 9.1 Dashboard implemented; remaining phases designed; automated tests deferred to Phase 10. See [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md).
+Milestone 9 (Frontend Modules) — ✅ complete (Phases 9.1–9.5 + post-ship UX/performance); frontend automated tests still Phase 10 (awaiting approval). See [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md).

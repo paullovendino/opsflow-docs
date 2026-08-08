@@ -51,12 +51,12 @@ Central documentation for the OpsFlow SaaS platform.
 | Phase 8.1 — Application Foundation | ✅ Implemented |
 | Phase 8.2 — Authentication Foundation | ✅ Implemented |
 | Phase 8.3 — UI Foundation | ✅ Implemented |
-| **Milestone 9 — Frontend Modules** | 🔄 **In progress** (9.1 complete) |
+| **Milestone 9 — Frontend Modules** | ✅ **Complete** (9.1–9.5 + post-ship UX/performance) |
 | Phase 9.1 — Dashboard UI | ✅ Implemented |
-| Phase 9.2 — User Management | 📋 Designed |
-| Phase 9.3 — Project Management | 📋 Designed |
-| Phase 9.4 — Task Management | 📋 Designed |
-| Phase 9.5 — Reports | 📋 Designed |
+| Phase 9.2 — User Management | ✅ Implemented (modal CRUD + lookup cache) |
+| Phase 9.3 — Project Management | ✅ Implemented (list+modal Create/Edit; Show page) |
+| Phase 9.4 — Task Management | ✅ Implemented (modal CRUD; table not Kanban) |
+| Phase 9.5 — Reports | ✅ Implemented (Tailwind bars; no exports) |
 
 ## Documentation Index
 
@@ -102,4 +102,4 @@ Central documentation for the OpsFlow SaaS platform.
 - Tasks (Milestone 5 complete): `/api/v1/tasks` CRUD, assignment, queries, `TaskPolicy`, status — see [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md)
 - Dashboard (Milestone 6 complete): `GET /api/v1/dashboard` — see [docs/MILESTONE_6_DASHBOARD.md](docs/MILESTONE_6_DASHBOARD.md)
 - Reports (Milestone 7 complete): `/api/v1/reports/projects`, `/api/v1/reports/employees` — see [docs/MILESTONE_7_REPORTS.md](docs/MILESTONE_7_REPORTS.md)
-- Next: Phase 9.2 — User Management (awaiting approval) — see [HANDOFF.md](HANDOFF.md) · [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md)
+- Next: Phase 10 — Testing & QA (awaiting approval) — then Phase 11 — Deployment — see [HANDOFF.md](HANDOFF.md) · [TESTING.md](TESTING.md)

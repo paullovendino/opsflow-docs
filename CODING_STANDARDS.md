@@ -211,8 +211,15 @@ Details: [AUTHENTICATION.md](AUTHENTICATION.md)
 - Login auth errors stay inline on the login form; do not auto-route every API `403` to `/403`.
 - Milestone 9 feature UIs live under `modules/` with domain `*Service.ts` and composables — see [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md).
 - Phase 9.1 Dashboard UI is implemented (`dashboardService`, `useDashboard`, `modules/dashboard`).
-- Do not call Users/Projects/Tasks/Reports APIs for product UI until the relevant Milestone 9 phase is approved.
-- No chart libraries or Kanban in Milestone 9 (locked).
+- Phase 9.2 User Management UI is implemented (`userService`, `lookupService`, `useUserList`, `useLookups`, `modules/users`).
+- Phase 9.3 Project Management UI is implemented (`projectService`, `useProjectList`, `modules/projects` — Create/Edit/View modals; `/projects/:id` Show page).
+- Phase 9.4 Task Management UI is implemented (`taskService`, `useTaskList`, `modules/tasks` — Create/Edit/View modals; table not Kanban).
+- Phase 9.5 Reports UI is implemented (`reportService`, `modules/reports` — Tailwind bars; no chart lib / exports).
+- Users, Projects, and Tasks Create/Edit/View use shared `AppModal` dialogs on the list; deep-link show pages remain for `/users/:id`, `/profile`, `/projects/:id`, `/tasks/:id`. Reports remain dedicated list/detail pages.
+- `useLookups` uses a module-level in-memory SPA-session cache + in-flight dedupe (not Pinia / localStorage). Users search/filters/pagination remain server-side.
+- Prefer shared UI (`AppTable`, `AppDropdownMenu`, `AppFilterBar`, `AppConfirmDialog`, `AppModal`, skeletons, `AppProgressBar`, …) over module-only duplicates.
+- Milestone 9 modules may call their domain APIs (`users`, `projects`, `tasks`, `dashboard`, `reports`, `lookups`).
+- No chart libraries or Kanban in Milestone 9 (locked). Do not implement Phase 10 Testing & QA until approved.
 
 ---
 

@@ -35,7 +35,7 @@ Health check for the API process.
 
 Sanctum SPA cookie authentication.
 
-Frontend consumption (Milestone 8 — ✅; Phase 9.1 Dashboard UI — ✅; remaining M9 phases designed): [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) · [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md).
+Frontend consumption (Milestone 8 — ✅; Milestone 9 — ✅ Phases 9.1–9.5): [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) · [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md).
 
 SPA must:
 
@@ -302,7 +302,8 @@ Password is never returned. `department` / `job_title` may be `null`. Nested obj
 ## Users
 
 > **Phase 3.3 — Implemented (CRUD APIs)** · **Phase 3.5 — Implemented (list query)** · **Phase 3.6 — Implemented (authorization)**  
-> Lookup APIs are Phase 3.4 (`/api/v1/lookups/*`).
+> Lookup APIs are Phase 3.4 (`/api/v1/lookups/*`).  
+> Vue UI: Phase 9.2 ✅ — list + modal Create/Edit/View; show/profile pages; `useLookups` SPA-session cache — [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md)
 
 ### GET /api/v1/users
 
@@ -480,7 +481,8 @@ List job titles (non-soft-deleted).
 
 > **Milestone 4 — ✅ Phases 4.1–4.5 implemented (complete)**  
 > Spec: [docs/MILESTONE_4_PROJECT_MANAGEMENT.md](docs/MILESTONE_4_PROJECT_MANAGEMENT.md)  
-> ADR: [decisions/Project-Management.md](decisions/Project-Management.md)
+> ADR: [decisions/Project-Management.md](decisions/Project-Management.md)  
+> Vue UI: Phase 9.3 ✅ — list + modal Create/Edit/View; Show workspace page (members + `ProjectTasksPanel`) — [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md)
 
 ### Authorization (coarse — Phase 4.5)
 
@@ -692,7 +694,8 @@ Remove a member from a project (hard-delete pivot row).
 
 > **Milestone 5 — ✅ Complete** (Phases 5.1–5.6)  
 > Spec: [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md)  
-> ADR: [decisions/Task-Management.md](decisions/Task-Management.md)
+> ADR: [decisions/Task-Management.md](decisions/Task-Management.md)  
+> Vue UI: Phase 9.4 ✅ — table list + modal Create/Edit/View; `/tasks/:id` deep link; assignment/status; not Kanban — [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md)
 
 ### Authorization (coarse — Phase 5.5)
 
@@ -994,7 +997,8 @@ Authorization: Sanctum session (auth:sanctum)
 ## Reports
 
 > Milestone 7 — ✅ Implemented  
-> Spec: [docs/MILESTONE_7_REPORTS.md](docs/MILESTONE_7_REPORTS.md) · ADR: [decisions/Reports.md](decisions/Reports.md)
+> Spec: [docs/MILESTONE_7_REPORTS.md](docs/MILESTONE_7_REPORTS.md) · ADR: [decisions/Reports.md](decisions/Reports.md)  
+> Vue UI: Phase 9.5 ✅ — project/employee list+detail pages; date filters; Tailwind bars; no chart library; no exports — [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md)
 
 ### List project reports
 

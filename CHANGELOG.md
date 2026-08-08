@@ -8,6 +8,65 @@ Format follows a lightweight Keep a Changelog style.
 
 ## [Unreleased] — v1.0.0 (Development)
 
+### Frontend UX / perceived performance (post-ship Milestone 9) — ✅ Implemented
+
+- CRUD modal UX: Users, Projects, and Tasks Create/Edit/View use list + `AppModal` aliases; Show remains a dedicated page (`/users/:id`, `/projects/:id`, `/tasks/:id`)
+- Projects Create/Edit revised from dedicated pages (`ProjectCreateView` / `ProjectEditView`) to `ProjectListView` + `ProjectFormDialog` / `ProjectDetailDialog`; Show page can edit in place
+- Shared skeletons: `AppSkeleton`, `AppTableSkeleton`, `AppCardSkeleton`, `AppDetailSkeleton`, `AppReportSkeleton`; module list skeletons reuse them
+- Soft refresh: keep prior list/detail visible (`opacity-60` + `aria-busy`); loading remains distinct from empty state
+- `AppProgressBar`: route navigation + page-level HTTP; **`/api/v1/lookups/*` excluded**; Create/Edit modal alias routes do not start route progress
+- Auth bootstrap: full-screen `AppSpinner` until `/me` completes
+- `useLookups`: module-level in-memory SPA-session cache + in-flight dedupe (not Pinia, not localStorage); Users search/filters/pagination remain server-side
+- Stable `AuthLayout` `viewKey` + `isModalAliasNavigation` for Users / Projects / Tasks Create/Edit aliases (list not remounted)
+- Backend APIs unchanged; `opsflow-web` `npm run type-check` + `npm run build` green
+- Docs synchronized; **Milestone 9 complete**; next is **Phase 10 — Testing & QA** (awaiting approval); then Phase 11 — Deployment
+
+### Reports UI (Phase 9.5) — ✅ Implemented
+
+- `opsflow-web`: `/reports` → project reports; `/reports/projects`, `/reports/projects/:id`, `/reports/employees`, `/reports/employees/:id`
+- `reportService`; `ReportDateFilters`; reuse `DashboardStatCard` / `DashboardStatusBar` (Tailwind bars only)
+- Project + Employee list/detail; optional `from_date` / `to_date`
+- Role-aware: Employee list Admin/PM only; Employee self detail via My report
+- No exports; no chart libraries
+- Sidebar: Reports + Employee reports (Admin/PM) / My report (Employee)
+- `npm run type-check` + `npm run build` green
+- Docs synchronized; Milestone 9 complete after 9.5; later post-ship UX/performance polish — see entry above; next is Phase 10 — Testing & QA
+
+### Task Management UI (Phase 9.4) — ✅ Implemented
+
+- `opsflow-web`: `/tasks` list with search, filters (status/priority/project), pagination; desktop table / mobile cards
+- Create/Edit/View as **modals** on the list (`AppModal`); routes `/tasks/create` and `/tasks/:id/edit` open list + dialog (Users pattern); `/tasks/:id` show page for deep links
+- `taskService` + `useTaskList`; `TaskForm` / `TaskFormDialog` / `TaskDetailDialog` / `TaskDetailPanel` / `TaskAssignmentDialog` / `TaskActionsMenu`
+- Status patch; assignment patch; soft delete; priority badges via `StatusBadge` kind=priority
+- Integrated into Project Show via `ProjectTasksPanel`
+- Authz: Admin/PM mutate; Employee list/view + status only when assigned to self
+- Table layout (not Kanban); no chart library
+- Docs synchronized; next was Phase 9.5 — Reports
+
+### Project Management UI (Phase 9.3) — ✅ Implemented
+
+- `opsflow-web`: `/projects` list with search, status filter, pagination; desktop table / mobile cards
+- Create/Edit originally shipped as dedicated pages; later revised to **list modals** (`ProjectFormDialog` / `ProjectDetailDialog` on `ProjectListView`) — see post-ship UX entry
+- Show workspace: project information, members panel, Tasks via `ProjectTasksPanel` (Phase 9.4)
+- `projectService` + `useProjectList`; status via `PATCH .../status` modal; soft delete via existing `DELETE` + confirm
+- Members on Show: list / add (active-user select) / remove confirm; surfaces API `409` for duplicates
+- Authz-aligned UI: Admin/PM mutate; Employees list/view only; sidebar Projects enabled
+- `npm run type-check` + `npm run build` green
+- Docs synchronized; next was Phase 9.4 — Task Management
+- Full Milestone 9 documentation sync completed after Phase 9.5 + post-ship UX
+
+### User Management UI (Phase 9.2) — ✅ Implemented
+
+- `opsflow-web`: `/users` directory with search, filters, pagination, role-aware nav
+- Create/Edit/View as **modals** (`AppModal` + `UserFormDialog` / `UserDetailDialog`); routes `/users/create` and `/users/:id/edit` open the list with the dialog
+- Deep-link pages: `/users/:id` (show), `/profile` (self)
+- `userService` + `lookupService`; `useUserList` / `useLookups`; reusable `UserForm` / `UserDetailPanel`
+- Shared UI: `AppTable`, `AppPagination`, `AppSearch`, `AppFilterBar`, `AppConfirmDialog`, `AppModal`, `AppDropdownMenu`, `AppPageHeader`, `AppFormSection`, `AppFormActions`, `AppSelect`, `AppTextarea`, `AppBadge`, `StatusBadge`
+- Status activate/deactivate + soft delete via `AppConfirmDialog`
+- UX polish: teleported actions menu (no overflow clipping); Clear always visible/disabled; confirm focus trap; list refresh opacity; mobile card stack
+- `npm run type-check` + `npm run build` green
+- Docs synchronized; next was Phase 9.3 — Project Management
+
 ### Dashboard UI (Phase 9.1) — ✅ Implemented
 
 - `opsflow-web`: `/dashboard` landing; authenticated `/` redirects to dashboard
@@ -16,15 +75,18 @@ Format follows a lightweight Keep a Changelog style.
 - `DashboardSkeleton` / empty recent / inline error+retry; sidebar Dashboard link enabled
 - Shared `AppBadge` / `StatusBadge`; removed App Home placeholder
 - `npm run type-check` + `npm run build` green
-- Docs synchronized; next is Phase 9.2 — User Management (awaiting approval)
+- Docs synchronized; next was Phase 9.2 — User Management
 
 ### Frontend Modules design package (Milestone 9) — 📋 Documentation only
 
 - Created [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md) and [decisions/Frontend-Modules.md](decisions/Frontend-Modules.md)
 - Phases 9.1 Dashboard · 9.2 Users · 9.3 Projects · 9.4 Tasks · 9.5 Reports
-- Locked: `/` → `/dashboard`; table (not Kanban); Create/Edit pages; Tailwind charts (no chart lib); `modules/` folder
-- Roadmap: Testing → **Phase 10**; Deployment → **Phase 11**
-- Companion docs synchronized; **Phase 9.1 implemented**
+- Locked (design): `/` → `/dashboard`; table (not Kanban); Tailwind charts (no chart lib); `modules/` folder
+- Users Create/Edit later revised to **modals** (Phase 9.2 implementation) — see Phase 9.2 changelog entry
+- Tasks Create/Edit later revised to **modals** (Phase 9.4 implementation) — see Phase 9.4 changelog entry
+- Projects Create/Edit later revised to **modals** (post-ship UX) — see post-ship UX changelog entry
+- Roadmap: Testing & QA → **Phase 10**; Deployment → **Phase 11**
+- Companion docs synchronized; **Milestone 9 implemented (9.1–9.5 + UX/performance polish)**
 
 ### Frontend Foundation (Milestone 8) — ✅ Implemented · Milestone 8 complete
 

@@ -48,7 +48,7 @@ OpsFlow is a production-quality portfolio SaaS for project and operations manage
 | Repository | Responsibility |
 |------------|----------------|
 | `opsflow-api` | Laravel REST API |
-| `opsflow-web` | Vue 3 SPA (Milestone 8 complete; Phase 9.1 Dashboard UI complete) |
+| `opsflow-web` | Vue 3 SPA (Milestones 8–9 complete; Phases 9.1–9.5) |
 | `opsflow-docs` | Documentation and ADRs |
 
 ## Consequences

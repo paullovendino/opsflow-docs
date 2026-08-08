@@ -126,14 +126,15 @@ Department CRUD, Job Title CRUD, teams, branches, and organization settings are 
 
 ## Frontend Modules
 
-> Milestone 9 — 🔄 In progress (✅ Phase 9.1) · next Phase 9.2 awaiting approval  
+> Milestone 9 — ✅ Complete (Phases 9.1–9.5 + post-ship UX/performance) · next Phase 10 Testing & QA awaiting approval  
 > Spec: [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md) · ADR: [decisions/Frontend-Modules.md](decisions/Frontend-Modules.md)
 
 - [x] Dashboard UI (9.1)
-- [ ] User Management UI (9.2)
-- [ ] Project Management UI (9.3)
-- [ ] Task Management UI — table, not Kanban (9.4)
-- [ ] Reports UI (9.5)
+- [x] User Management UI (9.2) — list + modal Create/Edit/View; profile/show pages; confirms; lookup cache
+- [x] Project Management UI (9.3) — list + modal Create/Edit/View; Show workspace page (members + `ProjectTasksPanel`)
+- [x] Task Management UI (9.4) — table (not Kanban); Create/Edit/View modals; assignment/status; priority badges
+- [x] Reports UI (9.5) — project/employee list+detail; date filters; Tailwind bars; no chart library; no exports
+- [x] CRUD modal UX, skeleton loading, `AppProgressBar`, stable modal routes, `useLookups` SPA-session cache
 
 ---
 

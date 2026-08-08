@@ -46,12 +46,12 @@ OpsFlow development roadmap by phase.
 | Phase 8.1 | Application Foundation | ✅ Implemented |
 | Phase 8.2 | Authentication Foundation | ✅ Implemented |
 | Phase 8.3 | UI Foundation | ✅ Implemented |
-| **Milestone 9** | **Frontend Modules** | 🔄 **In progress** (9.1 complete) |
+| **Milestone 9** | **Frontend Modules** | ✅ **Complete** (9.1–9.5 + post-ship UX/performance) |
 | Phase 9.1 | Dashboard UI | ✅ Implemented |
-| Phase 9.2 | User Management | 📋 Designed |
-| Phase 9.3 | Project Management | 📋 Designed |
-| Phase 9.4 | Task Management | 📋 Designed |
-| Phase 9.5 | Reports | 📋 Designed |
+| Phase 9.2 | User Management | ✅ Implemented |
+| Phase 9.3 | Project Management | ✅ Implemented |
+| Phase 9.4 | Task Management | ✅ Implemented |
+| Phase 9.5 | Reports | ✅ Implemented |
 
 ---
 
@@ -446,7 +446,7 @@ Dashboard / Users / Projects / Tasks / Reports pages · automated frontend testi
 
 ## Phase 9 — Frontend Modules
 
-**Status: 🔄 In progress** — ✅ Phase 9.1 complete · awaiting Phase 9.2 approval
+**Status: ✅ Complete** — Phases 9.1–9.5 implemented (including post-ship CRUD/loading/lookup UX)
 
 Specification:
 
@@ -462,34 +462,42 @@ Specification:
 
 ### Phase 9.2 — User Management
 
-- [ ] User list/search/filters/pagination
-- [ ] Create/Edit/Show pages; Profile; status/delete confirms
-- [ ] Lookups for selects
+- [x] User list/search/filters/pagination
+- [x] Create/Edit/View **modals** on list; Profile + `/users/:id` deep-link pages; status/delete confirms
+- [x] Lookups for selects; teleported actions menu; stable Clear filter control
 
 ### Phase 9.3 — Project Management
 
-- [ ] Project list + CRUD pages + status
-- [ ] Members on project show
+- [x] Project list + Create/Edit/View **modals** on list; `/projects/:id` Show workspace page
+- [x] Members on project show; status patch modal; soft delete confirm
+- [x] Project Show integrates `ProjectTasksPanel` (Phase 9.4)
 
 ### Phase 9.4 — Task Management
 
-- [ ] Task table (not Kanban) + CRUD
-- [ ] Assignment + status controls; priority badges
+- [x] Task table (not Kanban) + list search/filters/pagination
+- [x] Create/Edit/View **modals** on list (Users pattern); `/tasks/:id` deep-link page
+- [x] Assignment + status patches; priority badges; soft delete; role-aware controls
 
 ### Phase 9.5 — Reports
 
-- [ ] Project/Employee report list + detail
-- [ ] Date filters; cards + Tailwind charts + tables
+- [x] Project/Employee report list + detail; `/reports` → project reports
+- [x] Date filters (`from_date`/`to_date`); cards + Tailwind bars (reuse Dashboard stats/bars); no chart library; no exports
+
+### Post-ship UX / perceived performance (still Milestone 9)
+
+- [x] Shared skeletons + `AppProgressBar` (lookup HTTP excluded; modal aliases skip route progress)
+- [x] `useLookups` SPA-session cache + in-flight dedupe (not Pinia / localStorage)
+- [x] Stable `viewKey` for Users / Projects / Tasks Create/Edit aliases
 
 ### Explicitly out of scope (Milestone 9)
 
-Kanban · chart libraries · exports · Activity Logs UI · Testing (Phase 10) · Deployment (Phase 11) · new API/schema
+Kanban · chart libraries · exports · Activity Logs UI · Testing & QA (Phase 10) · Deployment (Phase 11) · new API/schema
 
 ---
 
-## Phase 10 — Testing
+## Phase 10 — Testing & QA
 
-**Status: Pending** (after Milestone 9)
+**Status: Pending** (awaiting explicit approval; Milestone 9 complete)
 
 - API Testing (remaining gaps + broader suites)
 - Frontend Testing

@@ -188,20 +188,26 @@ Enforced via `ReportPolicy` Gate abilities + scoping in `ReportService`. See [do
 ## Frontend Architecture (`opsflow-web`)
 
 > Milestone 8 — ✅ Complete · [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md)  
-> Milestone 9 — 🔄 In progress (✅ 9.1) · [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md)
+> Milestone 9 — ✅ Complete (9.1–9.5 + post-ship UX/performance) · [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md)
 
 | Layer | Role |
 |-------|------|
 | Views | Thin pages under `modules/*/views` (+ auth/error views) |
-| Layouts | `GuestLayout`, `AuthLayout` (nested routes) |
-| Modules | `dashboard` (✅), `users` / `projects` / `tasks` / `reports` (planned) |
-| Router | History mode; `requiresAuth` / `guest`; `/` → `/dashboard` |
-| Pinia | `auth`, `ui` (module list state via composables by default) |
-| Services | Axios `http` + domain `*Service.ts` (`dashboardService` ✅) |
+| Dialogs | Shared `AppModal` / `AppConfirmDialog` / `AppDropdownMenu` for Users/Projects/Tasks CRUD and confirms |
+| Layouts | `GuestLayout`, `AuthLayout` (nested routes; stable `viewKey` for Create/Edit modal aliases) |
+| Modules | `dashboard` · `users` · `projects` · `tasks` · `reports` (all ✅) |
+| Router | History mode; `requiresAuth` / `guest` / optional `roles`; `/` → `/dashboard` |
+| Users routes | List + modal create/edit; show/profile pages for deep links |
+| Projects routes | List + modal create/edit/view; `/projects/:id` Show workspace page |
+| Tasks routes | List + modal create/edit/view; `/tasks/:id` page for deep links |
+| Reports routes | Dedicated list + detail pages (`/reports/projects`, `/reports/employees`, …) |
+| Pinia | `auth`, `ui` (module list state via composables; lookup cache is **not** Pinia) |
+| Services | Axios `http` + domain `*Service.ts` (`dashboardService`, `userService`, `lookupService`, `projectService`, `taskService`, `reportService` ✅) |
+| Loading | Skeletons + `AppProgressBar` (lookup HTTP excluded); auth bootstrap spinner |
 | Components | Shared UI + layout; Tailwind only (no chart lib / UI kit) |
 | Types | Envelope + domain shapes |
 
-Feature module pages ship phase-by-phase under Milestone 9; implement only after explicit phase approval.
+Milestone 9 feature module UIs are complete (including post-ship UX/performance). Do not implement Phase 10 Testing & QA until explicitly approved.
 
 ---
 
@@ -271,7 +277,7 @@ API routes (`api/*`) render through `App\Exceptions\ApiExceptionRenderer` using 
 | Phase 7.4 — Reports Authorization | ✅ Implemented |
 | **Milestone 7 — Reports** | ✅ **Complete** (7.1–7.4) |
 | Phase 8 — Frontend Foundation | ✅ **Complete** (8.1–8.3) |
-| Phase 9 — Frontend Modules | 🔄 In progress (✅ 9.1 Dashboard UI) |
-| Phase 10 — Testing | ⏳ Pending |
+| Phase 9 — Frontend Modules | ✅ **Complete** (9.1–9.5 + post-ship UX/performance) |
+| Phase 10 — Testing & QA | ⏳ Pending (next) |
 | Remarks / Activity Logs | Planned |
-| Phase 11 — Deployment | Planned |
+| Phase 11 — Deployment | Planned (after Phase 10) |

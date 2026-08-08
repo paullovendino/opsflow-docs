@@ -15,21 +15,24 @@ The canonical roadmap lives in [ROADMAP.md](ROADMAP.md).
   - ✅ Phase 8.1 — Application Foundation
   - ✅ Phase 8.2 — Authentication Foundation
   - ✅ Phase 8.3 — UI Foundation
-- ✅ **Phase 9.1 — Dashboard UI**
+- ✅ **Milestone 9 — Frontend Modules (Complete)**
+  - ✅ Phase 9.1 — Dashboard UI
+  - ✅ Phase 9.2 — User Management UI
+  - ✅ Phase 9.3 — Project Management UI
+  - ✅ Phase 9.4 — Task Management UI
+  - ✅ Phase 9.5 — Reports UI
 
 ## Next
 
-**Phase 9.2 — User Management** (awaiting explicit implementation approval)
+**Phase 10 — Testing & QA** (awaiting explicit implementation approval)
 
-- Spec: [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md)
-- ADR: [decisions/Frontend-Modules.md](decisions/Frontend-Modules.md)
-- Done: ✅ 9.1 Dashboard UI
-- Remaining: 9.2 Users · 9.3 Projects · 9.4 Tasks · 9.5 Reports
+- Guide: [TESTING.md](TESTING.md)
+- Roadmap: [ROADMAP.md](ROADMAP.md)
+- Done: ✅ Milestone 9 (9.1–9.5 + post-ship CRUD/loading/lookup UX)
 
 Canonical roadmap: [ROADMAP.md](ROADMAP.md)
 
 ## Later
 
-- Phase 10 — Testing
 - Phase 11 — Deployment
 - Future versions: see [ROADMAP.md](ROADMAP.md)

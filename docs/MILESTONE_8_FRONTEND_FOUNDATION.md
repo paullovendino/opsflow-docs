@@ -491,16 +491,16 @@ Frontend-only milestone. Database ADR remains schema-neutral for M8.
 
 Explicitly deferred (do **not** implement in Milestone 8):
 
-- Dashboard page / `GET /api/v1/dashboard` UI
-- Users / Lookups admin UI
-- Projects / Members UI
-- Tasks UI
-- Reports UI
-- Charts, tables for domain modules, advanced filters
+- Dashboard page / `GET /api/v1/dashboard` UI → Milestone **9.1** ✅
+- Users / Lookups admin UI → Milestone **9.2** ✅
+- Projects / Members UI → Milestone **9.3** ✅
+- Tasks UI → Milestone **9.4** ✅
+- Reports UI → Milestone **9.5** ✅
+- Charts, tables for domain modules, advanced filters (chart libs remain deferred)
 - Registration, password reset, email verification, remember-me
 - Token auth / mobile clients
-- Frontend automated test suite (Vitest/Cypress/Playwright) — later **Phase 9 — Testing**
-- Deployment / production hosting — later **Phase 10 — Deployment**
+- Frontend automated test suite (Vitest/Cypress/Playwright) — later **Phase 10 — Testing & QA**
+- Deployment / production hosting — later **Phase 11 — Deployment**
 - UI component libraries / design systems packages
 - Dark-mode product theme (Tailwind may support later; not a M8 goal)
 - Activity Logs / Remarks UI

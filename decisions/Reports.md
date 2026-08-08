@@ -99,7 +99,7 @@ PDF/CSV/Excel export, scheduled/email reports, Activity Logs, Remarks analytics,
 - Employee isolation tests are mandatory before Milestone 7 is marked complete
 - Implemented via `Gate::define` for `viewAnyProjectReports`, `viewProjectReport`, `viewAnyEmployeeReports`, `viewEmployeeReport`
 - Do not invent beyond this ADR / Milestone 7 specification during follow-on work
-- Milestone 8 is **Frontend Foundation** ([docs/MILESTONE_8_FRONTEND_FOUNDATION.md](../docs/MILESTONE_8_FRONTEND_FOUNDATION.md)) — ✅ complete; Vue Reports UI is Milestone **9.5** ([docs/MILESTONE_9_FRONTEND_MODULES.md](../docs/MILESTONE_9_FRONTEND_MODULES.md))
+- Milestone 8 is **Frontend Foundation** ([docs/MILESTONE_8_FRONTEND_FOUNDATION.md](../docs/MILESTONE_8_FRONTEND_FOUNDATION.md)) — ✅ complete; Vue Reports UI is Milestone **9.5** — ✅ implemented ([docs/MILESTONE_9_FRONTEND_MODULES.md](../docs/MILESTONE_9_FRONTEND_MODULES.md))
 
 ## References
 
