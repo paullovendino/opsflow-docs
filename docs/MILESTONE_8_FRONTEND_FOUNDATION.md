@@ -499,8 +499,8 @@ Explicitly deferred (do **not** implement in Milestone 8):
 - Charts, tables for domain modules, advanced filters (chart libs remain deferred)
 - Registration, password reset, email verification, remember-me
 - Token auth / mobile clients
-- Frontend automated test suite (Vitest/Cypress/Playwright) — later **Phase 10 — Testing & QA**
-- Deployment / production hosting — later **Phase 11 — Deployment**
+- Frontend automated test suite (Vitest) — **Phase 10 — Testing & QA** (✅ complete; Playwright/Cypress still deferred)
+- Deployment / production hosting — later **Milestone 11 — Deployment**
 - UI component libraries / design systems packages
 - Dark-mode product theme (Tailwind may support later; not a M8 goal)
 - Activity Logs / Remarks UI

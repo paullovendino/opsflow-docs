@@ -27,7 +27,7 @@ OpsFlow is a production-quality portfolio SaaS for project and operations manage
 |------------|--------|-------|
 | Framework | Vue 3 | Composition API only |
 | Language | TypeScript | Required |
-| State | Pinia | Global auth/app state |
+| State | Pinia | Global auth/app state only — do **not** introduce Vuex or another store |
 | Routing | Vue Router | Navigation guards for protected pages |
 | Styling | Tailwind CSS | Utility-first UI |
 | HTTP | Axios | `withCredentials: true` for Sanctum SPA auth |
@@ -40,15 +40,16 @@ OpsFlow is a production-quality portfolio SaaS for project and operations manage
 | Git / GitHub | Source control |
 | Postman / Bruno / Insomnia | API exploration |
 | pgAdmin | PostgreSQL administration |
-| PHPUnit | Backend feature/unit tests |
-| Vercel | Planned frontend hosting |
+| PHPUnit | Backend feature/unit tests (`php artisan test`) |
+| Vitest + Vue Test Utils + happy-dom | SPA unit/component tests (`npm run test`) |
+| Vercel | Planned frontend hosting (Milestone 11) |
 
 ### Repositories
 
 | Repository | Responsibility |
 |------------|----------------|
 | `opsflow-api` | Laravel REST API |
-| `opsflow-web` | Vue 3 SPA (Milestones 8–9 complete; Phases 9.1–9.5) |
+| `opsflow-web` | Vue 3 SPA (Milestones 8–9 complete; Phase 10 Testing & QA complete) |
 | `opsflow-docs` | Documentation and ADRs |
 
 ## Consequences

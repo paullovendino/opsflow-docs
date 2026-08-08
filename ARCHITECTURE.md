@@ -203,11 +203,13 @@ Enforced via `ReportPolicy` Gate abilities + scoping in `ReportService`. See [do
 | Reports routes | Dedicated list + detail pages (`/reports/projects`, `/reports/employees`, …) |
 | Pinia | `auth`, `ui` (module list state via composables; lookup cache is **not** Pinia) |
 | Services | Axios `http` + domain `*Service.ts` (`dashboardService`, `userService`, `lookupService`, `projectService`, `taskService`, `reportService` ✅) |
-| Loading | Skeletons + `AppProgressBar` (lookup HTTP excluded); auth bootstrap spinner |
+| Loading | `AppSkeleton` / `AppTableSkeleton` / `AppCardSkeleton` / `AppDetailSkeleton` / `AppReportSkeleton` + `AppProgressBar` (lookup HTTP excluded; modal aliases skip route progress); auth bootstrap spinner; button loading; soft refresh; modal-local loading |
 | Components | Shared UI + layout; Tailwind only (no chart lib / UI kit) |
 | Types | Envelope + domain shapes |
 
-Milestone 9 feature module UIs are complete (including post-ship UX/performance). Do not implement Phase 10 Testing & QA until explicitly approved.
+Milestone 9 feature module UIs are complete (including post-ship UX/performance). **Phase 10 — Testing & QA is ✅ complete.** Spec: [docs/MILESTONE_10_TESTING_QA.md](docs/MILESTONE_10_TESTING_QA.md). Next: [Milestone 10 — Product Enhancements](docs/MILESTONE_10_PRODUCT_ENHANCEMENTS.md) (planned). Then Milestone 11 — Deployment.
+
+**SPA stack (do not invent another store):** Vue 3 · TypeScript · Pinia · Vue Router · Axios · Tailwind CSS · Laravel API · Sanctum SPA cookies. Lookup cache is an **in-memory SPA-session cache with in-flight deduplication** (not Pinia / localStorage / Redis).
 
 ---
 
@@ -278,6 +280,7 @@ API routes (`api/*`) render through `App\Exceptions\ApiExceptionRenderer` using 
 | **Milestone 7 — Reports** | ✅ **Complete** (7.1–7.4) |
 | Phase 8 — Frontend Foundation | ✅ **Complete** (8.1–8.3) |
 | Phase 9 — Frontend Modules | ✅ **Complete** (9.1–9.5 + post-ship UX/performance) |
-| Phase 10 — Testing & QA | ⏳ Pending (next) |
-| Remarks / Activity Logs | Planned |
-| Phase 11 — Deployment | Planned (after Phase 10) |
+| Phase 10 — Testing & QA | ✅ Complete (PHPUnit **215**, Vitest **69**/26, manual QA passed, modal-navigation fix) |
+| Milestone 10 — Product Enhancements | 📋 Planned (not implemented) |
+| Remarks / Activity Logs | Planned (Milestone 10.1 / 10.2) |
+| Milestone 11 — Deployment | Future (after Milestone 10) |

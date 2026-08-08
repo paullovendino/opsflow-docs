@@ -22,17 +22,24 @@ The canonical roadmap lives in [ROADMAP.md](ROADMAP.md).
   - ✅ Phase 9.4 — Task Management UI
   - ✅ Phase 9.5 — Reports UI
 
+- ✅ **Phase 10 — Testing & QA (Complete)**
+  - ✅ 10.1 PHPUnit (**215** passed)
+  - ✅ 10.2 Vitest + Vue Test Utils + happy-dom (**69** / 26 files)
+  - ✅ 10.3 Manual QA passed + global modal-navigation fix
+
 ## Next
 
-**Phase 10 — Testing & QA** (awaiting explicit implementation approval)
+**Milestone 10 — Product Enhancements** — 📋 planned, **not implemented**
 
+- Placeholder: [docs/MILESTONE_10_PRODUCT_ENHANCEMENTS.md](docs/MILESTONE_10_PRODUCT_ENHANCEMENTS.md)
+- Phase 10 complete: [docs/MILESTONE_10_TESTING_QA.md](docs/MILESTONE_10_TESTING_QA.md) · [decisions/Testing-QA.md](decisions/Testing-QA.md)
 - Guide: [TESTING.md](TESTING.md)
 - Roadmap: [ROADMAP.md](ROADMAP.md)
-- Done: ✅ Milestone 9 (9.1–9.5 + post-ship CRUD/loading/lookup UX)
+- Done: ✅ Milestone 9 · ✅ Phase 10 Testing & QA
 
 Canonical roadmap: [ROADMAP.md](ROADMAP.md)
 
 ## Later
 
-- Phase 11 — Deployment
+- Milestone 11 — Deployment
 - Future versions: see [ROADMAP.md](ROADMAP.md)

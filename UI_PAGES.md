@@ -19,6 +19,7 @@
 - Sidebar (M9 complete): Dashboard, Users (role), Projects, Tasks, Reports, Employee reports (Admin/PM) / My report (Employee), Profile — no “Coming later” for M9 modules
 - Global `AppProgressBar` (route + page-level HTTP; `/api/v1/lookups/*` excluded; Create/Edit modal aliases do not start route progress)
 - Auth bootstrap: full-screen `AppSpinner` until `/me` completes
+- Button loading states on mutating actions
 
 ---
 
@@ -118,6 +119,7 @@
 - Search, filters (status / priority / project), pagination
 - Create/Edit/View via **modals** on the list (`AppModal`) — same locked pattern as Users
 - Status patch; assignment via `TaskAssignmentDialog` / detail panel; soft delete confirm; priority badges (`StatusBadge` kind=priority)
+- **Assignment rule:** assignee must be the project owner or a **project member** before they are eligible (existing API rule; unchanged)
 - Authz: Admin/PM mutate; Employee list/view + status only when assigned to self
 - Also embedded on Project Show via `ProjectTasksPanel`
 - Loading: `TaskListSkeleton` on initial load; soft opacity refresh; empty ≠ loading
@@ -151,17 +153,21 @@
 
 ## Activity Logs
 
-> Planned — future
+> Planned — Milestone 10.1 Product Enhancements (not implemented)
 
 - Activity List
 
 ---
 
-## Cross-cutting UI (Milestone 9 post-ship)
+## Cross-cutting UI (Milestone 9 post-ship + Phase 10.3 QA fix)
 
 - Shared skeletons: `AppSkeleton`, `AppTableSkeleton`, `AppCardSkeleton`, `AppDetailSkeleton`, `AppReportSkeleton`
-- Stable modal `viewKey` on Users / Projects / Tasks Create/Edit aliases (`AuthLayout`) so the underlying list is not remounted
-- Loading remains distinct from Empty State; friendly inline retry on load failure
+- Soft refresh: keep prior list/detail visible (opacity + `aria-busy`); loading ≠ empty
+- `useLookups`: in-memory SPA-session cache + in-flight dedupe (not Pinia / localStorage / Redis)
+- **Stable family `viewKey`:** Users / Projects / Tasks index + Create/Edit aliases share `*.index`; list stays mounted; search/filter/page query preserved; no unnecessary list remount/refetch when opening modal CRUD
+- Modal-specific API requests remain local (detail GET may use `quietProgress`); lookups stay quiet
+- Delete/status: `AppConfirmDialog` (not full-page navigation)
+- Reports remain dedicated pages (not modal CRUD)
 
 ---
 

@@ -216,10 +216,13 @@ Details: [AUTHENTICATION.md](AUTHENTICATION.md)
 - Phase 9.4 Task Management UI is implemented (`taskService`, `useTaskList`, `modules/tasks` — Create/Edit/View modals; table not Kanban).
 - Phase 9.5 Reports UI is implemented (`reportService`, `modules/reports` — Tailwind bars; no chart lib / exports).
 - Users, Projects, and Tasks Create/Edit/View use shared `AppModal` dialogs on the list; deep-link show pages remain for `/users/:id`, `/profile`, `/projects/:id`, `/tasks/:id`. Reports remain dedicated list/detail pages.
-- `useLookups` uses a module-level in-memory SPA-session cache + in-flight dedupe (not Pinia / localStorage). Users search/filters/pagination remain server-side.
+- `useLookups` uses a module-level in-memory SPA-session cache + in-flight dedupe (not Pinia / localStorage / Redis). Users search/filters/pagination remain server-side.
+- Global state is **Pinia** (`auth`, `ui`) only — do not introduce Vuex or another store library.
+- Stable family `viewKey`: Users / Projects / Tasks Create/Edit aliases share the list key; opening a modal does not remount/refetch the list or start route progress; modal-local loading remains.
+- Task assignees must be the project owner or a project member (existing assignment rule).
 - Prefer shared UI (`AppTable`, `AppDropdownMenu`, `AppFilterBar`, `AppConfirmDialog`, `AppModal`, skeletons, `AppProgressBar`, …) over module-only duplicates.
 - Milestone 9 modules may call their domain APIs (`users`, `projects`, `tasks`, `dashboard`, `reports`, `lookups`).
-- No chart libraries or Kanban in Milestone 9 (locked). Do not implement Phase 10 Testing & QA until approved.
+- No chart libraries or Kanban in Milestone 9 (locked). Phase 10 Testing & QA is ✅ complete — see [docs/MILESTONE_10_TESTING_QA.md](docs/MILESTONE_10_TESTING_QA.md). SPA tests: Vitest + Vue Test Utils + happy-dom (`npm run test`, **69** / 26 files). Next: Milestone 10 Product Enhancements (planned) — [docs/MILESTONE_10_PRODUCT_ENHANCEMENTS.md](docs/MILESTONE_10_PRODUCT_ENHANCEMENTS.md). Then Milestone 11 Deployment.
 
 ---
 

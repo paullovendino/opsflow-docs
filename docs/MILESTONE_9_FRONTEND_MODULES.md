@@ -48,7 +48,7 @@ Replace the Milestone 8 App Home placeholder with a real Dashboard landing exper
 | Toasts | Success toasts on create/update/delete/status/assignment. Inline field errors for `422`. `403` toast (or empty+message); do **not** auto-route to `/403` for API denials. |
 | Role-aware nav | Sidebar links enabled; hide/disable by role (see §3) |
 | Backend | **No** new endpoints, migrations, or contract changes |
-| Testing / Deployment | **Out of Milestone 9** → Phase 10 Testing & QA · Phase 11 Deployment |
+| Testing / Deployment | **Out of Milestone 9** → Phase 10 Testing & QA (✅ complete) · Milestone 10 Product Enhancements · Milestone 11 Deployment |
 
 ### Role-aware navigation (sidebar)
 
@@ -188,7 +188,7 @@ Create/Edit alias routes render the **same list component** as index:
 - `/projects/create`, `/projects/:id/edit` → `ProjectListView`
 - `/tasks/create`, `/tasks/:id/edit` → `TaskListView`
 
-`AuthLayout` uses a stable `viewKey` (`users.index` / `projects.index` / `tasks.index`) so opening a Create/Edit alias does **not** remount the list. Router guards skip `AppProgressBar` route progress for those family navigations (`isModalAliasNavigation`).
+`AuthLayout` uses a **stable family `viewKey`** (`users.index` / `projects.index` / `tasks.index`): index + Create/Edit aliases share the same key so opening a modal does **not** remount the list. Search/filter/page query is preserved. Router guards skip `AppProgressBar` route progress for those family navigations (`isModalAliasNavigation` / `shouldTrackRouteProgress`). Modal-local loading remains. (Finalized as a Phase 10.3 QA fix.)
 
 ### Lookup caching (`useLookups`)
 
@@ -616,8 +616,9 @@ Route order: `tasks/:id/edit` is registered **before** `tasks/:id`.
 
 ## 11. Out of Scope (Milestone 9 overall)
 
-- Automated frontend test suite (Phase 10 — Testing & QA)  
-- Deployment (Phase 11)  
+- Automated frontend test suite (Phase 10 — Testing & QA — ✅ complete)  
+- Milestone 10 Product Enhancements (planned)  
+- Deployment (Milestone 11)  
 - Chart libraries / UI frameworks  
 - Kanban / calendar / chat  
 - Activity Logs / Remarks UI  

@@ -8,7 +8,7 @@ Accepted — ✅ Complete (Phases 9.1–9.5 implemented)
 
 Milestone 8 delivered the OpsFlow SPA foundation (auth, shell, Axios/Sanctum, shared primitives). Backend Milestones 3–7 already expose Users, Projects, Tasks, Dashboard, and Reports APIs. Milestone 9 delivered all feature module UIs on top of that foundation.
 
-Roadmap Phase 9 was previously “Testing.” Feature UIs landed before a meaningful frontend test pass. Milestone 9 is therefore **Frontend Modules**; Testing & QA and Deployment remain Phases 10–11.
+Roadmap Phase 9 was previously “Testing.” Feature UIs landed before a meaningful frontend test pass. Milestone 9 is therefore **Frontend Modules**. **Phase 10 Testing & QA is complete.** **Milestone 10** is Product Enhancements (next, not implemented). **Milestone 11** is Deployment (future).
 
 Companion specification: [docs/MILESTONE_9_FRONTEND_MODULES.md](../docs/MILESTONE_9_FRONTEND_MODULES.md)
 
@@ -51,7 +51,7 @@ Companion specification: [docs/MILESTONE_9_FRONTEND_MODULES.md](../docs/MILESTON
 | Reports | Dedicated list/detail **pages**; date filters; cards + Tailwind bars (reuse Dashboard stats/bars); no chart library; no exports (✅) |
 | Confirms | `AppConfirmDialog` for delete/status/member remove |
 | Loading | Shared skeletons + `AppProgressBar`; lookup HTTP excluded from global progress; soft refresh ≠ empty |
-| Modal routes | Stable `viewKey` + `isModalAliasNavigation` for Users/Projects/Tasks Create/Edit aliases |
+| Modal routes | Stable family `viewKey` + `isModalAliasNavigation`: index + Create/Edit share `*.index`; list stays mounted; query preserved; no route progress on modal aliases |
 | Nav | Sidebar: Dashboard, Users (role), Projects, Tasks, Reports, Employee reports (Admin/PM) / My report (Employee), Profile |
 
 ### Roadmap renumbering
@@ -59,8 +59,9 @@ Companion specification: [docs/MILESTONE_9_FRONTEND_MODULES.md](../docs/MILESTON
 | Phase | Milestone |
 |-------|-----------|
 | **9** | **Frontend Modules** (this ADR) — ✅ complete |
-| **10** | Testing & QA (formerly Phase 9) — next |
-| **11** | Deployment (formerly Phase 10) |
+| **Phase 10** | Testing & QA — ✅ complete |
+| **Milestone 10** | Product Enhancements — next (not implemented) |
+| **Milestone 11** | Deployment — future |
 
 ### Explicitly out of scope
 
@@ -68,8 +69,8 @@ Kanban, chart libraries, exports, Activity Logs/Remarks UI, automated test suite
 
 ## Consequences
 
-- Companion docs point next work at **Phase 10 — Testing & QA** (after approval); then **Phase 11 — Deployment**
-- All M9 phases delivered (including post-ship CRUD/loading/lookup UX); do **not** implement Phase 10 until user explicitly approves
+- Companion docs point next work at **Milestone 10 — Product Enhancements** ([docs/MILESTONE_10_PRODUCT_ENHANCEMENTS.md](../docs/MILESTONE_10_PRODUCT_ENHANCEMENTS.md) — planned only); then **Milestone 11 — Deployment**
+- All M9 phases delivered (including post-ship CRUD/loading/lookup UX); Phase 10 Testing & QA is ✅ complete
 - Users Create/Edit UX was revised from dedicated pages to **list modals** during 9.2 polish
 - Tasks Create/Edit UX was revised from dedicated pages to **list modals** during 9.4 (explicit user request) — current locked Tasks pattern
 - Projects Create/Edit UX was later revised from dedicated pages to **list modals** (same pattern as Users/Tasks); `/projects/:id` remains the Show workspace **page**

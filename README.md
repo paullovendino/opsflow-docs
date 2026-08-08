@@ -57,6 +57,9 @@ Central documentation for the OpsFlow SaaS platform.
 | Phase 9.3 — Project Management | ✅ Implemented (list+modal Create/Edit; Show page) |
 | Phase 9.4 — Task Management | ✅ Implemented (modal CRUD; table not Kanban) |
 | Phase 9.5 — Reports | ✅ Implemented (Tailwind bars; no exports) |
+| **Phase 10 — Testing & QA** | ✅ **Complete** (10.1–10.3 + modal QA fix) |
+| **Milestone 10 — Product Enhancements** | 📋 **Next** (not implemented) |
+| **Milestone 11 — Deployment** | Future |
 
 ## Documentation Index
 
@@ -72,6 +75,8 @@ Central documentation for the OpsFlow SaaS platform.
 | [docs/MILESTONE_7_REPORTS.md](docs/MILESTONE_7_REPORTS.md) | Milestone 7 implementation specification |
 | [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) | Milestone 8 implementation specification |
 | [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md) | Milestone 9 implementation specification |
+| [docs/MILESTONE_10_TESTING_QA.md](docs/MILESTONE_10_TESTING_QA.md) | Phase 10 Testing & QA — ✅ complete |
+| [docs/MILESTONE_10_PRODUCT_ENHANCEMENTS.md](docs/MILESTONE_10_PRODUCT_ENHANCEMENTS.md) | Milestone 10 Product Enhancements — 📋 planned |
 | [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md) | Product overview and tech stack |
 | [REQUIREMENTS.md](REQUIREMENTS.md) | Functional and non-functional requirements |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | System and backend architecture |
@@ -102,4 +107,4 @@ Central documentation for the OpsFlow SaaS platform.
 - Tasks (Milestone 5 complete): `/api/v1/tasks` CRUD, assignment, queries, `TaskPolicy`, status — see [docs/MILESTONE_5_TASK_MANAGEMENT.md](docs/MILESTONE_5_TASK_MANAGEMENT.md)
 - Dashboard (Milestone 6 complete): `GET /api/v1/dashboard` — see [docs/MILESTONE_6_DASHBOARD.md](docs/MILESTONE_6_DASHBOARD.md)
 - Reports (Milestone 7 complete): `/api/v1/reports/projects`, `/api/v1/reports/employees` — see [docs/MILESTONE_7_REPORTS.md](docs/MILESTONE_7_REPORTS.md)
-- Next: Phase 10 — Testing & QA (awaiting approval) — then Phase 11 — Deployment — see [HANDOFF.md](HANDOFF.md) · [TESTING.md](TESTING.md)
+- Next: Milestone 10 — Product Enhancements (planned) — then Milestone 11 — Deployment — see [docs/MILESTONE_10_PRODUCT_ENHANCEMENTS.md](docs/MILESTONE_10_PRODUCT_ENHANCEMENTS.md) · [HANDOFF.md](HANDOFF.md) · [TESTING.md](TESTING.md)

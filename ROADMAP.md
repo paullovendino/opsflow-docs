@@ -2,7 +2,7 @@
 
 OpsFlow development roadmap by phase.
 
-**Status legend:** ✅ Completed / Implemented · Pending
+**Status legend:** ✅ Completed / Implemented · 📋 Planned · Future / Pending
 
 ---
 
@@ -52,6 +52,9 @@ OpsFlow development roadmap by phase.
 | Phase 9.3 | Project Management | ✅ Implemented |
 | Phase 9.4 | Task Management | ✅ Implemented |
 | Phase 9.5 | Reports | ✅ Implemented |
+| **Phase 10** | **Testing & QA** | ✅ **Complete** (10.1–10.3 + modal QA fix) |
+| **Milestone 10** | **Product Enhancements** | 📋 **Next** (not implemented) |
+| **Milestone 11** | **Deployment** | Future |
 
 ---
 
@@ -491,23 +494,56 @@ Specification:
 
 ### Explicitly out of scope (Milestone 9)
 
-Kanban · chart libraries · exports · Activity Logs UI · Testing & QA (Phase 10) · Deployment (Phase 11) · new API/schema
+Kanban · chart libraries · exports · Activity Logs UI · new API/schema · Deployment
 
 ---
 
 ## Phase 10 — Testing & QA
 
-**Status: Pending** (awaiting explicit approval; Milestone 9 complete)
+**Status: ✅ Complete**
 
-- API Testing (remaining gaps + broader suites)
-- Frontend Testing
-- Bug Fixes
+Specification:
+
+- [docs/MILESTONE_10_TESTING_QA.md](docs/MILESTONE_10_TESTING_QA.md)
+- [decisions/Testing-QA.md](decisions/Testing-QA.md)
+
+### Delivered
+
+- [x] 10.1 Backend PHPUnit gap-fill + full regression (`php artisan test` **215** passed)
+- [x] 10.2 Frontend Vitest + Vue Test Utils + happy-dom (`npm run test` **69** / 26 files; type-check + build green)
+- [x] 10.3 Manual QA / E2E checklist — **passed** (auth, Users, Projects, Tasks, Reports + Admin → Project → Member → Task → Employee status → Reports)
+- [x] In-scope QA fix: global modal navigation (stable family `viewKey`; list stays mounted; query preserved; no route progress on Create/Edit aliases)
+
+Deferred: Playwright/Cypress · GitHub Actions · shared PHPUnit actor trait. **No CI.**
 
 ---
 
-## Phase 11 — Deployment
+## Milestone 10 — Product Enhancements
 
-**Status: Pending**
+**Status: 📋 Next — not implemented**
+
+Placeholder: [docs/MILESTONE_10_PRODUCT_ENHANCEMENTS.md](docs/MILESTONE_10_PRODUCT_ENHANCEMENTS.md)
+
+Do **not** implement until a detailed design package is approved.
+
+### Planned only
+
+- [ ] 10.1 Activity Logs / Audit Trail
+- [ ] 10.2 Remarks / Comments
+- [ ] 10.3 Notifications
+- [ ] 10.4 Task Priority & Due Dates
+- [ ] 10.5 Project Progress
+- [ ] 10.6 Global Search
+- [ ] 10.7 Dashboard Enhancements
+- [ ] 10.8 User Profile Enhancements
+- [ ] 10.9 Dark Mode
+- [ ] 10.10 Final UX + QA
+
+---
+
+## Milestone 11 — Deployment
+
+**Status: Future** (after Milestone 10 Product Enhancements)
 
 - Backend Deployment
 - Frontend Deployment
@@ -517,12 +553,13 @@ Kanban · chart libraries · exports · Activity Logs UI · Testing & QA (Phase 
 
 ## Future Versions
 
+Notifications and Remarks are planned for **Milestone 10 — Product Enhancements** (not implemented yet). Remaining v1.1+ items stay here unless a later design absorbs them.
+
 ### v1.1
 
-- Notifications
 - Email Alerts
 - File Attachments
-- Remarks (domain entity)
+- (Notifications / Remarks → Milestone 10 planned scope)
 
 ### v1.2
 

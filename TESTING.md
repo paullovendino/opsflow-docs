@@ -2,7 +2,14 @@
 
 ## Overview
 
-OpsFlow API tests use PHPUnit via Laravel's testing harness.
+OpsFlow tests two layers:
+
+| Layer | Runner | Command |
+|-------|--------|---------|
+| API (`opsflow-api`) | PHPUnit via Laravel | `php artisan test` |
+| SPA (`opsflow-web`) | Vitest + Vue Test Utils + happy-dom | `npm run test` / `npm run test:watch` |
+
+**Phase 10 — Testing & QA: ✅ complete.** Spec: [docs/MILESTONE_10_TESTING_QA.md](docs/MILESTONE_10_TESTING_QA.md) · ADR: [decisions/Testing-QA.md](decisions/Testing-QA.md). Next: [Milestone 10 — Product Enhancements](docs/MILESTONE_10_PRODUCT_ENHANCEMENTS.md) (planned). Then Milestone 11 — Deployment.
 
 ---
 
@@ -59,6 +66,7 @@ Path: `tests/Feature/Auth/AuthenticationTest.php`
 | Unauthenticated `/me` | `401`, `Unauthenticated.` |
 | Authenticated user cannot login again | `403`, `Already authenticated.` |
 | Successful logout | `200`, then `/me` is `401` |
+| Login throttle | `429` after 5 failed attempts per `email\|ip` |
 
 Notes:
 
@@ -235,12 +243,46 @@ Spec: [docs/MILESTONE_7_REPORTS.md](docs/MILESTONE_7_REPORTS.md) · ADR: [decisi
 
 ---
 
-## Remaining coverage (not yet)
+## Phase 10.1 API gap-fill (implemented)
 
-- Explicit `429` rate-limit assertion
-- CSRF rejection cases
-- Frontend automated tests (**Phase 10 — Testing & QA**; Milestone 9 module UIs complete — awaiting approval)
-- Activity Logs suites
+| Test | Path | Expectation |
+|------|------|-------------|
+| Login throttle | `tests/Feature/Auth/AuthenticationTest.php` | 5 failed logins → 6th is `429` |
+| CSRF `419` | `tests/Unit/ApiExceptionRendererTest.php` | `TokenMismatchException` on `api/*` → envelope `419`; non-API → not handled |
+| Empty project reports | `tests/Feature/Report/ProjectReportApiTest.php` | empty `data` + `meta.total` 0 |
+| Empty employee reports | `tests/Feature/Report/EmployeeReportApiTest.php` | empty list via search with no matches |
 
-Milestone 8 (Frontend Foundation) — ✅ complete; manual auth/shell checks apply.  
-Milestone 9 (Frontend Modules) — ✅ complete (Phases 9.1–9.5 + post-ship UX/performance); frontend automated tests still Phase 10 (awaiting approval). See [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md).
+Scaffold `ExampleTest` (Feature + Unit) removed. Full suite last run: **215** passed (2026-08-08).
+
+CSRF note: Laravel disables CSRF verification while `runningUnitTests()`, so a live Sanctum cookie-mismatch Feature test is not practical. Coverage is the renderer unit test.
+
+## Frontend automated tests (Phase 10.2)
+
+From `opsflow-web`:
+
+```bash
+npm run test
+npm run test:watch
+```
+
+Stack: Vitest + `@vue/test-utils` + happy-dom. Colocated `src/**/*.spec.ts`. Last run: **69** tests / 26 files passed. Also: `npm run type-check` and `npm run build`.
+
+Coverage (mocked services, no live API): shared UI, auth store, route guards + sidebar roles, `LoginView` inline errors, HTTP `401`/`429`/`5xx` interceptors, `useLookups` cache/dedupe, list/dashboard loading vs empty vs error, quiet lookup / modal-scoped progress, stable family `viewKey` / `isModalAliasNavigation` / query-preserving modal aliases.
+
+## Phase 10.3 Manual QA — ✅ passed
+
+Browser against local API + SPA (Sanctum cookies): Authentication, Users, Projects, Tasks, Reports verified. Cross-module: Admin → Project → Member → Task → Employee status → Reports.
+
+## Phase 10.3 QA fix — global modal navigation
+
+`AuthLayout` now uses a **stable family `viewKey`**: Users / Projects / Tasks index + Create/Edit aliases share `*.index`. Opening a modal does not remount or refetch the list, does not start route progress, and preserves search/filter/page query. Modal-local loading remains. Real page navigation still uses route + HTTP progress.
+
+## Remaining coverage (deferred / later milestones)
+
+- Playwright / Cypress (deferred)
+- GitHub Actions CI (deferred) — **no CI claimed**
+- Activity Logs / Remarks / Notifications suites — **Milestone 10 Product Enhancements** (planned)
+
+Milestone 8 (Frontend Foundation) — ✅ complete.  
+Milestone 9 (Frontend Modules) — ✅ complete (Phases 9.1–9.5 + post-ship UX/performance).  
+**Phase 10 — Testing & QA** — ✅ complete.

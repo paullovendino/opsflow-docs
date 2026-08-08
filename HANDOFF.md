@@ -40,15 +40,16 @@ Organization
 | `opsflow-docs` | Documentation + ADRs (this repo)                              |
 | `opsflow-web`  | Vue 3 SPA (M8 + **M9 complete** · ✅ 9.1–9.5) |
 
-**Current status:** ✅ **Milestone 9 — Frontend Modules complete** (Phases 9.1–9.5, including post-ship CRUD/loading/lookup UX). Next: **Phase 10 — Testing & QA** — **wait for explicit implementation approval**. After Phase 10: **Phase 11 — Deployment**.
+**Current status:** ✅ **Milestone 8 complete** · ✅ **Milestone 9 complete** · ✅ **Phase 10 — Testing & QA complete**. **Next:** **Milestone 10 — Product Enhancements** (planned, not implemented). Then **Milestone 11 — Deployment**.
 
 | Field | Value |
 |-------|--------|
-| Current milestone | **Milestone 9 — Frontend Modules** ✅ **Complete** |
-| Current phase | ✅ 9.1 · ✅ 9.2 · ✅ 9.3 · ✅ 9.4 · ✅ 9.5 · next is **Phase 10 Testing & QA** (awaiting approval) |
+| Current milestone | **Milestone 10 — Product Enhancements** 📋 **Next** (not implemented) |
+| Current phase | Product Enhancements placeholder — design package not started |
 | Completed (M8) | ✅ 8.1 · ✅ 8.2 · ✅ 8.3 |
 | Completed (M9) | ✅ 9.1 Dashboard · ✅ 9.2 Users · ✅ 9.3 Projects · ✅ 9.4 Tasks · ✅ 9.5 Reports · post-ship UX/performance |
-| Planned (M9) | — (none remaining) |
+| Completed (Phase 10) | ✅ 10.1 PHPUnit **215** · ✅ 10.2 Vitest **69**/26 · ✅ 10.3 Manual QA passed · ✅ modal-navigation QA fix |
+| Planned (M10) | 10.1 Activity Logs · 10.2 Remarks · 10.3 Notifications · 10.4 Task Priority & Due Dates · 10.5 Project Progress · 10.6 Global Search · 10.7 Dashboard · 10.8 Profile · 10.9 Dark Mode · 10.10 Final UX + QA |
 
 ---
 
@@ -151,12 +152,13 @@ Routes: `routes/api.php` (prefixed `/api` + `v1` groups)
 - Auth shell: Guest/Auth layouts, login/logout/`/me` bootstrap
 - Feature modules (M9): Dashboard · Users · Projects · Tasks · Reports — [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md)
 - Post-ship UX: CRUD list+modal aliases, skeleton loading, `AppProgressBar`, `useLookups` SPA-session cache
-- Frontend `npm run type-check` and `npm run build` pass; backend APIs were not changed for these UX/performance improvements
-- Next: Phase 10 — Testing & QA (awaiting approval) · then Phase 11 — Deployment
+- Frontend `npm run test` (**69** / 26 files) + `npm run type-check` + `npm run build` pass; backend `php artisan test` **215** passed
+- Phase 10 Testing & QA: ✅ **complete** — [docs/MILESTONE_10_TESTING_QA.md](docs/MILESTONE_10_TESTING_QA.md) · ADR: [decisions/Testing-QA.md](decisions/Testing-QA.md)
+- Next: **Milestone 10 — Product Enhancements** (planned only) — [docs/MILESTONE_10_PRODUCT_ENHANCEMENTS.md](docs/MILESTONE_10_PRODUCT_ENHANCEMENTS.md) · then **Milestone 11 — Deployment**
 
 ### Tooling
 
-- Cursor, Git/GitHub, Postman/Bruno/Insomnia, pgAdmin, PHPUnit
+- Cursor, Git/GitHub, Postman/Bruno/Insomnia, pgAdmin, PHPUnit, Vitest
 
 ADR: [decisions/Tech-Stack.md](decisions/Tech-Stack.md)
 
@@ -208,6 +210,7 @@ ADR: [decisions/Tech-Stack.md](decisions/Tech-Stack.md)
 | 9.3 | Project Management | ✅ **Implemented** |
 | 9.4 | Task Management | ✅ **Implemented** |
 | 9.5 | Reports | ✅ **Implemented** |
+| **Phase 10** | **Testing & QA** | ✅ **Complete** (10.1–10.3 + modal QA fix) |
 
 **Phase 1:** PostgreSQL, Sanctum, `/api/v1`, CORS, envelope, exception renderer, morph map, roles seed, health check, folder structure.
 
@@ -267,7 +270,7 @@ ADR: [decisions/Tech-Stack.md](decisions/Tech-Stack.md)
 - `AppProgressBar`: route navigation + page-level HTTP; **`/api/v1/lookups/*` excluded**; Create/Edit modal alias routes do not start route progress
 - Soft refresh: keep prior list/detail data visible; opacity while refreshing; loading ≠ empty state
 - `useLookups`: module-level **in-memory SPA-session cache** + in-flight dedupe (not Pinia, not localStorage); Users search/filters/pagination remain server-side
-- AuthLayout stable `viewKey` for Users/Projects/Tasks Create/Edit aliases so the underlying list is not remounted
+- AuthLayout **stable family `viewKey`**: Users / Projects / Tasks index + Create/Edit aliases share `*.index` so the list stays mounted; search/filter/page query is preserved; modal aliases do not start route progress; modal-local loading remains (Phase 10.3 QA fix)
 
 Sidebar (M9): Dashboard, Users (role), Projects, Tasks, Reports, Employee reports (Admin/PM) / My report (Employee), Profile — no “Coming later” for M9 modules.
 
@@ -279,31 +282,31 @@ See [CHANGELOG.md](CHANGELOG.md), [ROADMAP.md](ROADMAP.md).
 
 ### Immediate next
 
-**Phase 10 — Testing & QA** (see §12) — wait for explicit implementation approval
+**Milestone 10 — Product Enhancements** — 📋 planned, **not implemented**. Do not implement until a detailed design package is approved.
 
-Specification: [TESTING.md](TESTING.md) · [ROADMAP.md](ROADMAP.md)
+Placeholder: [docs/MILESTONE_10_PRODUCT_ENHANCEMENTS.md](docs/MILESTONE_10_PRODUCT_ENHANCEMENTS.md) · [ROADMAP.md](ROADMAP.md)
 
-Completed: Milestones 1–9 (including Phases 9.1–9.5).
+Completed: Milestones 1–9 + **Phase 10 Testing & QA**.
 
 ### Still pending
 
-- Phase 10 — Testing & QA
-- Phase 11 — Deployment
+- Milestone 10 — Product Enhancements (planned)
+- Milestone 11 — Deployment (future)
 - GitHub repos finalized (as applicable)
 
 ### Later phases (do not invent early)
 
-Kanban and other v1.2+ items after core module UIs.
+Kanban and other v1.2+ items after Product Enhancements / Deployment as approved.
 
 ### Future versions
 
-Notifications, remarks, kanban, time tracking, mobile, multi-org, etc. ([ROADMAP.md](ROADMAP.md))
+Items not absorbed into Milestone 10 (kanban, time tracking, mobile, multi-org, etc.) remain in [ROADMAP.md](ROADMAP.md) Future Versions.
 
 ### Explicitly out of scope for Milestone 9
 
 - Chart libraries / UI frameworks / Kanban
 - PDF/CSV exports, Activity Logs / Remarks UI
-- Automated test suite (Phase 10) · Deployment (Phase 11)
+- Deployment (Milestone 11)
 - Backend schema / new API endpoints
 
 ---
@@ -719,7 +722,7 @@ ADRs: [DATABASE_DESIGN.md](DATABASE_DESIGN.md), [decisions/Database.md](decision
 10. **Credential allowlist** into `Auth::attempt()`
 11. **Morph aliases only for existing models**
 12. **Do not expand schema beyond the approved ERD** without updating `decisions/Database.md`
-13. **Do not implement later modules early** (Activity Logs / Kanban) unless approved; do not implement Phase 10/11 until explicitly approved
+13. **Do not implement later modules early** (Activity Logs / Kanban) unless approved; do not implement Milestone 10 Product Enhancements until a design package is approved; do not implement Milestone 11 Deployment early
 14. **Authorize via Policies** — do not scatter manual role checks outside policies (`UserPolicy`, `ProjectPolicy`, `TaskPolicy`, `DashboardPolicy` / `viewDashboard`, `ReportPolicy` Gates)
 15. **CORS / Sanctum domains stay environment-driven**
 16. **Update docs/ADRs when behavior changes**
@@ -747,7 +750,7 @@ Details: [CODING_STANDARDS.md](CODING_STANDARDS.md), [CURSOR_RULES.md](CURSOR_RU
 2. **Laravel 13 HTTP tests** — guard caching requires `forgetGuards()` in some multi-request auth tests
 3. **Draw.io diagrams empty** — future docs milestone
 4. **No Postman/Bruno collection checked in** — future
-5. **Feature Vue module UIs** — Milestone 9 complete (9.1–9.5 + post-ship UX/performance); frontend automated tests still Phase 10
+5. **Feature Vue module UIs** — Milestone 9 complete (9.1–9.5 + post-ship UX/performance); Phase 10 Testing & QA complete (PHPUnit **215**, Vitest **69**/26, manual QA passed, modal-navigation fix)
 6. **Historical “Laravel 12” wording** in old git commits vs actual Laravel 13
 7. **Resource wrapping inconsistency** — login uses `data.user` + `resolve()`; `/me` uses Resource in `data` (intentional for now)
 8. **Environment-config hardening** deferred (secrets, production cookie domain strategy)
@@ -758,13 +761,15 @@ Details: [CODING_STANDARDS.md](CODING_STANDARDS.md), [CURSOR_RULES.md](CURSOR_RU
 
 ## 12. Immediate next milestone
 
-### Phase 10 — Testing & QA
+### Milestone 10 — Product Enhancements
 
-**Status:** 📋 Pending — **wait for explicit Phase 10 approval before coding.**
+**Status:** 📋 Planned — **not implemented**. Do **not** implement until a detailed design package is approved.
 
-**Completed:** Milestones 1–9 (Frontend Modules 9.1–9.5 + post-ship CRUD/loading/lookup UX). Backend APIs were not changed for those frontend UX/performance improvements. `opsflow-web` type-check and production build pass.
+**Placeholder:** [docs/MILESTONE_10_PRODUCT_ENHANCEMENTS.md](docs/MILESTONE_10_PRODUCT_ENHANCEMENTS.md)
 
-**Prior milestone:** [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md) · ADR: [decisions/Frontend-Modules.md](decisions/Frontend-Modules.md)
+**Completed immediately prior:** **Phase 10 — Testing & QA** ✅ ([docs/MILESTONE_10_TESTING_QA.md](docs/MILESTONE_10_TESTING_QA.md) · [decisions/Testing-QA.md](decisions/Testing-QA.md))
+
+**After Milestone 10:** **Milestone 11 — Deployment** (future).
 
 **Milestone 9 (complete):**
 
@@ -776,9 +781,33 @@ Details: [CODING_STANDARDS.md](CODING_STANDARDS.md), [CURSOR_RULES.md](CURSOR_RU
 | 9.4 | Task Management (table; Create/Edit/View **modals**) | ✅ Implemented |
 | 9.5 | Reports (Tailwind bars; no exports) | ✅ Implemented |
 
-**Phase 10 focus (when approved):** API test gaps · frontend automated tests · bug fixes — see [TESTING.md](TESTING.md) · [ROADMAP.md](ROADMAP.md)
+**Phase 10 Testing & QA (complete):**
 
-**Still out of scope until approved:** Deployment (Phase 11) · Kanban · chart libraries · exports
+| Phase | Scope | Status |
+|-------|--------|--------|
+| 10.1 | PHPUnit gap-fill + full regression | ✅ `php artisan test` **215** passed |
+| 10.2 | Vitest + VTU + happy-dom | ✅ `npm run test` **69** / 26 files; type-check + build green |
+| 10.3 | Manual browser QA checklist | ✅ Passed (auth, Users, Projects, Tasks, Reports + Admin → Project → Member → Task → Employee status → Reports) |
+| QA fix | Global modal navigation | ✅ Stable family `viewKey`; list stays mounted; query preserved; no route progress on Create/Edit aliases |
+
+Deferred: Playwright/Cypress · GitHub Actions · shared PHPUnit actor trait. **No CI.**
+
+**Milestone 10 planned only (not implemented):**
+
+| Phase | Theme | Status |
+|-------|--------|--------|
+| 10.1 | Activity Logs / Audit Trail | 📋 Planned |
+| 10.2 | Remarks / Comments | 📋 Planned |
+| 10.3 | Notifications | 📋 Planned |
+| 10.4 | Task Priority & Due Dates | 📋 Planned |
+| 10.5 | Project Progress | 📋 Planned |
+| 10.6 | Global Search | 📋 Planned |
+| 10.7 | Dashboard Enhancements | 📋 Planned |
+| 10.8 | User Profile Enhancements | 📋 Planned |
+| 10.9 | Dark Mode | 📋 Planned |
+| 10.10 | Final UX + QA | 📋 Planned |
+
+**Still out of scope until separately approved:** Milestone 11 Deployment · Kanban · chart libraries · exports
 
 
 ---
@@ -843,15 +872,18 @@ Specs: [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md) · [docs/MILESTONE_3_ORGANIZ
 ## Testing status
 
 - PHPUnit via `php artisan test`
+- SPA: Vitest + Vue Test Utils + happy-dom via `npm run test` (colocated `src/**/*.spec.ts`)
 - DB: PostgreSQL **`opsflow_testing`** (`phpunit.xml`; no SQLite driver in current PHP)
 - `RefreshDatabase`; session driver `cookie` in tests
 - Stateful SPA simulated with `Origin: http://localhost:5173`
 - After logout/guest follow-ups, tests may call `auth()->forgetGuards()` (Laravel 13 test-client quirk)
-- **Last known full suite:** 212 tests passed (Phases 1–7.4 / Milestone 7 complete)
+- **Last known full API suite:** **215** tests passed (Phase 10.1 gap-fill + M2–7; 2026-08-08)
+- **Last known SPA suite:** **69** tests / 26 files (`npm run test`, 2026-08-08)
+- **Manual QA (10.3):** ✅ passed (2026-08-08)
 
 | Suite | Path | Coverage |
 |-------|------|----------|
-| Auth | `tests/Feature/Auth/AuthenticationTest.php` | login/logout/me, guest, validation |
+| Auth | `tests/Feature/Auth/AuthenticationTest.php` | login/logout/me, guest, validation, throttle `429` |
 | Organization | `tests/Feature/Organization/OrganizationFoundationTest.php` | dept/job title migrate/seed/unique/soft delete |
 | User domain | `tests/Feature/User/UserDomainFoundationTest.php` | users ERD, relations, `full_name`, inactive login |
 | User APIs | `tests/Feature/User/UserManagementApiTest.php` | CRUD, status, validation, hashing, resources |
@@ -871,15 +903,16 @@ Specs: [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md) · [docs/MILESTONE_3_ORGANIZ
 | Task status | `tests/Feature/Task/TaskStatusApiTest.php` | status patch; all enums; create/update status-free; Employee assigned-to-self; guest `401` |
 | Dashboard APIs | `tests/Feature/Dashboard/DashboardApiTest.php` | envelope; statistics; overdue; assigned_to_me; recent; clamp; validation; guest `401` |
 | Dashboard authz | `tests/Feature/Dashboard/DashboardAuthorizationTest.php` | Admin / PM / Employee visibility matrix |
-| Project reports | `tests/Feature/Report/ProjectReportApiTest.php` | list/detail; filters; date range; overdue/unassigned; pagination; guest `401` |
-| Employee reports | `tests/Feature/Report/EmployeeReportApiTest.php` | list/detail; `by_project`; date range; soft-deleted project exclusion |
+| Project reports | `tests/Feature/Report/ProjectReportApiTest.php` | list/detail; filters; date range; overdue/unassigned; pagination; guest `401`; empty list |
+| Employee reports | `tests/Feature/Report/EmployeeReportApiTest.php` | list/detail; `by_project`; date range; soft-deleted project exclusion; empty list |
 | Report authz | `tests/Feature/Report/ReportAuthorizationTest.php` | Admin / PM / Employee matrix |
+| CSRF `419` | `tests/Unit/ApiExceptionRendererTest.php` | `TokenMismatchException` on `api/*` → envelope `419` |
 
 ```bash
 php artisan test
 ```
 
-Deferred: dedicated `429` test, CSRF failure cases, frontend automated tests (Phase 10), Activity Logs suites.
+Phase 10 complete: dedicated `429` login throttle, CSRF `419` renderer unit test, empty report lists, Vitest SPA suite (**69**/26), manual QA passed, global modal-navigation fix. Deferred: Playwright/CI. Activity Logs / Remarks / Notifications suites belong to **Milestone 10 Product Enhancements** (planned). Details: [TESTING.md](TESTING.md) · [docs/MILESTONE_10_TESTING_QA.md](docs/MILESTONE_10_TESTING_QA.md).
 
 Details: [TESTING.md](TESTING.md)
 
@@ -928,6 +961,8 @@ _(Re-check with `git status` before committing.)_
 | `docs/MILESTONE_7_…`     | Milestone 7 implementation spec       |
 | `docs/MILESTONE_8_…`     | Milestone 8 Frontend Foundation spec  |
 | `docs/MILESTONE_9_…`     | Milestone 9 Frontend Modules spec     |
+| `docs/MILESTONE_10_TESTING_QA.md` | Phase 10 Testing & QA — ✅ complete |
+| `docs/MILESTONE_10_PRODUCT_ENHANCEMENTS.md` | Milestone 10 Product Enhancements — 📋 planned |
 | `PROJECT_OVERVIEW.md`    | Product overview                      |
 | `REQUIREMENTS.md`        | Functional requirements               |
 | `ARCHITECTURE.md`        | System architecture                   |
@@ -942,7 +977,7 @@ _(Re-check with `git status` before committing.)_
 | `DEVELOPMENT_ROADMAP.md` | Pointer to `ROADMAP.md`               |
 | `CHANGELOG.md`           | Milestone changelog                   |
 | `UI_PAGES.md`            | UI inventory                          |
-| `decisions/`             | ADRs (incl. `Frontend-Foundation.md`, `Frontend-Modules.md`) |
+| `decisions/`             | ADRs (incl. `Frontend-Foundation.md`, `Frontend-Modules.md`, `Testing-QA.md`) |
 | `diagrams/`              | Draw.io placeholders (empty — future) |
 
 ---
@@ -951,8 +986,8 @@ _(Re-check with `git status` before committing.)_
 
 1. Read this handoff + [TESTING.md](TESTING.md) · [ROADMAP.md](ROADMAP.md)
 2. Confirm git branch/status in `opsflow-api` / `opsflow-docs` / `opsflow-web`
-3. ✅ Milestone 9 (Phases 9.1–9.5 + UX/performance polish) is complete — next is **Phase 10 — Testing & QA** — **wait for explicit approval**
-4. Do **not** invent backend APIs; do **not** implement Phase 10/11 until approved
+3. ✅ Milestone 9 complete · ✅ Phase 10 Testing & QA complete. **Next:** Milestone 10 Product Enhancements (design first — not implemented)
+4. Do **not** invent backend APIs; do **not** implement Milestone 10 enhancements until a design package is approved; do **not** implement Milestone 11 Deployment early
 5. Do **not** modify code when the user asks for docs-only tasks
 6. SPA auth shell + all M9 module UIs are live (Dashboard, Users, Projects, Tasks, Reports)
 
@@ -988,7 +1023,7 @@ cd opsflow-docs
 | Location   | `opsflow-docs/HANDOFF.md`                      |
 | Supersedes | Ad-hoc chat memory                             |
 | Maintain   | Update when milestones complete or ADRs change |
-| Ready for  | Next session → **Phase 10 — Testing & QA** (after approval) |
+| Ready for  | Next session → **Milestone 10 Product Enhancements design package** (then implementation after approval; then Milestone 11 Deployment) |
 
 ## Project Principles
 

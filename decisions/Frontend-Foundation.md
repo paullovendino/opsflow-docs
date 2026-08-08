@@ -84,9 +84,10 @@ Vue 3 (Composition API) · TypeScript · Pinia · Vue Router · Axios · Tailwin
 | Phase | Milestone |
 |-------|-----------|
 | **8** | **Frontend Foundation** (this ADR) — ✅ complete |
-| **9** | **Frontend Modules** — see [Frontend-Modules.md](Frontend-Modules.md) |
-| **10** | Testing |
-| **11** | Deployment |
+| **9** | **Frontend Modules** — see [Frontend-Modules.md](Frontend-Modules.md) — ✅ complete |
+| **Phase 10** | Testing & QA — ✅ complete |
+| **Milestone 10** | Product Enhancements — next (not implemented) |
+| **Milestone 11** | Deployment — future |
 
 ### Explicitly out of scope
 
@@ -94,7 +95,7 @@ Feature module pages, frontend test frameworks as a deliverable, deployment, reg
 
 ## Consequences
 
-- Companion docs mark Milestone 8 complete; feature UIs shipped in **Milestone 9** (✅ complete); next is **Phase 10 — Testing & QA** (after approval); then Phase 11 — Deployment
+- Companion docs mark Milestone 8 complete; feature UIs shipped in **Milestone 9** (✅ complete); **Phase 10 Testing & QA is ✅ complete**; next is **Milestone 10 — Product Enhancements** (planned); then Milestone 11 — Deployment
 - Phase 2 “Pinia auth pending” is delivered by Milestone 8.2
 - Database ADR: Milestone 8 remains **schema-neutral**
 - Milestone 9 delivered Dashboard/Users/Projects/Tasks/Reports UIs — see [decisions/Frontend-Modules.md](Frontend-Modules.md)

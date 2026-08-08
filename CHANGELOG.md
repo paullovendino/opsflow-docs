@@ -8,6 +8,30 @@ Format follows a lightweight Keep a Changelog style.
 
 ## [Unreleased] — v1.0.0 (Development)
 
+### Documentation sync — Phase 10 complete / Milestone 10 Product Enhancements next — 2026-08-08
+
+- Phase 10 Testing & QA marked **complete**; next is **Milestone 10 — Product Enhancements** (planned only); Deployment is **Milestone 11** (future)
+- Created [docs/MILESTONE_10_PRODUCT_ENHANCEMENTS.md](docs/MILESTONE_10_PRODUCT_ENHANCEMENTS.md) (10.1–10.10 planned; not implemented; no detailed design yet)
+- Companion docs synchronized (HANDOFF, ROADMAP, DEVELOPMENT_ROADMAP, README, TESTING, PROJECT_OVERVIEW, ADRs)
+
+### Testing & QA complete (Phase 10.1–10.3 + modal QA fix) — ✅ Complete
+
+- Backend gap-fill: login throttle **429**; CSRF **419** via `ApiExceptionRenderer` unit test (Laravel disables CSRF in PHPUnit, so a live Feature mismatch test is not practical); empty project/employee report lists; removed scaffold `ExampleTest`
+- Frontend: Vitest + Vue Test Utils + happy-dom; colocated `src/**/*.spec.ts`; scripts `test` / `test:watch`
+- SPA coverage: shared UI, auth store, route guards, sidebar role nav, `LoginView` inline errors, HTTP interceptors, `useLookups` cache/dedupe, list/dashboard loading/empty/error, quiet lookups / modal-scoped progress, stable family `viewKey`
+- Manual QA (10.3): **passed** — Authentication, Users, Projects, Tasks, Reports; cross-module Admin → Project → Member → Task → Employee status → Reports
+- Global modal navigation QA fix: stable family `viewKey` (index + Create/Edit share `*.index`); list stays mounted; search/filter/page query preserved; modal aliases do not start route progress; modal-local loading remains; Users / Projects / Tasks audited
+- Gates (2026-08-08): `php artisan test` **215** passed · `npm run test` **69** / 26 files · type-check + build green · manual QA passed
+- Deferred: Playwright/Cypress, GitHub Actions, shared PHPUnit actor trait. **No CI.**
+- Next: Milestone 10 Product Enhancements (design then implementation); then Milestone 11 Deployment
+
+### Testing & QA design package (Phase 10) — 📋 Documentation only
+
+- Created [docs/MILESTONE_10_TESTING_QA.md](docs/MILESTONE_10_TESTING_QA.md) and [decisions/Testing-QA.md](decisions/Testing-QA.md)
+- Inspected current PHPUnit Feature coverage (no Pest) and confirmed **no** frontend test runner
+- Locked: gap-fill API tests (do not duplicate M2–7 suites); Vitest only after install approval; manual QA checklist; no CI invented
+- Milestone 9 remains **complete**; Phase 10 design locked before implementation approval
+
 ### Frontend UX / perceived performance (post-ship Milestone 9) — ✅ Implemented
 
 - CRUD modal UX: Users, Projects, and Tasks Create/Edit/View use list + `AppModal` aliases; Show remains a dedicated page (`/users/:id`, `/projects/:id`, `/tasks/:id`)
@@ -19,7 +43,7 @@ Format follows a lightweight Keep a Changelog style.
 - `useLookups`: module-level in-memory SPA-session cache + in-flight dedupe (not Pinia, not localStorage); Users search/filters/pagination remain server-side
 - Stable `AuthLayout` `viewKey` + `isModalAliasNavigation` for Users / Projects / Tasks Create/Edit aliases (list not remounted)
 - Backend APIs unchanged; `opsflow-web` `npm run type-check` + `npm run build` green
-- Docs synchronized; **Milestone 9 complete**; next is **Phase 10 — Testing & QA** (awaiting approval); then Phase 11 — Deployment
+- Docs synchronized; **Milestone 9 complete**; Phase 10 Testing & QA later completed; next is Milestone 10 Product Enhancements; then Milestone 11 Deployment
 
 ### Reports UI (Phase 9.5) — ✅ Implemented
 
@@ -85,7 +109,7 @@ Format follows a lightweight Keep a Changelog style.
 - Users Create/Edit later revised to **modals** (Phase 9.2 implementation) — see Phase 9.2 changelog entry
 - Tasks Create/Edit later revised to **modals** (Phase 9.4 implementation) — see Phase 9.4 changelog entry
 - Projects Create/Edit later revised to **modals** (post-ship UX) — see post-ship UX changelog entry
-- Roadmap: Testing & QA → **Phase 10**; Deployment → **Phase 11**
+- Roadmap at that time: Testing & QA → **Phase 10**; Deployment → **Phase 11** (later: Phase 10 complete; Milestone 10 Product Enhancements; Milestone 11 Deployment)
 - Companion docs synchronized; **Milestone 9 implemented (9.1–9.5 + UX/performance polish)**
 
 ### Frontend Foundation (Milestone 8) — ✅ Implemented · Milestone 8 complete

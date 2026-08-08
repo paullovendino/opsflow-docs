@@ -22,7 +22,7 @@
 - Prefer `opsflow-docs/docs/DOMAIN_MODEL.md` for business concepts.
 - Prefer milestone specs under `opsflow-docs/docs/` before implementing a phase.
 - Do not implement future modules early (Remarks/Activity Logs/advanced RBAC) unless the milestone says so.
-- Milestones **3–9** are **complete** (including Frontend Modules 9.1–9.5 + post-ship UX/performance). Do **not** implement Phase 10 Testing & QA until the user explicitly approves. Do **not** implement Phase 11 Deployment early.
+- Milestones **3–9** and **Phase 10 Testing & QA** are **complete**. **Next:** Milestone 10 Product Enhancements (planned — do **not** implement until a design package is approved). Do **not** implement Milestone 11 Deployment early. Follow `docs/MILESTONE_10_PRODUCT_ENHANCEMENTS.md` / `docs/MILESTONE_10_TESTING_QA.md` / `decisions/Testing-QA.md`.
 - Match existing patterns. Frontend modules: follow `docs/MILESTONE_9_FRONTEND_MODULES.md` / `decisions/Frontend-Modules.md`. Foundation: `docs/MILESTONE_8_FRONTEND_FOUNDATION.md`.
 
 ## API
@@ -49,6 +49,8 @@
 - Use Tailwind CSS; **no UI framework** unless an ADR approves one.
 - Follow [docs/MILESTONE_8_FRONTEND_FOUNDATION.md](docs/MILESTONE_8_FRONTEND_FOUNDATION.md) for the auth shell (✅ Milestone 8).
 - Follow [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md) for feature modules (✅ Milestone 9 complete — Dashboard, Users, Projects, Tasks, Reports).
-- Users, Projects, and Tasks Create/Edit/View use `AppModal` on the list; do not reintroduce dedicated Create/Edit pages for those modules unless an ADR revises that. Show pages (`/users/:id`, `/projects/:id`, `/tasks/:id`) remain.
-- `useLookups` cache is composable module-level SPA-session + dedupe — do not invent Pinia/localStorage/Redis lookup caching.
+- Users, Projects, and Tasks Create/Edit/View use `AppModal` on the list; do not reintroduce dedicated Create/Edit pages for those modules unless an ADR revises that. Show pages (`/users/:id`, `/projects/:id`, `/tasks/:id`) remain. Reports are dedicated pages.
+- Task assignees must be the **project owner or a project member** (existing rule — do not reinterpret).
+- `useLookups` cache is composable module-level **in-memory SPA-session** + in-flight dedupe — do not invent Pinia / localStorage / Redis lookup caching. Do not introduce Vuex or another state-management library.
+- Stable family `viewKey`: Create/Edit modal aliases share the list view key; do not remount/refetch the list on modal navigation; do not start route progress on modal aliases.
 - No chart library / UI kit / Kanban unless an ADR changes that.

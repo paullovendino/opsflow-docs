@@ -126,7 +126,9 @@ Department CRUD, Job Title CRUD, teams, branches, and organization settings are 
 
 ## Frontend Modules
 
-> Milestone 9 — ✅ Complete (Phases 9.1–9.5 + post-ship UX/performance) · next Phase 10 Testing & QA awaiting approval  
+> Milestone 9 — ✅ Complete (Phases 9.1–9.5 + post-ship UX/performance)  
+> Phase 10 — Testing & QA: ✅ **Complete** · [docs/MILESTONE_10_TESTING_QA.md](docs/MILESTONE_10_TESTING_QA.md)  
+> Next: Milestone 10 — Product Enhancements (planned) · [docs/MILESTONE_10_PRODUCT_ENHANCEMENTS.md](docs/MILESTONE_10_PRODUCT_ENHANCEMENTS.md)  
 > Spec: [docs/MILESTONE_9_FRONTEND_MODULES.md](docs/MILESTONE_9_FRONTEND_MODULES.md) · ADR: [decisions/Frontend-Modules.md](decisions/Frontend-Modules.md)
 
 - [x] Dashboard UI (9.1)
@@ -140,7 +142,7 @@ Department CRUD, Job Title CRUD, teams, branches, and organization settings are 
 
 ## Remarks
 
-> Planned — future
+> Planned — Milestone 10.2 Product Enhancements (not implemented)
 
 - Author remarks on work items (design in [docs/DOMAIN_MODEL.md](docs/DOMAIN_MODEL.md))
 
@@ -148,7 +150,7 @@ Department CRUD, Job Title CRUD, teams, branches, and organization settings are 
 
 ## Activity Logs
 
-> Planned — future (not Milestone 6)
+> Planned — Milestone 10.1 Product Enhancements (not Milestone 6; not implemented)
 
 - User actions
 - Task updates
